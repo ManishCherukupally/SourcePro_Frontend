@@ -1,0 +1,238 @@
+@media screen and (max-width: 480px) {
+    .logincard {
+        transform: translateX("3rem");
+        margin: "1em";
+        /* Adjust the margin as needed */
+    }
+}
+
+.email label,
+.sp label,
+.numinp label,
+.password label {
+    color: grey;
+}
+
+.bgimg {
+    background-blend-mode: saturation;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.blur {
+    background-color: rgb(0, 0, 0, 0.35);
+}
+
+.resend {
+    color: blue;
+}
+
+.forgot-password-link {
+    color: black;
+    /* Change to your preferred link color */
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 10px;
+    display: inline-block;
+    transition: color 0.3s ease;
+
+    &:hover {
+        color: #0056b3;
+    }
+}
+
+.cancelbtn {
+    color: black;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.newpaswd {
+    color: blue;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.grey-input {
+    border: none;
+    background-image: grey;
+    width: 20em;
+}
+
+.tab {
+    color: grey;
+    /* Default color */
+}
+
+/* 
+.tab:focus {
+    color: orange;
+    /* Change to orange when clicked */
+/* }a */
+
+.editbtn {
+    color: rgb(0, 115, 255);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.mantine-4g8dsw {
+
+    height: 2.25rem;
+    -webkit-tap-highlight-color: transparent;
+    font-size: 0.875rem;
+    width: 25rem;
+    color: #000;
+    display: block;
+    text-align: left;
+    background-color: #eeeeee;
+
+    min-height: 2.25rem;
+    padding-left: calc(2.25rem / 3);
+    padding-right: calc(2.25rem / 3);
+    border-radius: 0.5rem;
+}
+
+.headerbox {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #E9E9E9;
+}
+
+/* .icon {
+    padding-bottom: 2px;
+    padding-top: 10px;
+} */
+
+.mantine-Tabs-tabsList {
+
+    align-items: center;
+    padding-bottom: 2px;
+    justify-content: space-between;
+    border-bottom: 1px solid #ced4da;
+}
+
+.mantine-19sdg6w {
+    gap: 2.5rem;
+    margin-right: 3rem;
+}
+
+.mantine-Tabs-tab {
+    color: #626262;
+    transition: 0.1s ease-in;
+    font-weight: 600;
+
+}
+
+.mantine-Tabs-tab[data-active] {
+    color: #F09A3E;
+    border-color: #F09A3E;
+    border-bottom: 3px solid #F09A3E;
+    border-radius: 3px;
+
+}
+
+.mantine-1b9354u[data-active]:hover {
+    border-color: #F09A3E;
+}
+
+.menudd {
+    padding: 1rem;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    color: #3A3A3A;
+
+}
+
+.iconbox {
+
+    padding-bottom: 6%;
+    border-width: 2px;
+    display: flex;
+    justify-content: center;
+
+}
+
+.mantine-hpmcve {
+    height: 3.2rem;
+    padding-top: 10px;
+    margin-right: 1.5rem;
+}
+
+.menutext {
+    font-weight: 600;
+    margin: 0.3rem;
+}
+
+.menutext[data-active] {
+    color: #F09A3E;
+    border-bottom: #F09A3E;
+}
+
+.mantine-1hher0m[data-active]:hover {
+    border-color: #F09A3E;
+}
+
+.mantine-10g25be {
+    background-color: #3A3A3A;
+    padding: 0;
+    margin-top: 8px;
+}
+
+.mantine-jc1vc6 {
+    padding-right: 0;
+}
+
+.divider {
+    color: #727272;
+}
+
+.accbtn:hover {
+    background-color: #3A3A3A;
+}
+
+.clipgrp,
+.matgrp {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.mantine-16fdnqw {
+    width: fit-content;
+}
+
+.mantine-79k16w[data-active] {
+    background-color: rgba(38, 38, 38, 1);
+}
+
+.selectedDiv {
+    background-color: black;
+}
+
+.coursecard:hover {
+    box-shadow: md;
+    transform: scale(1.02);
+    transform-style: preserve-3d;
+    position: relative;
+}
+
+.playerWrapper {
+    width: 100%;
+    position: relative;
+}
+
+.controlWrapper {
+    position: "absolute";
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    z-index: 1;
+}
