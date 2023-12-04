@@ -41,7 +41,7 @@ const Head = () => {
   const course = useParams()
   const lessonId = useParams()
   const [data, setData] = useState([]);
-  console.log(data)
+  // console.log(data)
   useEffect(() => {
     axios.get("http://192.168.29.220:8000/home/")
       .then((resp) => {

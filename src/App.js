@@ -13,7 +13,6 @@ import EditDetailsPage from "./pages/EditDetailsPage";
 import ChangePaswdPage from "./pages/ChangePaswdPage";
 import TransactionPage from "./pages/TransactionPage";
 import Mycourses from "./components/MyCourses/Mycourses";
-import New from "./components/new";
 import CoursePage from "./pages/CoursePage";
 import Quiz_test from "./components/quizComp/Quiz_test";
 import { QuizScoreRed } from "./components/quizComp/QuizScoreColor";
@@ -53,7 +52,6 @@ function App() {
             exact Component={Mycourses} />
           {/* <Route path="/mycourses/:courseid" Component={CoursePage} /> */}
           <Route path="/mycourses/:courseid/:lessonid" Component={CoursePage} />
-          <Route path="/new" Component={New} />
           <Route path="/quiz" Component={Quiz_test} />
           <Route path="/quiz/:courseid/:lessonid" Component={Quiz_test} />
 

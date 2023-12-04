@@ -1,39 +1,25 @@
-
-// @ts-ignore
-// @ts-ignore
-// @ts-ignore
-import { Accordion, ActionIcon, BackgroundImage, Box, Button, Card, Center, Container, CopyButton, Divider, Flex, Grid, Group, Overlay, Radio, Space, Spoiler, Tabs, Text, Tooltip, UnstyledButton } from '@mantine/core'
-// @ts-ignore
 import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { Accordion, ActionIcon, BackgroundImage, Box, Button, Card, Center, Container, CopyButton, Divider, Flex, Grid, Group, Overlay, Radio, Space, Spoiler, Tabs, Text, Tooltip, UnstyledButton } from '@mantine/core'
+
 import Head from '../dashboard Header/Head'
 
 import { BiRadioCircle, BiSolidLike } from 'react-icons/bi'
 import { BsCheckCircle } from 'react-icons/bs';
 
-// @ts-ignore
 import { AiFillLock, AiOutlineLock } from 'react-icons/ai'
 
 
-// @ts-ignore
 import { MdDocumentScanner, MdDownload } from 'react-icons/md'
 import { TbCopy } from 'react-icons/tb'
 import { TiTick } from 'react-icons/ti'
 
-// @ts-ignore
-import VideoPlayer from './VideoPlayer'
 import axios from 'axios'
-// @ts-ignore
-// @ts-ignore
-// @ts-ignore
 import { courseidatom } from '../../Store/store'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import ReactPlayer from 'react-player'
 
 
 const Course_home = () => {
-
-
-    // @ts-ignore
     const [isActive, setIsActive] = useState(false);
 
     const [textContent, setTextContent] = useState('');
@@ -42,11 +28,11 @@ const Course_home = () => {
     const [fData, setFdata] = useState([])
 
     const [lessonData, setLessonData] = useState([])
-    // @ts-ignore
+
     const [lessonName, setLessonName] = useState("")
     const [likes, setLikes] = useState({})
     console.log("likes" + likes)
-    // @ts-ignore
+
     const [Ldata, setLdata] = useState({})
 
     // console.log(videoUrl)
@@ -54,16 +40,15 @@ const Course_home = () => {
     const course = useParams()
     const lessonId = useParams()
     // console.log(courseidatom)
-    // @ts-ignore
+
     const [getLikes, setLikesData] = useState(homeData.course_likes);
 
 
     const [iconColor, setIconColor] = useState(homeData.like_status);
     console.log("true :  " + iconColor)
-    const [timeToStart, setTimeToStart] = useState(0);
-    const playerRef = useRef(lessonId.lessonid);
+
     // console.log("player ref" + playerRef)
-    // @ts-ignore
+
     // const player = document.getElementById("react-player").reactPlayer;
 
     const navigate = useNavigate()
@@ -116,11 +101,11 @@ const Course_home = () => {
             ))
     }, [course.courseid])
 
-
-    // @ts-ignore
+    const [timeToStart, setTimeToStart] = useState(null);
+    const playerRef = useRef(lessonId.lessonid);
     useEffect(() => {
 
-        // @ts-ignore
+
         // if (lessonId.lessonid !== prevCrouselessonid || lessonId.lessonid === "") {
         axios.get("http://192.168.29.220:8000/usr_course_page_lesson/",
             {
@@ -144,7 +129,10 @@ const Course_home = () => {
                     }
 
                 })
-                setTimeToStart(10)
+
+                const [hours, minutes, seconds] = data.minutes_completed.split(':').map(Number);
+                const totalSeconds = hours * 3600 + minutes * 60 + seconds;
+                setTimeToStart(totalSeconds)
                 setLessonData(data)
                 setLessonName(resp.data["all_lessons"].lesson_name)
 
@@ -155,9 +143,9 @@ const Course_home = () => {
         // }
 
     }, [course.courseid, lessonId.lessonid])
-    // @ts-ignore
-    // @ts-ignore
-    // @ts-ignore
+
+
+
     const prevCrouselessonid = useRef(lessonId.lessonid)
 
 
@@ -195,7 +183,7 @@ const Course_home = () => {
 
 
 
-    // @ts-ignore
+
     const openNewTab = (documentUrl) => {
         window.open(documentUrl, '_blank');
     };
@@ -203,9 +191,9 @@ const Course_home = () => {
     const copyTextToClipboard = document.getElementById("txt")
 
 
-    // @ts-ignore
-    // @ts-ignore
-    // @ts-ignore
+
+
+
     const [extractedTitle, setExtractedTitle] = useState('');
 
 
@@ -221,29 +209,22 @@ const Course_home = () => {
 
     // Split the URL by '/' and get the last part, then remove any trailing '/'
 
-    // @ts-ignore
+
 
 
     // Loop through all_lessons to extract and open material URLs
-    // @ts-ignore
+
 
 
     const [showOverlay, setShowOverlay] = useState(false);
-    // const handleoverlay = () => {
-    //     return (
 
-
-
-
-    //     )
-    // }
 
     const [selected, setSelected] = useState(false);
     const [fill, setFill] = useState("")
-    // @ts-ignore
+
     const [Bg, setBg] = useState("")
 
-    // @ts-ignore
+
     const toggleSelected = () => {
         setSelected(!selected);
 
@@ -324,17 +305,7 @@ const Course_home = () => {
     }
     const handleButtonClick = () => {
         // Trigger a re-render by setting the state to false and then back to true
-        try {
-            axios.put("http://192.168.29.220:8000/usr_course_page_lesson/", {
-
-                minutes_completed: (time),
-                course_id: course.courseid,
-                lesson_id: lessonId.lessonid
-            })
-        }
-        catch (err) {
-            console.error(err)
-        }
+        console.log("button Clicked")
         setShouldRerender(false);
         setTimeout(() => {
             setShouldRerender(true);
@@ -343,6 +314,7 @@ const Course_home = () => {
         setShowOverlay(false)
         setFill("blur(0px)")
     };
+
 
     return (
         <>
@@ -386,15 +358,10 @@ const Course_home = () => {
 
                                 {shouldRerender &&
                                     lessonData.map((item) => (
-                                        <ReactPlayer ref={playerRef} id="my-player" key={item.lesson_id} height={"100%"} width={"100%"}
+                                        <ReactPlayer ref={playerRef} key={item.lesson_id} height={"100%"} width={"100%"}
                                             controls
                                             playing={isPlaying}
-                                            onStart={() => {
-                                                // const playerInstance = document.querySelector('#my-player').reactPlayer;
-                                                // playerInstance.seekTo(10, 'seconds');
-
-                                                playerRef.current.seekTo(timeToStart, 'seconds')
-                                            }}
+                                            onReady={() => playerRef.current.seekTo(timeToStart, 'seconds')}
 
                                             onPause={() => {
                                                 handlePause()
@@ -406,7 +373,7 @@ const Course_home = () => {
                                             }}
 
                                             // seekTo={seekToTime}
-                                            // @ts-ignore
+
                                             url={item.lesson_url}
                                             muted
                                             onEnded={() => {
@@ -427,7 +394,7 @@ const Course_home = () => {
                                                     //     {
                                                     //         label: "",
                                                     //         kind: "subtitles",
-                                                    //         // @ts-ignore
+                                                    //        
                                                     //         src: "http://192.168.29.220:8000/media/Back_to_Basics.mp4.en.vtt/",
                                                     //         srcLang: "en",
                                                     //         default: true,
@@ -467,11 +434,11 @@ const Course_home = () => {
                                         <Card style={{ paddingLeft: "1rem" }}>
                                             <Group>
                                                 <Text fz={18} color="#3A3A3A" fw={"600"} >{homeData.
-                                                    // @ts-ignore
+
                                                     course_name}</Text>
                                                 {/* <Text fz={18}> . </Text> */}
                                                 <Text fz={14} color="#3A3A3A" fw={"600"} >{lessonData.
-                                                    // @ts-ignore
+
                                                     lesson_name}</Text>
                                             </Group>
                                             <Space h={5} />
@@ -479,11 +446,11 @@ const Course_home = () => {
                                             <Group style={{ display: "flex", alignItems: "center" }} >
 
                                                 <Text color='#626262' fz={14}>Released: {new Date(homeData.
-                                                    // @ts-ignore
+
                                                     creation_date).toLocaleString("en-UK")}</Text>
                                                 <Text fz={18}> . </Text>
                                                 <Text color='#626262' fz={14} >Tutor :{" " + homeData.
-                                                    // @ts-ignore
+
                                                     author}</Text>
                                             </Group>
                                             <Space h={15} />
@@ -501,20 +468,20 @@ const Course_home = () => {
                                         <Accordion >
                                             {fData.length > 0 ? (fData.map((item) => (
                                                 <Accordion.Item key={item.
-                                                    // @ts-ignore
+
                                                     question}
                                                     value={item.
 
-                                                        // @ts-ignore
+
                                                         answer}>
                                                     <Accordion.Control>{item.
 
-                                                        // @ts-ignore
+
                                                         question}</Accordion.Control>
                                                     <Accordion.Panel>
                                                         {item.
 
-                                                            // @ts-ignore
+
                                                             answer}
                                                     </Accordion.Panel>
                                                 </Accordion.Item>
@@ -543,15 +510,15 @@ const Course_home = () => {
                                             <Group className='matgrp'>
                                                 <div>
                                                     {
-                                                        // @ts-ignore
+
                                                         lessonData.map((lesson, index) => {
-                                                            // @ts-ignore
+
                                                             if (lesson.materials && lesson.materials[1].material_name) {
 
-                                                                // @ts-ignore
+
                                                                 const materialName = lesson.materials[1].material_name
                                                                 // console.log(materialName)
-                                                                // @ts-ignore
+
                                                                 return <Text color='#FFFFFF' key={lesson.lesson_id}>{materialName}</Text>;
                                                             }
                                                         })
@@ -561,7 +528,7 @@ const Course_home = () => {
                                                 <div>
                                                     {
                                                         lessonData.map((lesson) => {
-                                                            // @ts-ignore
+
                                                             const materialUrl = (lesson.materials && lesson.materials[0]);
                                                             if (materialUrl)
                                                                 return (
@@ -588,9 +555,9 @@ const Course_home = () => {
                                                 <div>
                                                     {
                                                         lessonData.map((lesson, index) => {
-                                                            // @ts-ignore
+
                                                             if (lesson.clipboards && lesson.clipboards[1].clipboard_name) {
-                                                                // @ts-ignore
+
                                                                 const materialName = lesson.clipboards[1].clipboard_name;
                                                                 return <Text id='txt' color='#FFFFFF' key={index}>{materialName}</Text>;
                                                             }
@@ -598,7 +565,7 @@ const Course_home = () => {
                                                     }
                                                 </div>
                                                 <CopyButton
-                                                    // @ts-ignore
+
                                                     value={copyTextToClipboard?.innerText}
                                                     timeout={2000}>
                                                     {({ copied, copy }) => (
@@ -623,37 +590,36 @@ const Course_home = () => {
                                     {
                                         lessonData.map((item, index) => (
                                             <div key={item.
-                                                // @ts-ignore
+
                                                 lesson_id}>
                                                 <Flex direction={"column"}>
                                                     <Container pl={0} pr={0} w={"100%"} fluid  >
 
                                                         {
-                                                            // @ts-ignore
+
                                                             item.lesson_status === "locked" ?
                                                                 (<div style={{ pointerEvents: 'none' }}>
                                                                     <Flex p={"1rem"} align={"center"} gap={15}>
                                                                         <ActionIcon variant='transperant' ><AiFillLock color='#5F5F5F' size={20} /></ActionIcon>
                                                                         <Flex direction={"column"}>
                                                                             <Text color='#FFFFFF' >{index + 1}. {item.
-                                                                                // @ts-ignore
+
                                                                                 lesson_name}</Text>
 
                                                                         </Flex>
                                                                     </Flex>
                                                                 </div>) :
                                                                 (
-                                                                    <div onClick={() => {
-                                                                        handleButtonClick();
-                                                                        // navigate(`/home/${course.courseid}/${item.lesson_id}`)
-                                                                    }}>
+                                                                    <div onClick={handleButtonClick}>
 
-                                                                        <div key={item.
-                                                                            // @ts-ignore
-                                                                            lesson_id}>
+                                                                        <Link to={`/home/${course.courseid}/${item.lesson_id}`}
+                                                                            style={{ textDecoration: "none" }} key={item.
+
+                                                                                lesson_id}>
+
                                                                             <Flex p={"1rem"} align={"center"} gap={15} >
                                                                                 {
-                                                                                    // @ts-ignore
+
                                                                                     item.lesson_status === "completed" ?
                                                                                         (<ActionIcon variant='tranperant' ><BsCheckCircle color='green' size={20} /></ActionIcon>) :
                                                                                         (<ActionIcon variant='tranperant' ><BiRadioCircle color='#5F5F5F' size={20} /></ActionIcon>)
@@ -661,23 +627,23 @@ const Course_home = () => {
 
                                                                                 <Flex direction={"column"}>
                                                                                     <Text color='#FFFFFF' >{index + 1}. {item.
-                                                                                        // @ts-ignore
+
                                                                                         lesson_name}</Text>
                                                                                     <Space h={8} />
                                                                                     <Flex gap={10} >
 
                                                                                         <Text color='#FFFFFF' fz={"xs"}>{item.
-                                                                                            // @ts-ignore
+
                                                                                             lesson_duration}m </Text>
                                                                                         {
-                                                                                            // @ts-ignore
+
                                                                                             item.quiz_attempt_status === true ?
 
                                                                                                 (<Flex gap={"9rem"}>
                                                                                                     <Flex gap={5}>
                                                                                                         <Text fz={"xs"} c={"white"}>Score :</Text>
                                                                                                         <Text fz={"xs"} c={"rgba(0, 156, 23, 1)"}>{item.
-                                                                                                            // @ts-ignore
+
                                                                                                             quiz_score}%</Text>
                                                                                                     </Flex>
                                                                                                     <Link to={`/quiz/${course.courseid}/${item.lesson_id}`} style={{ textDecoration: "none", color: "rgba(0, 117, 225, 1)", fontSize: 12 }}>
@@ -692,7 +658,7 @@ const Course_home = () => {
                                                                                     </Flex>
                                                                                 </Flex>
                                                                             </Flex>
-                                                                        </div>
+                                                                        </Link>
                                                                     </div>
                                                                 )
 
