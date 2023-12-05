@@ -7,6 +7,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { useAtom } from 'jotai'
 import { courseidatom, lessonidatom } from '../Store/store'
+import { Carousel } from '@mantine/carousel'
 // import LoginTest from './LoginTest'
 
 
@@ -59,10 +60,16 @@ const Home = () => {
       <Container mt={"2rem"} size={"xl"}>
         <Text fz={20} fw={500}>Continue Learning</Text>
         <Space h={10} />
-        <SimpleGrid cols={4}>
-          {continueLearning.map((card) => {
-            return (
+        <Carousel slideSize="0%"
+          align={"start"}
+          slidesToScroll={4}
+          slideGap={19}
+          draggable
+          withControls={false}
+        >
+          {continueLearning.map((card) => (
 
+            <Carousel.Slide>
               <div onClick={() => navigate(`/home/${card.
                 // @ts-ignore
                 course_id}/${card.last_viewed_lesson_id}`)}>
@@ -95,16 +102,25 @@ const Home = () => {
                 </Card>
 
               </div>
-            )
-          })}
-        </SimpleGrid>
+            </Carousel.Slide>
+
+          ))
+          }
+
+        </Carousel>
         <Space h={25} />
         <Text fz={20} fw={500}>New Courses</Text>
         <Space h={10} />
-        <SimpleGrid cols={4}>
+        <Carousel slideSize="0%"
+          align={"start"}
+          slidesToScroll={4}
+          slideGap={19}
+          draggable
+          withControls={false}
+        >
           {newCourses.map((card) => {
             return (
-              <ScrollArea w={1320}>
+              <Carousel.Slide>
                 <Card shadow='sm' w={277} p={0} withBorder radius={"md"}>
                   <Card h={120} p={0} radius={0} >
                     <Image
@@ -129,47 +145,52 @@ const Home = () => {
                     </Text>
                   </Card>
                 </Card>
-
-              </ScrollArea>
+              </Carousel.Slide>
             )
           })}
-        </SimpleGrid>
+        </Carousel>
         <Space h={25} />
         <Text fz={20} fw={500}>All Courses</Text>
         <Space h={10} />
-        <SimpleGrid cols={4}>
+        <Carousel slideSize="0%"
+          align={"start"}
+          slidesToScroll={4}
+          slideGap={19}
+          draggable
+          withControls={false}
+        >
           {allCourses.map((card) => {
             return (
+              <Carousel.Slide>
+                <Card shadow='sm' mb={"1rem"} w={277} p={0} withBorder radius={"md"}>
+                  <Card h={120} p={0} radius={0} >
+                    <Image
+                      src={card.
+                        // @ts-ignore
+                        thumbnail}
+                      height={130}
 
-              <Card shadow='sm' mb={"1rem"} w={277} p={0} withBorder radius={"md"}>
-                <Card h={120} p={0} radius={0} >
-                  <Image
-                    src={card.
-                      // @ts-ignore
-                      thumbnail}
-                    height={130}
+                    />
+                  </Card>
 
-                  />
-                </Card>
-
-                <Progress color='yellow' radius={0}
-                  // @ts-ignore
-                  value={card.percentage_completed} />
-                <Card pt={6} h={67} radius={0} style={{ backgroundColor: "#ECECEC" }}>
-                  <Text fs={"Open Sans"} fz={16} fw={500}>{card.
+                  <Progress color='yellow' radius={0}
                     // @ts-ignore
-                    course_name}</Text>
-                  <Text fs={"Open Sans"} fz="sm" color="dimmed">
-                    {card.
+                    value={card.percentage_completed} />
+                  <Card pt={6} h={67} radius={0} style={{ backgroundColor: "#ECECEC" }}>
+                    <Text fs={"Open Sans"} fz={16} fw={500}>{card.
                       // @ts-ignore
-                      total_duration} mins
-                  </Text>
+                      course_name}</Text>
+                    <Text fs={"Open Sans"} fz="sm" color="dimmed">
+                      {card.
+                        // @ts-ignore
+                        total_duration} mins
+                    </Text>
+                  </Card>
                 </Card>
-              </Card>
-
+              </Carousel.Slide>
             )
           })}
-        </SimpleGrid>
+        </Carousel>
       </Container>
 
     </>

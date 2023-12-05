@@ -20,6 +20,7 @@ import ReactPlayer from 'react-player'
 
 
 const Course_home = () => {
+    const playerRef = useRef(null);
     const [isActive, setIsActive] = useState(false);
 
     const [textContent, setTextContent] = useState('');
@@ -52,6 +53,7 @@ const Course_home = () => {
     // const player = document.getElementById("react-player").reactPlayer;
 
     const navigate = useNavigate()
+
     useEffect(() => {
         axios.get("http://192.168.29.220:8000/usr_course_page/", {
             params:
@@ -101,8 +103,7 @@ const Course_home = () => {
             ))
     }, [course.courseid])
 
-    const [timeToStart, setTimeToStart] = useState(null);
-    const playerRef = useRef(lessonId.lessonid);
+
     useEffect(() => {
 
 
@@ -129,10 +130,10 @@ const Course_home = () => {
                     }
 
                 })
-
-                const [hours, minutes, seconds] = data.minutes_completed.split(':').map(Number);
-                const totalSeconds = hours * 3600 + minutes * 60 + seconds;
-                setTimeToStart(totalSeconds)
+                // //@ts-ignore    
+                // const [hours, minutes, seconds] = resp.data.minutes_completed.split(':').map(Number);
+                // const totalSeconds = hours * 3600 + minutes * 60 + seconds;
+                // setTimeToStart(10)
                 setLessonData(data)
                 setLessonName(resp.data["all_lessons"].lesson_name)
 
@@ -143,13 +144,6 @@ const Course_home = () => {
         // }
 
     }, [course.courseid, lessonId.lessonid])
-
-
-
-    const prevCrouselessonid = useRef(lessonId.lessonid)
-
-
-
     // const clr = useMemo(homeData.like_status)
     // console.log("clr" + iconColor)
     console.log("upgradedLikes" + getLikes)
@@ -314,8 +308,12 @@ const Course_home = () => {
         setShowOverlay(false)
         setFill("blur(0px)")
     };
+    const [timeToStart, setTimeToStart] = useState(10);
 
 
+    const handlePlay = () => {
+        playerRef.current.seekTo(20, 'seconds')
+    }
     return (
         <>
             <Box>
@@ -361,11 +359,9 @@ const Course_home = () => {
                                         <ReactPlayer ref={playerRef} key={item.lesson_id} height={"100%"} width={"100%"}
                                             controls
                                             playing={isPlaying}
-                                            onReady={() => playerRef.current.seekTo(timeToStart, 'seconds')}
+                                            onPlay={handlePlay}
 
-                                            onPause={() => {
-                                                handlePause()
-                                            }}
+                                            onPause={handlePause}
 
                                             onProgress={(progress) => {
                                                 const integerValue = Math.floor(progress.playedSeconds);

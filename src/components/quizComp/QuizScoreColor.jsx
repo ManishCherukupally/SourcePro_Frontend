@@ -4,17 +4,18 @@ import { BiArrowBack } from 'react-icons/bi'
 import ScoreLoader from './ScoreLoader'
 
 import { scoreatom } from '../../Store/store'
-import { Link, Navigate, useParams } from 'react-router-dom'
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import Quiz_test from './Quiz_test'
 
 
 export function QuizScoreGreen() {
+    const navigate = useNavigate()
     const course = useParams()
     const lessonId = useParams()
     const [nextLessonData, setNextLessonData] = useState({})
-    const [Lname, setLName] = useState("")
-
+    const [lessonData, setLessonData] = useState({})
+    // console.log("LData" + lessonData)
     useEffect(() => {
         axios.get("http://192.168.29.220:8000/next_lesson/", {
             params: {
@@ -26,18 +27,38 @@ export function QuizScoreGreen() {
                 setNextLessonData(resp.data)
             })
 
-    })
+    }, [])
 
-    axios.get("http://192.168.29.220:8000/usr_course_page_lesson/",
-        {
-            params: {
-                course_id: course.courseid,
-                lesson_id: lessonId.lessonid
-            }
-        })
-        .then(resp => setLName(resp.data.lesson_name))
+    useEffect(() => {
+        axios.get("http://192.168.29.220:8000/usr_course_page_lesson/",
+            {
+                params: {
+                    course_id: course.courseid,
+                    lesson_id: lessonId.lessonid
+                }
+            })
+            .then((resp) => {
+                const data = resp.data["all_lessons"]
+                console.log(data)
+                const result = data.find(({ lesson_id }) => lesson_id === lessonId.lessonid)
+                console.log(result)
+
+            })
 
 
+    }, [course.courseid, lessonId.lessonid])
+
+    const [shouldRerender, setShouldRerender] = useState(false);
+
+    useEffect(() => {
+        // Set the initial state of the component
+        setShouldRerender(true);
+    }, [course.courseid, lessonId.lessonid]);
+
+    const handleButtonClick = () => {
+        // Trigger a re-render by setting the state to false and then back to true
+
+    };
 
 
     return (<>
@@ -47,11 +68,24 @@ export function QuizScoreGreen() {
                 <Flex justify={"space-between"} align={"center"} gap={"1rem"}>
                     <Group>
                         <ActionIcon variant='transparent'><BiArrowBack color='#FFFFFF' size={25} /></ActionIcon>
-                        <Text c={"#FFFFFF"} fw={600}>Quiz 1. {Lname}</Text>
+
+                        <Text c={"#FFFFFF"} fw={600} key={lessonData.lesson_id} >Quiz 1.{lessonData.lesson_name}</Text>
+
                     </Group>
                     <Flex>
                         {/* <Link to={`/quiz/${course.courseid}/${lessonId.lessonid}`}> */}
-                        <Button mr={"3.5rem"} variant='outline' style={{ color: "rgba(255, 255, 255, 1)", borderColor: "rgba(255, 255, 255, 1)" }}
+                        <Button mr={"3.5rem"} variant='outline'
+                            onClick={() => {
+                                console.log("button Clicked")
+                                setShouldRerender(false);
+                                setTimeout(() => {
+                                    setShouldRerender(true);
+                                }, 1000)
+
+                                shouldRerender &&
+                                    navigate(`/quiz/${course.courseid}/${lessonId.lessonid}`)
+                            }}
+                            style={{ color: "rgba(255, 255, 255, 1)", borderColor: "rgba(255, 255, 255, 1)" }}
                         > RE-TAKE QUIZ</Button>
                         {/* </Link> */}
                         <Link to={`/home/${
@@ -81,7 +115,20 @@ export function QuizScoreRed() {
     const course = useParams()
     const lessonId = useParams()
     const [showQuiz, setShowQuiz] = useState(false); // Use local state to manage quiz visibility
+    const [lessonData, setLessonData] = useState([])
 
+    useEffect(() => {
+        axios.get("http://192.168.29.220:8000/usr_course_page_lesson/", {
+            params: {
+                course_id: course.courseid,
+                lesson_id: lessonId.lessonid
+            }
+        })
+            .then((resp) => {
+                setLessonData(resp.data)
+            })
+
+    })
     const handleRetakeQuiz = () => {
         setShowQuiz(true);
 
@@ -94,7 +141,9 @@ export function QuizScoreRed() {
                     <Flex justify={"space-between"} align={"center"} gap={"1rem"}>
                         <Group>
                             <ActionIcon variant='transparent'><BiArrowBack color='#FFFFFF' size={25} /></ActionIcon>
-                            <Text c={"#FFFFFF"} fw={600}>Quiz-1. Lesson name</Text>
+
+                            <Text c={"#FFFFFF"} fw={600} key={lessonId.lessonid}>Quiz 1.{lessonData.lesson_name}</Text>
+
                         </Group>
                         <Flex>
                             <Button mr={"3.5rem"} variant='outline' style={{ color: "rgba(255, 255, 255, 1)", borderColor: "rgba(255, 255, 255, 1)" }}

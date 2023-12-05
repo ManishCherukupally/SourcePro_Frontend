@@ -13,10 +13,9 @@ function ProgressCard({ data }) {
     const navigate = useNavigate();
     return (
         <>
-
             <Flex >
 
-                <Card className='coursecard' onClick={() => { navigate(`/mycourses/${data.course_id}/${lessonidatom}`) }}>
+                <Card className='coursecard' onClick={() => { navigate(`/mycourses/${data.course_id}/${data.last_viewed_lesson_id}`) }}>
                     <CardSection>
                         <Image
                             radius={"md"}
@@ -68,8 +67,10 @@ function ProgressCard({ data }) {
  */
 // @ts-ignore
 function HistoryCard({ hdata }) {
+
     const navigate = useNavigate();
     const isDisabled = hdata.deactivation_days_left === 0;
+
     return (
         <>
             {
@@ -112,7 +113,7 @@ function HistoryCard({ hdata }) {
                 ) : (
                     <Flex >
 
-                        <Card className='coursecard' onClick={() => { navigate(`/mycourses/${hdata.course_id}/${lessonidatom}`) }}>
+                        <Card className='coursecard' onClick={() => { navigate(`/mycourses/${hdata.course_id}/${hdata.last_viewed_lesson_id}`) }}>
                             <CardSection>
                                 <Image
                                     radius={"md"}
@@ -170,7 +171,7 @@ const Mycourses = () => {
 
     const [isLoading, setLoading] = useState(true);
 
-
+    const [continueLearning, setContinueLearning] = useState([])
     useEffect(() => {
         axios.get("http://192.168.29.220:8000/mycourses/")
             .then(resp => {
@@ -195,6 +196,13 @@ const Mycourses = () => {
                 // console.log("api resp " + strD)
                 // setCourseDetail(strD);
                 setLoading(false);
+            })
+    }, [])
+    useEffect(() => {
+        axios.get("http://192.168.29.220:8000/home/")
+            .then((resp) => {
+                const continueapidata = resp.data["Continue_Learning"]
+                setContinueLearning(continueapidata)
             })
     }, [])
     return (
@@ -233,8 +241,6 @@ const Mycourses = () => {
 
                                 {
                                     history.map((card) => (
-
-
                                         <HistoryCard key={card.course} hdata={card} />
                                     ))
                                 }
