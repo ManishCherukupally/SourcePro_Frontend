@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import Head from './dashboard Header/Head'
 import { ActionIcon, AppShell, Box, Card, CardSection, Container, Divider, Flex, Grid, Group, Image, Paper, Progress, ScrollArea, SimpleGrid, Space, Tabs, Text, TextInput, Textarea } from '@mantine/core'
 
@@ -8,10 +8,28 @@ import axios from 'axios'
 import { useAtom } from 'jotai'
 import { courseidatom, lessonidatom } from '../Store/store'
 import { Carousel } from '@mantine/carousel'
-// import LoginTest from './LoginTest'
 
+// import LoginTest from './LoginTest'
+import { createStyles, getStylesRef } from '@mantine/core';
+const useStyles = createStyles(() => ({
+  controls: {
+    ref: getStylesRef('controls'),
+    transition: 'opacity 150ms ease',
+    opacity: 0,
+  },
+
+  root: {
+    '&:hover': {
+      [`& .${getStylesRef('controls')}`]: {
+        opacity: 1,
+      },
+    },
+  },
+}));
 
 const Home = () => {
+  const { classes } = useStyles();
+
   const navigate = useNavigate()
   const [continueLearning, setContinueLearning] = useState([])
   const [newCourses, setNewCourses] = useState([])
@@ -61,53 +79,55 @@ const Home = () => {
         <Text fz={20} fw={500}>Continue Learning</Text>
         <Space h={10} />
         <Carousel slideSize="0%"
+          classNames={classes}
           align={"start"}
           slidesToScroll={4}
           slideGap={19}
           draggable
-          withControls={false}
+
         >
           {continueLearning.map((card) => (
+            <>
+              <Carousel.Slide>
+                <div onClick={() => navigate(`/home/${card.
+                  // @ts-ignore
+                  course_id}/${card.last_viewed_lesson_id}`)}>
+                  <Card className="coursecard" shadow='sm' w={277} p={0} withBorder radius={"md"}>
+                    <Card h={120} w={277} p={0} radius={0} >
+                      <Image style={{ position: "relative" }}
+                        src={card.
+                          // @ts-ignore
+                          thumbnail}
 
-            <Carousel.Slide>
-              <div onClick={() => navigate(`/home/${card.
-                // @ts-ignore
-                course_id}/${card.last_viewed_lesson_id}`)}>
-                <Card className="coursecard" shadow='sm' w={277} p={0} withBorder radius={"md"}>
-                  <Card h={120} w={277} p={0} radius={0} >
-                    <Image style={{ position: "relative" }}
-                      src={card.
-                        // @ts-ignore
-                        thumbnail}
+                        height={140}
 
-                      height={140}
+                      />
+                    </Card >
 
-                    />
-                  </Card >
-
-                  <Progress bg={"rgba(131, 94, 54, 1)"} h={6} color='yellow' radius={0}
-                    // @ts-ignore
-                    value={card.percentage_completed} />
-                  <Card pt={6} h={67} radius={0} style={{ backgroundColor: "#ECECEC" }}>
-                    <Text fs={"Open Sans"} fz={16} fw={500}>{card.
+                    <Progress bg={"rgba(131, 94, 54, 1)"} h={6} color='yellow' radius={0}
                       // @ts-ignore
-                      course_name}</Text>
-                    <Text fs={"Open Sans"} fz="sm" color="dimmed">
-                      {card.
+                      value={card.percentage_completed} />
+                    <Card pt={6} h={67} radius={0} style={{ backgroundColor: "#ECECEC" }}>
+                      <Text fs={"Open Sans"} fz={16} fw={500}>{card.
                         // @ts-ignore
-                        minutes_left} mins left
-                    </Text>
+                        course_name}</Text>
+                      <Text fs={"Open Sans"} fz="sm" color="dimmed">
+                        {card.
+                          // @ts-ignore
+                          minutes_left} mins left
+                      </Text>
 
+                    </Card>
                   </Card>
-                </Card>
 
-              </div>
-            </Carousel.Slide>
-
+                </div>
+              </Carousel.Slide>
+            </>
           ))
           }
 
         </Carousel>
+
         <Space h={25} />
         <Text fz={20} fw={500}>New Courses</Text>
         <Space h={10} />
@@ -116,7 +136,8 @@ const Home = () => {
           slidesToScroll={4}
           slideGap={19}
           draggable
-          withControls={false}
+          classNames={classes}
+
         >
           {newCourses.map((card) => {
             return (
@@ -153,43 +174,53 @@ const Home = () => {
         <Text fz={20} fw={500}>All Courses</Text>
         <Space h={10} />
         <Carousel slideSize="0%"
+          classNames={classes}
           align={"start"}
           slidesToScroll={4}
           slideGap={19}
           draggable
-          withControls={false}
+
+
         >
           {allCourses.map((card) => {
             return (
-              <Carousel.Slide>
-                <Card shadow='sm' mb={"1rem"} w={277} p={0} withBorder radius={"md"}>
-                  <Card h={120} p={0} radius={0} >
-                    <Image
-                      src={card.
-                        // @ts-ignore
-                        thumbnail}
-                      height={130}
+              <>
+                <Carousel.Slide>
+                  <Card shadow='sm' mb={"1rem"} w={277} p={0} withBorder radius={"md"}>
+                    <Card h={120} p={0} radius={0} >
+                      <Image
+                        src={card.
+                          // @ts-ignore
+                          thumbnail}
+                        height={130}
 
-                    />
-                  </Card>
+                      />
+                    </Card>
 
-                  <Progress color='yellow' radius={0}
-                    // @ts-ignore
-                    value={card.percentage_completed} />
-                  <Card pt={6} h={67} radius={0} style={{ backgroundColor: "#ECECEC" }}>
-                    <Text fs={"Open Sans"} fz={16} fw={500}>{card.
+                    <Progress color='yellow' radius={0}
                       // @ts-ignore
-                      course_name}</Text>
-                    <Text fs={"Open Sans"} fz="sm" color="dimmed">
-                      {card.
+                      value={card.percentage_completed} />
+                    <Card pt={6} h={67} radius={0} style={{ backgroundColor: "#ECECEC" }}>
+                      <Text fs={"Open Sans"} fz={16} fw={500}>{card.
                         // @ts-ignore
-                        total_duration} mins
-                    </Text>
+                        course_name}</Text>
+                      <Text fs={"Open Sans"} fz="sm" color="dimmed">
+                        {card.
+                          // @ts-ignore
+                          total_duration} mins
+                      </Text>
+                    </Card>
                   </Card>
-                </Card>
-              </Carousel.Slide>
+                </Carousel.Slide>
+
+
+              </>
             )
           })}
+
+
+
+
         </Carousel>
       </Container>
 
