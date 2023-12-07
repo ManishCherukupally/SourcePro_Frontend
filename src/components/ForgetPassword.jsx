@@ -7,6 +7,9 @@ import { BiArrowBack } from 'react-icons/bi'
 // @ts-ignore
 import LoginForm from './LoginForm'
 import axios from 'axios'
+axios.defaults.withCredentials = true;
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'x-csrftoken'
 
 
 const ForgetPassword = () => {
@@ -21,10 +24,13 @@ const ForgetPassword = () => {
     }
   );
 
-  // @ts-ignore
+
   const handleForgetPaswd = async (/** @type {any} */ values) => {
     try {
-      const response = await axios.post('YOUR_API_ENDPOINT', values);
+      const response = await axios.post('YOUR_API_ENDPOINT', {
+        withCredentials: true,
+        values
+      });
 
       console.log(response)
     }
@@ -61,7 +67,7 @@ const ForgetPassword = () => {
                         <ActionIcon size={"sm"}>< BiArrowBack /></ActionIcon>
                       </Link>
                       <Space w={15} />
-                      <Text fz={18} fw={700}>Forgot your Password?</Text>
+                      <Text fz={18} fw={700} onClick={handleForgetPaswd}>Forgot your Password?</Text>
                     </Flex>
 
                     <Space h={15} />

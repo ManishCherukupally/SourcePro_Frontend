@@ -1,12 +1,14 @@
 import { ActionIcon, Button, Card, Flex, Group, Text } from '@mantine/core'
 import React, { useEffect, useState } from 'react'
 import { BiArrowBack } from 'react-icons/bi'
-import ScoreLoader from './ScoreLoader'
-
+import Quiz_test from './Quiz_test'
 import { scoreatom } from '../../Store/store'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
-import Quiz_test from './Quiz_test'
+axios.defaults.withCredentials = true;
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'x-csrftoken'
+
 
 
 export function QuizScoreGreen() {
@@ -18,6 +20,7 @@ export function QuizScoreGreen() {
     // console.log("LData" + lessonData)
     useEffect(() => {
         axios.get("http://192.168.29.220:8000/next_lesson/", {
+            withCredentials: true,
             params: {
                 course_id: course.courseid,
                 lesson_id: lessonId.lessonid
@@ -32,6 +35,7 @@ export function QuizScoreGreen() {
     useEffect(() => {
         axios.get("http://192.168.29.220:8000/usr_course_page_lesson/",
             {
+                withCredentials: true,
                 params: {
                     course_id: course.courseid,
                     lesson_id: lessonId.lessonid
@@ -159,7 +163,7 @@ export function QuizScoreRed() {
                         <Text c={"#FFFFFF"}>Oops! You need to score more than 70%</Text>
                     </Flex>
                 </Card>
-                {/* <ScoreLoader /> */}
+
 
             </div>
 

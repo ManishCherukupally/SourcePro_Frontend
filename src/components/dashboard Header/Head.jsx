@@ -35,7 +35,9 @@ import ChangePassword from '../ChangePassword'
 import Transaction from '../Transaction'
 import { render } from '@testing-library/react'
 import axios from 'axios'
-
+axios.defaults.withCredentials = true;
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'x-csrftoken'
 const Head = () => {
   const navigate = useNavigate();
   const course = useParams()
@@ -43,7 +45,9 @@ const Head = () => {
   const [data, setData] = useState([]);
   // console.log(data)
   useEffect(() => {
-    axios.get("http://192.168.29.220:8000/home/")
+    axios.get("http://192.168.29.220:8000/home/", {
+      withCredentials: true
+    })
       .then((resp) => {
         const courses = resp.data["All_Courses"];
         setData(courses);

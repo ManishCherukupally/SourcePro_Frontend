@@ -9,8 +9,12 @@ import { FaBookOpen } from 'react-icons/fa'
 import { MdPerson } from 'react-icons/md'
 import { Link } from 'react-router-dom'
 import LoginForm from './LoginForm'
-import axios from 'axios'
 import Header from './dashboard Header/Head'
+import axios from 'axios'
+axios.defaults.withCredentials = true;
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'x-csrftoken'
+
 
 // const ProfileDropdown = () => {
 //   const [opened, setOpened] = useState(false);
@@ -44,7 +48,10 @@ const ChangePassword = () => {
 
   const changePassword = async () => {
     try {
-      const res = await axios.put("http://192.168.29.220:8000/user_details/", formData);
+      const res = await axios.put("http://192.168.29.220:8000/user_details/", {
+        withCredentials: true,
+        formData
+      });
     }
     catch (err) {
       console.error(err)

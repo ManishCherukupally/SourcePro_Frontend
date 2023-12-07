@@ -1,16 +1,16 @@
 import React, { useEffect, useState, useRef } from 'react'
 import Head from './dashboard Header/Head'
 import { ActionIcon, AppShell, Box, Card, CardSection, Container, Divider, Flex, Grid, Group, Image, Paper, Progress, ScrollArea, SimpleGrid, Space, Tabs, Text, TextInput, Textarea } from '@mantine/core'
-
 import { Link, useNavigate, useParams } from 'react-router-dom'
-
-import axios from 'axios'
 import { useAtom } from 'jotai'
 import { courseidatom, lessonidatom } from '../Store/store'
 import { Carousel } from '@mantine/carousel'
-
-// import LoginTest from './LoginTest'
 import { createStyles, getStylesRef } from '@mantine/core';
+import axios from 'axios'
+axios.defaults.withCredentials = true;
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'x-csrftoken'
+
 const useStyles = createStyles(() => ({
   controls: {
     ref: getStylesRef('controls'),
@@ -39,7 +39,9 @@ const Home = () => {
   const [lessonId, setLessonId] = useAtom(lessonidatom)
   console.log("lessonId" + lessonId)
   useEffect(() => {
-    axios.get("http://192.168.29.220:8000/home/")
+    axios.get("http://192.168.29.220:8000/home/", {
+      withCredentials: true
+    })
       .then((resp) => {
         const continueapidata = resp.data["Continue_Learning"]
         setContinueLearning(continueapidata)

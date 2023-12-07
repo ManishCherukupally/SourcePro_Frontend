@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { Box, Image, Card, CardSection, Container, Divider, Group, Tabs, Text, Title, Flex, Stack, Space, ActionIcon, Progress } from '@mantine/core';
-import axios from 'axios';
-import Head from '../dashboard Header/Head'; import { BsCheckCircle } from 'react-icons/bs';
+import Head from '../dashboard Header/Head';
+import { BsCheckCircle } from 'react-icons/bs';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAtom } from 'jotai';
 import { lessonidatom } from '../../Store/store';
+import axios from 'axios';
+axios.defaults.withCredentials = true;
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'x-csrftoken'
+
 /**
  * @param {{ thumbnail: string | null | undefined; course_name: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; deactivation_days_left: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; author: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; date_of_subscription: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; }} data
  */
@@ -173,7 +178,9 @@ const Mycourses = () => {
 
     const [continueLearning, setContinueLearning] = useState([])
     useEffect(() => {
-        axios.get("http://192.168.29.220:8000/mycourses/")
+        axios.get("http://192.168.29.220:8000/mycourses/", {
+            withCredentials: true
+        })
             .then(resp => {
                 console.log("Course Date-->", resp)
                 const progress = resp.data.In_Progress
@@ -198,13 +205,7 @@ const Mycourses = () => {
                 setLoading(false);
             })
     }, [])
-    useEffect(() => {
-        axios.get("http://192.168.29.220:8000/home/")
-            .then((resp) => {
-                const continueapidata = resp.data["Continue_Learning"]
-                setContinueLearning(continueapidata)
-            })
-    }, [])
+
     return (
         <>        <Head />
             <Box>

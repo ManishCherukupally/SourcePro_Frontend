@@ -17,7 +17,9 @@ import axios from 'axios'
 import { courseidatom } from '../../Store/store'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import ReactPlayer from 'react-player'
-
+axios.defaults.withCredentials = true;
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'x-csrftoken'
 
 const Course_home = () => {
     const playerRef = useRef(null);
@@ -56,6 +58,7 @@ const Course_home = () => {
 
     useEffect(() => {
         axios.get("http://192.168.29.220:8000/usr_course_page/", {
+            withCredentials: true,
             params:
             {
                 course_id: course.courseid,
@@ -80,6 +83,7 @@ const Course_home = () => {
     useEffect(() => {
         axios.get("http://192.168.29.220:8000/faq/",
             {
+                withCredentials: true,
                 params: {
                     course_id: course.courseid
                 }
@@ -94,6 +98,7 @@ const Course_home = () => {
     useEffect(() => {
         axios.get("http://192.168.29.220:8000/learners_count/",
             {
+                withCredentials: true,
                 params: {
                     course_id: course.courseid
                 }
@@ -110,6 +115,7 @@ const Course_home = () => {
         // if (lessonId.lessonid !== prevCrouselessonid || lessonId.lessonid === "") {
         axios.get("http://192.168.29.220:8000/usr_course_page_lesson/",
             {
+                withCredentials: true,
                 params: {
                     course_id: course.courseid,
                     lesson_id: lessonId.lessonid
@@ -149,7 +155,9 @@ const Course_home = () => {
     console.log("upgradedLikes" + getLikes)
     const handleIconClick = () => {
         try {
-            axios.put("http://192.168.29.220:8000/likes_count/")
+            axios.put("http://192.168.29.220:8000/likes_count/", {
+                withCredentials: true
+            })
                 .then((resp) => {
                     // setLdata(resp.data)
                     setIconColor(resp.data.status)
@@ -157,6 +165,7 @@ const Course_home = () => {
                     setLikes(resp.data.Likes)
 
                     axios.get("http://192.168.29.220:8000/usr_course_page/", {
+                        withCredentials: true,
                         params:
                         {
                             course_id: course.courseid,
@@ -289,7 +298,8 @@ const Course_home = () => {
 
                 minutes_completed: (time),
                 course_id: course.courseid,
-                lesson_id: lessonId.lessonid
+                lesson_id: lessonId.lessonid,
+                withCredentials: true
             })
         }
         catch (err) {

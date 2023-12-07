@@ -4,7 +4,10 @@ import { useForm } from '@mantine/form'
 import React from 'react'
 import { BiArrowBack } from 'react-icons/bi'
 import { Link } from 'react-router-dom'
-
+import axios from 'axios'
+axios.defaults.withCredentials = true;
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'x-csrftoken'
 const SetNewPswdForm = () => {
     const form = useForm(
         {

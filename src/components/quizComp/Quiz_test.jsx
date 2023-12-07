@@ -4,16 +4,15 @@ import { atom, useAtom } from 'jotai';
 // @ts-ignore
 import { ActionIcon, Box, Button, Card, Center, Checkbox, Container, Divider, Flex, Group, Loader, LoadingOverlay, Overlay, Radio, Space, Stack, Text, Title } from '@mantine/core'
 import { BiArrowBack } from 'react-icons/bi'
-
-// @ts-ignore
-import ScoreLoader from './ScoreLoader'
-
-// @ts-ignore
-import { useDisclosure } from '@mantine/hooks'
-import axios from 'axios'
 import { QuizScoreGreen, QuizScoreRed } from './QuizScoreColor'
 import { quiz, qwitho, scoreatom, valquiz } from '../../Store/store'
 import { useParams } from 'react-router-dom';
+import { useDisclosure } from '@mantine/hooks'
+import axios from 'axios'
+axios.defaults.withCredentials = true;
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'x-csrftoken'
+
 
 
 // @ts-ignore
@@ -130,6 +129,7 @@ const Quiz_test = () => {
 
         axios.get('http://192.168.29.220:8000/quiz/',
             {
+                withCredentials: true,
                 params: {
                     course_id: course.courseid,
                     lesson_id: lessonId.lessonid
@@ -225,7 +225,8 @@ const Quiz_test = () => {
         const request = {
             course_id,
             lesson_id,
-            questions
+            questions,
+            withCredentials: true
         }
 
         // console.log("request body " + JSON.stringify(requestbody))

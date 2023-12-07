@@ -1,6 +1,5 @@
 // @ts-ignore
 import { ActionIcon, AppShell, Card, Divider, Flex, Grid, Paper, Tabs, TextInput, Image, Title, Container, Group, Text, Space, SimpleGrid, UnstyledButton } from '@mantine/core'
-import axios from "axios"
 import React, { useEffect, useState } from 'react'
 import { AiFillHome } from 'react-icons/ai'
 import { BiSearch } from 'react-icons/bi'
@@ -8,6 +7,11 @@ import { FaBookOpen } from 'react-icons/fa'
 import { MdPerson } from 'react-icons/md'
 import { Link, useNavigate } from 'react-router-dom'
 import Head from './dashboard Header/Head'
+import axios from "axios"
+axios.defaults.withCredentials = true;
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'x-csrftoken'
+
 
 
 const Mydetails = () => {
@@ -16,7 +20,9 @@ const Mydetails = () => {
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    axios.get("http://192.168.29.220:8000/user_details/")
+    axios.get("http://192.168.29.220:8000/user_details/", {
+      withCredentials: true
+    })
 
       .then(res => {
         console.log(res.data)

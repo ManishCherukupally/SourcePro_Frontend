@@ -12,21 +12,27 @@ import ForgetPassword from './ForgetPassword';
 import { Link } from 'react-router-dom';
 import './Components.css'
 import axios from 'axios'
-
+axios.defaults.withCredentials = true;
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'x-csrftoken'
 const LoginForm = () => {
 
+    const [loader, setLoader] = useState(false)
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
     const handleLogin = async () => {
+        setLoader(true);
         try {
             await axios.post('http://192.168.29.220:8001/api/login/', {
                 email,
                 password,
+                withcredentials: true
             })
                 .then((resp) => {
                     console.log(resp.data.generated_token)
                     axios.get('http://192.168.29.220:8001/api/sampleapi/', {
+                        withCredentials: true,
                         headers: {
                             Authorization: resp.data.generated_token,
                         }
@@ -87,7 +93,8 @@ const LoginForm = () => {
                                         </Flex>
 
 
-                                        <Button fullWidth style={{ backgroundColor: "rgba(240, 154, 62, 1)" }} type='submit' radius={"md"} onClick={handleLogin}>Login</Button>
+                                        <Button fullWidth style={{ backgroundColor: "rgba(240, 154, 62, 1)" }} type='submit' radius={"md"} onClick={handleLogin}
+                                            loading={loader}>Login</Button>
 
 
                                         <Space h={"5em"} />
