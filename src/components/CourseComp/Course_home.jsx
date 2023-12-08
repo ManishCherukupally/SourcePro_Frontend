@@ -15,7 +15,7 @@ import { TiTick } from 'react-icons/ti'
 
 import axios from 'axios'
 import { courseidatom } from '../../Store/store'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, json, useNavigate, useParams } from 'react-router-dom'
 import ReactPlayer from 'react-player'
 axios.defaults.withCredentials = true;
 axios.defaults.xsrfCookieName = 'csrftoken'
@@ -26,6 +26,8 @@ const Course_home = () => {
     const [isActive, setIsActive] = useState(false);
 
     const [textContent, setTextContent] = useState('');
+    const [clipboardContent, setClipboardContent] = useState("")
+    console.log(clipboardContent)
     const [homeData, setHomeData] = useState({})
 
     const [fData, setFdata] = useState([])
@@ -36,9 +38,6 @@ const Course_home = () => {
     const [likes, setLikes] = useState({})
     console.log("likes" + likes)
 
-    const [Ldata, setLdata] = useState({})
-
-    // console.log(videoUrl)
     const [learners, setLearners] = useState(0)
     const course = useParams()
     const lessonId = useParams()
@@ -49,10 +48,8 @@ const Course_home = () => {
 
     const [iconColor, setIconColor] = useState(homeData.like_status);
     console.log("true :  " + iconColor)
+    const [extractedTitle, setExtractedTitle] = useState('');
 
-    // console.log("player ref" + playerRef)
-
-    // const player = document.getElementById("react-player").reactPlayer;
 
     const navigate = useNavigate()
 
@@ -122,8 +119,17 @@ const Course_home = () => {
                 }
             })
             .then((resp) => {
+                // console.log(JSON.stringify(resp.data["all_lessons"].materials))
                 const data = (resp.data["all_lessons"])
+                const clipData = resp.data.all_lessons.map(item => item.clipboards)
 
+                console.log(clipData[0])
+
+                axios.get(clipData[0])
+                    .then((response) => {
+                        setClipboardContent(response.data)
+
+                    })
                 data.sort((/** @type {{ lesson_id: number; }} */ a, /** @type {{ lesson_id: number; }} */ b) => {
                     if (a.lesson_id < b.lesson_id) {
                         return -1
@@ -134,7 +140,6 @@ const Course_home = () => {
                     else {
                         return 0
                     }
-
                 })
                 // //@ts-ignore    
                 // const [hours, minutes, seconds] = resp.data.minutes_completed.split(':').map(Number);
@@ -142,9 +147,15 @@ const Course_home = () => {
                 // setTimeToStart(10)
                 setLessonData(data)
                 setLessonName(resp.data["all_lessons"].lesson_name)
-
-
-                // setVideoUrl(resp.data.all_lessons.materials[0].material_name)
+                // const clipData = resp.data["all_lessons"].map((item) => {
+                //     // if (item.length > 6) {
+                //     //     item.find(item => {
+                //     //         console.log("clips" + item.clipboards)
+                //     //     })
+                //     // }
+                //     console.log(Object.entries(item.clipboards))
+                // })
+                // console.log("clipdata" + JSON.stringify(clipData))
 
             })
         // }
@@ -155,9 +166,7 @@ const Course_home = () => {
     console.log("upgradedLikes" + getLikes)
     const handleIconClick = () => {
         try {
-            axios.put("http://192.168.29.220:8000/likes_count/", {
-                withCredentials: true
-            })
+            axios.put("http://192.168.29.220:8000/likes_count/")
                 .then((resp) => {
                     // setLdata(resp.data)
                     setIconColor(resp.data.status)
@@ -192,63 +201,10 @@ const Course_home = () => {
     };
 
     const copyTextToClipboard = document.getElementById("txt")
-
-
-
-
-
-    const [extractedTitle, setExtractedTitle] = useState('');
-
-
-    // useEffect(() => {
-    //     // Extract the title from the URL
-    //     const matches = videoUrl.match(/\/([^/]+)\.pdf/);
-
-    //     if (matches && matches.length > 1) {
-    //         const title = matches[1].replace(/_/g, ' '); // Replace underscores with spaces
-    //         setExtractedTitle(title);
-    //     }
-    // }, [videoUrl]);
-
-    // Split the URL by '/' and get the last part, then remove any trailing '/'
-
-
-
-
-    // Loop through all_lessons to extract and open material URLs
-
-
-
     const [showOverlay, setShowOverlay] = useState(false);
-
-
-    const [selected, setSelected] = useState(false);
     const [fill, setFill] = useState("")
 
-    const [Bg, setBg] = useState("")
-
-
-    const toggleSelected = () => {
-        setSelected(!selected);
-
-    };
-
     const [isPlaying, setIsPlaying] = React.useState(true);
-    const [isReady, setIsReady] = React.useState(false);
-
-
-    // const onReady = React.useCallback(() => {
-    //     if (isReady) {
-
-
-    //         setIsReady(true);
-    //     }
-    // }, [isReady])
-
-
-
-
-
 
     const [shouldRerender, setShouldRerender] = useState(false);
 
@@ -281,7 +237,6 @@ const Course_home = () => {
     // }, []);
 
 
-    const [pauseTime, setPauseTime] = useState("")
     const [play, setPlay] = useState(0);
     console.log(play)
     var date = new Date(play * 1000);
@@ -299,7 +254,7 @@ const Course_home = () => {
                 minutes_completed: (time),
                 course_id: course.courseid,
                 lesson_id: lessonId.lessonid,
-                withCredentials: true
+
             })
         }
         catch (err) {
@@ -318,7 +273,7 @@ const Course_home = () => {
         setShowOverlay(false)
         setFill("blur(0px)")
     };
-    const [timeToStart, setTimeToStart] = useState(10);
+
 
 
     const handlePlay = () => {
@@ -518,17 +473,18 @@ const Course_home = () => {
                                                     {
 
                                                         lessonData.map((lesson, index) => {
+                                                            let extracted;
 
-                                                            if (lesson.materials && lesson.materials[1].material_name) {
-
-
-                                                                const materialName = lesson.materials[1].material_name
-                                                                // console.log(materialName)
-
-                                                                return <Text color='#FFFFFF' key={lesson.lesson_id}>{materialName}</Text>;
+                                                            if (lesson.materials) {
+                                                                const materialUrl = lesson.materials[0];
+                                                                extracted = materialUrl.split('/').slice(-2, -1)[0].replace(/_/g, ' ').replace(/\.[^/.]+$/, '');
+                                                                console.log(`Lesson ID ${lesson.lesson_id}: ${extracted}`);
                                                             }
+
+                                                            return <Text color='#FFFFFF' key={lesson.lesson_id}>{extracted}</Text>;
                                                         })
                                                     }
+
                                                 </div>
 
                                                 <div>
@@ -560,19 +516,22 @@ const Course_home = () => {
                                             <Group className='clipgrp' >
                                                 <div>
                                                     {
-                                                        lessonData.map((lesson, index) => {
+                                                        lessonData.map((lesson) => {
+                                                            let extracted;
+                                                            if (lesson.clipboards) {
 
-                                                            if (lesson.clipboards && lesson.clipboards[1].clipboard_name) {
+                                                                const materialUrl = lesson.materials[0];
+                                                                extracted = materialUrl.split('/').slice(-2, -1)[0].replace(/_/g, ' ').replace(/\.[^/.]+$/, '');
+                                                                return <Text id='txt' color='#FFFFFF' key={lesson.lesson_id}>{extracted}</Text>;
 
-                                                                const materialName = lesson.clipboards[1].clipboard_name;
-                                                                return <Text id='txt' color='#FFFFFF' key={index}>{materialName}</Text>;
                                                             }
+
                                                         })
                                                     }
                                                 </div>
                                                 <CopyButton
 
-                                                    value={copyTextToClipboard?.innerText}
+                                                    value={clipboardContent}
                                                     timeout={2000}>
                                                     {({ copied, copy }) => (
                                                         <Tooltip label={copied ? 'Copied' : 'Copy to Clipboard'} withArrow>

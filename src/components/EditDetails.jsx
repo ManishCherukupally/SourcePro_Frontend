@@ -19,11 +19,10 @@ axios.defaults.xsrfHeaderName = 'x-csrftoken'
 
 
 const EditDetails = () => {
-
-  const [loaderVisible, setLoaderVisible] = useState(false);
+  const navigate = useNavigate();
   const [getData, setGetData] = useState([])
   // @ts-ignore
-  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     user_id: '',
     name: '',
@@ -46,22 +45,17 @@ const EditDetails = () => {
   }
 
   const updateData = async () => {
-    // setLoaderVisible(true);
-    try {
-      const response = await axios.put("http://192.168.29.220:8000/user_details/", {
-        withCredentials: true,
-        formData
-      });
 
+    try {
+      const response = await axios.put("http://192.168.29.220:8000/user_details/", formData);
+      navigate("/mydetails");
       console.log("response from the server:", response.data);
-      navigate("/mydetails")
+
     } catch (error) {
 
       console.error('Error while updating details:', error);
     }
-    setTimeout(() => {
-      setLoaderVisible(false);
-    }, 3000)
+
 
 
   };
