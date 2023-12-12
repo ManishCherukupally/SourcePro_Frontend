@@ -5,18 +5,15 @@ import Head from '../dashboard Header/Head'
 
 import { BiRadioCircle, BiSolidLike } from 'react-icons/bi'
 import { BsCheckCircle } from 'react-icons/bs';
-
 import { AiFillLock, AiOutlineLock } from 'react-icons/ai'
-
-
 import { MdDocumentScanner, MdDownload } from 'react-icons/md'
 import { TbCopy } from 'react-icons/tb'
 import { TiTick } from 'react-icons/ti'
-
-import axios from 'axios'
 import { courseidatom } from '../../Store/store'
 import { Link, json, useNavigate, useParams } from 'react-router-dom'
 import ReactPlayer from 'react-player'
+import client from '../../API/api';
+import axios from 'axios';
 axios.defaults.withCredentials = true;
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'x-csrftoken'
@@ -43,18 +40,18 @@ const Course_home = () => {
     const lessonId = useParams()
     // console.log(courseidatom)
 
-    const [getLikes, setLikesData] = useState(homeData.course_likes);
 
-
-    const [iconColor, setIconColor] = useState(homeData.like_status);
     console.log("true :  " + iconColor)
     const [extractedTitle, setExtractedTitle] = useState('');
 
 
     const navigate = useNavigate()
 
+
+
+
     useEffect(() => {
-        axios.get("http://192.168.29.220:8000/usr_course_page/", {
+        client.get("usr_course_page/", {
             withCredentials: true,
             params:
             {
@@ -72,13 +69,17 @@ const Course_home = () => {
                 });
                 setLikesData(resp.data["course_data"].course_likes)
                 setIconColor(resp.data["course_data"].like_status)
+
             }))
 
     }, [course.courseid, lessonId.lesson_id])
 
+    const [getLikes, setLikesData] = useState(homeData.course_likes);
 
+
+    const [iconColor, setIconColor] = useState(homeData.like_status);
     useEffect(() => {
-        axios.get("http://192.168.29.220:8000/faq/",
+        client.get("faq/",
             {
                 withCredentials: true,
                 params: {
@@ -93,7 +94,7 @@ const Course_home = () => {
     }, [course.courseid])
 
     useEffect(() => {
-        axios.get("http://192.168.29.220:8000/learners_count/",
+        client.get("learners_count/",
             {
                 withCredentials: true,
                 params: {
@@ -110,7 +111,7 @@ const Course_home = () => {
 
 
         // if (lessonId.lessonid !== prevCrouselessonid || lessonId.lessonid === "") {
-        axios.get("http://192.168.29.220:8000/usr_course_page_lesson/",
+        client.get("usr_course_page_lesson/",
             {
                 withCredentials: true,
                 params: {
@@ -122,10 +123,14 @@ const Course_home = () => {
                 // console.log(JSON.stringify(resp.data["all_lessons"].materials))
                 const data = (resp.data["all_lessons"])
                 const clipData = resp.data.all_lessons.map(item => item.clipboards)
+                let link;
+                // console.log(clipData)
+                clipData.map((item) => (
+                    link = item
+                    // console.log(item)
+                ))
 
-                console.log(clipData[0])
-
-                axios.get(clipData[0])
+                axios.get(link)
                     .then((response) => {
                         setClipboardContent(response.data)
 
@@ -164,25 +169,28 @@ const Course_home = () => {
     // const clr = useMemo(homeData.like_status)
     // console.log("clr" + iconColor)
     console.log("upgradedLikes" + getLikes)
+
     const handleIconClick = () => {
+        console.log("icon Clicked")
         try {
-            axios.put("http://192.168.29.220:8000/likes_count/")
+            client.put("likes_count/")
                 .then((resp) => {
                     // setLdata(resp.data)
                     setIconColor(resp.data.status)
 
                     setLikes(resp.data.Likes)
 
-                    axios.get("http://192.168.29.220:8000/usr_course_page/", {
-                        withCredentials: true,
+                    client.get("usr_course_page/", {
+
                         params:
                         {
                             course_id: course.courseid,
                             lesson_id: lessonId.lessonid
-                        }
+                        },
+                        withCredentials: true
                     })
                         .then((resp) => {
-                            setLikesData(resp.data["course_data"].course_likes)
+                            setLikesData(resp.data.course_data.course_likes)
                         })
                 })
 
@@ -249,7 +257,7 @@ const Course_home = () => {
 
     const handlePause = async () => {
         try {
-            await axios.put("http://192.168.29.220:8000/usr_course_page_lesson/", {
+            await client.put("usr_course_page_lesson/", {
 
                 minutes_completed: (time),
                 course_id: course.courseid,
@@ -273,12 +281,12 @@ const Course_home = () => {
         setShowOverlay(false)
         setFill("blur(0px)")
     };
+    const seekToTime = () => {
+        if (playerRef.current) {
+            playerRef.current.seekTo(10, 'seconds');
+        }
+    };
 
-
-
-    const handlePlay = () => {
-        playerRef.current.seekTo(20, 'seconds')
-    }
     return (
         <>
             <Box>
@@ -324,7 +332,7 @@ const Course_home = () => {
                                         <ReactPlayer ref={playerRef} key={item.lesson_id} height={"100%"} width={"100%"}
                                             controls
                                             playing={isPlaying}
-                                            onPlay={handlePlay}
+                                            onStart={seekToTime}
 
                                             onPause={handlePause}
 
@@ -356,7 +364,7 @@ const Course_home = () => {
                                                     //         label: "",
                                                     //         kind: "subtitles",
                                                     //        
-                                                    //         src: "http://192.168.29.220:8000/media/Back_to_Basics.mp4.en.vtt/",
+                                                    //         src: "media/Back_to_Basics.mp4.en.vtt/",
                                                     //         srcLang: "en",
                                                     //         default: true,
                                                     //     }

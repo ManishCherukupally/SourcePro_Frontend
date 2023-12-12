@@ -5,10 +5,11 @@ import { BsCheckCircle } from 'react-icons/bs';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAtom } from 'jotai';
 import { lessonidatom } from '../../Store/store';
-import axios from 'axios';
-axios.defaults.withCredentials = true;
-axios.defaults.xsrfCookieName = 'csrftoken'
-axios.defaults.xsrfHeaderName = 'x-csrftoken'
+// import axios from 'axios';
+import client from '../../API/api';
+// axios.defaults.withCredentials = true;
+// axios.defaults.xsrfCookieName = 'csrftoken'
+// axios.defaults.xsrfHeaderName = 'x-csrftoken'
 
 /**
  * @param {{ thumbnail: string | null | undefined; course_name: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; deactivation_days_left: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; author: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; date_of_subscription: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; }} data
@@ -178,7 +179,7 @@ const Mycourses = () => {
 
     const [continueLearning, setContinueLearning] = useState([])
     useEffect(() => {
-        axios.get("http://192.168.29.220:8000/mycourses/", {
+        client.get("mycourses/", {
             withCredentials: true
         })
             .then(resp => {

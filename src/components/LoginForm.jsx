@@ -11,10 +11,11 @@ import {
 import ForgetPassword from './ForgetPassword';
 import { Link } from 'react-router-dom';
 import './Components.css'
-import axios from 'axios'
-axios.defaults.withCredentials = true;
-axios.defaults.xsrfCookieName = 'csrftoken'
-axios.defaults.xsrfHeaderName = 'x-csrftoken'
+// import axios from 'axios'
+import client from '../API/api';
+// axios.defaults.withCredentials = true;
+// axios.defaults.xsrfCookieName = 'csrftoken'
+// axios.defaults.xsrfHeaderName = 'x-csrftoken'
 const LoginForm = () => {
 
     const [loader, setLoader] = useState(false)
@@ -24,14 +25,14 @@ const LoginForm = () => {
     const handleLogin = async () => {
         setLoader(true);
         try {
-            await axios.post('http://192.168.29.220:8001/api/login/', {
+            await client.post('login/', {
                 email,
                 password,
                 withcredentials: true
             })
                 .then((resp) => {
                     console.log(resp.data.generated_token)
-                    axios.get('http://192.168.29.220:8001/api/sampleapi/', {
+                    client.get('sampleapi/', {
                         withCredentials: true,
                         headers: {
                             Authorization: resp.data.generated_token,

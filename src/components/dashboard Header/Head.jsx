@@ -34,10 +34,11 @@ import ChangePassword from '../ChangePassword'
 // @ts-ignore
 import Transaction from '../Transaction'
 import { render } from '@testing-library/react'
-import axios from 'axios'
-axios.defaults.withCredentials = true;
-axios.defaults.xsrfCookieName = 'csrftoken'
-axios.defaults.xsrfHeaderName = 'x-csrftoken'
+// import axios from 'axios'
+import client from '../../API/api'
+// axios.defaults.withCredentials = true;
+// axios.defaults.xsrfCookieName = 'csrftoken'
+// axios.defaults.xsrfHeaderName = 'x-csrftoken'
 const Head = () => {
   const navigate = useNavigate();
   const course = useParams()
@@ -45,7 +46,7 @@ const Head = () => {
   const [data, setData] = useState([]);
   // console.log(data)
   useEffect(() => {
-    axios.get("http://192.168.29.220:8000/home/", {
+    client.get("home/", {
       withCredentials: true
     })
       .then((resp) => {
@@ -79,8 +80,7 @@ const Head = () => {
             <Box w={80} className='iconbox'
               style={{
                 borderBottom: `${window.location.pathname === "/home"
-                  || window.location.pathname === `/home/${course.courseid}/${lessonId.lessonid}` ||
-                  window.location.pathname === `/home/${course.courseid}` ? "3px solid #F09A3E" : ""}`
+                  || window.location.pathname === `/home/${course.courseid}/${lessonId.lessonid}` ? "3px solid #F09A3E" : ""}`
               }}
             >
               <Link to={"/home"}>
@@ -93,14 +93,12 @@ const Head = () => {
             <Box h={"100%"} w={80} className='iconbox'
               style={{
                 borderBottom: `${window.location.pathname === "/mycourses" ||
-                  window.location.pathname === `/mycourses/${course.courseid}/${lessonId.lessonid}` ||
-                  window.location.pathname === `/mycourses/${course.courseid}` ? "3px solid #F09A3E" : ""}`
+                  window.location.pathname === `/mycourses/${course.courseid}/${lessonId.lessonid}` ? "3px solid #F09A3E" : ""}`
               }}
             >
               <Link to={"/mycourses"}>
                 <Image width="25px" src={window.location.pathname === "/mycourses" ||
-                  window.location.pathname === `/mycourses/${course.courseid}/${lessonId.lessonid}` ||
-                  window.location.pathname === `/mycourses/${course.courseid}` ? Book1 : Book} ></Image>
+                  window.location.pathname === `/mycourses/${course.courseid}/${lessonId.lessonid}` ? Book1 : Book} ></Image>
               </Link>
             </Box>
 

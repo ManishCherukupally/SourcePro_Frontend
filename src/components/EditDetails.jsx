@@ -12,10 +12,9 @@ import { MdPerson } from 'react-icons/md'
 import { Link, useNavigate } from 'react-router-dom'
 import Head from './dashboard Header/Head'
 import Mydetails from './Mydetails'
-import axios from 'axios'
-axios.defaults.withCredentials = true;
-axios.defaults.xsrfCookieName = 'csrftoken'
-axios.defaults.xsrfHeaderName = 'x-csrftoken'
+// import axios from 'axios'
+import client from '../API/api'
+
 
 
 const EditDetails = () => {
@@ -47,7 +46,7 @@ const EditDetails = () => {
   const updateData = async () => {
 
     try {
-      const response = await axios.put("http://192.168.29.220:8000/user_details/", formData);
+      const response = await client.put("user_details/", formData);
       navigate("/mydetails");
       console.log("response from the server:", response.data);
 
@@ -60,7 +59,7 @@ const EditDetails = () => {
 
   };
   useEffect(() => {
-    axios.get("http://192.168.29.220:8000/user_details/", {
+    client.get("user_details/", {
       withCredentials: true,
     })
 

@@ -6,10 +6,11 @@ import { useAtom } from 'jotai'
 import { courseidatom, lessonidatom } from '../Store/store'
 import { Carousel } from '@mantine/carousel'
 import { createStyles, getStylesRef } from '@mantine/core';
-import axios from 'axios'
-axios.defaults.withCredentials = true;
-axios.defaults.xsrfCookieName = 'csrftoken'
-axios.defaults.xsrfHeaderName = 'x-csrftoken'
+// import axios from 'axios'
+import client from '../API/api'
+// axios.defaults.withCredentials = true;
+// axios.defaults.xsrfCookieName = 'csrftoken'
+// axios.defaults.xsrfHeaderName = 'x-csrftoken'
 
 const useStyles = createStyles(() => ({
   controls: {
@@ -39,7 +40,7 @@ const Home = () => {
   const [lessonId, setLessonId] = useAtom(lessonidatom)
   console.log("lessonId" + lessonId)
   useEffect(() => {
-    axios.get("http://192.168.29.220:8000/home/", {
+    client.get("home/", {
       withCredentials: true
     })
       .then((resp) => {

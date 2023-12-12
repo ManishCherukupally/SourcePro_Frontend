@@ -10,10 +10,11 @@ import { MdPerson } from 'react-icons/md'
 import { Link } from 'react-router-dom'
 import LoginForm from './LoginForm'
 import Header from './dashboard Header/Head'
-import axios from 'axios'
-axios.defaults.withCredentials = true;
-axios.defaults.xsrfCookieName = 'csrftoken'
-axios.defaults.xsrfHeaderName = 'x-csrftoken'
+// import axios from 'axios'
+import client from '../API/api'
+// axios.defaults.withCredentials = true;
+// axios.defaults.xsrfCookieName = 'csrftoken'
+// axios.defaults.xsrfHeaderName = 'x-csrftoken'
 
 
 // const ProfileDropdown = () => {
@@ -48,7 +49,7 @@ const ChangePassword = () => {
 
   const changePassword = async () => {
     try {
-      const res = await axios.put("http://192.168.29.220:8000/user_details/", {
+      const res = await client.put("user_details/", {
         withCredentials: true,
         formData
       });
@@ -128,5 +129,4 @@ const ChangePassword = () => {
     </div>
   )
 }
-
 export default ChangePassword

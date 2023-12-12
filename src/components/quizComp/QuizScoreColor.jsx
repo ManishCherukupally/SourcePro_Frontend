@@ -4,10 +4,11 @@ import { BiArrowBack } from 'react-icons/bi'
 import Quiz_test from './Quiz_test'
 import { scoreatom } from '../../Store/store'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
-import axios from 'axios'
-axios.defaults.withCredentials = true;
-axios.defaults.xsrfCookieName = 'csrftoken'
-axios.defaults.xsrfHeaderName = 'x-csrftoken'
+// import axios from 'axios'
+import client from '../../API/api'
+// axios.defaults.withCredentials = true;
+// axios.defaults.xsrfCookieName = 'csrftoken'
+// axios.defaults.xsrfHeaderName = 'x-csrftoken'
 
 
 
@@ -19,7 +20,7 @@ export function QuizScoreGreen() {
     const [lessonData, setLessonData] = useState({})
     // console.log("LData" + lessonData)
     useEffect(() => {
-        axios.get("http://192.168.29.220:8000/next_lesson/", {
+        client.get("next_lesson/", {
             withCredentials: true,
             params: {
                 course_id: course.courseid,
@@ -33,7 +34,7 @@ export function QuizScoreGreen() {
     }, [])
 
     useEffect(() => {
-        axios.get("http://192.168.29.220:8000/usr_course_page_lesson/",
+        client.get("usr_course_page_lesson/",
             {
                 withCredentials: true,
                 params: {
@@ -122,7 +123,7 @@ export function QuizScoreRed() {
     const [lessonData, setLessonData] = useState([])
 
     useEffect(() => {
-        axios.get("http://192.168.29.220:8000/usr_course_page_lesson/", {
+        client.get("usr_course_page_lesson/", {
             params: {
                 course_id: course.courseid,
                 lesson_id: lessonId.lessonid

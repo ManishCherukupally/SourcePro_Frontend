@@ -6,10 +6,11 @@ import { Link } from 'react-router-dom'
 import { BiArrowBack } from 'react-icons/bi'
 // @ts-ignore
 import LoginForm from './LoginForm'
-import axios from 'axios'
-axios.defaults.withCredentials = true;
-axios.defaults.xsrfCookieName = 'csrftoken'
-axios.defaults.xsrfHeaderName = 'x-csrftoken'
+// import axios from 'axios'
+import client from '../API/api'
+// axios.defaults.withCredentials = true;
+// axios.defaults.xsrfCookieName = 'csrftoken'
+// axios.defaults.xsrfHeaderName = 'x-csrftoken'
 
 
 const ForgetPassword = () => {
@@ -27,7 +28,7 @@ const ForgetPassword = () => {
 
   const handleForgetPaswd = async (/** @type {any} */ values) => {
     try {
-      const response = await axios.post('YOUR_API_ENDPOINT', {
+      const response = await client.post('YOUR_API_ENDPOINT', {
         withCredentials: true,
         values
       });

@@ -37,9 +37,7 @@ function App() {
           <Route path="/" Component={LoginPage} />
           <Route path="/forgot-password" Component={ForgotPassword} />
           <Route path="/forgot-password/set-new-password" Component={SetnewPawsdPage} />
-          <Route path="/home"
-            // @ts-ignore
-            exact Component={HomePage} />
+          <Route path="/home" exact Component={HomePage} />
           <Route path="/home/:courseid/:lessonid" Component={CoursePage} />
           {/* <Route path="/home/:courseid" Component={CoursePage} /> */}
           {/* <Route path="/home/courseplayer/:course_name" Component={CoursePage} /> */}

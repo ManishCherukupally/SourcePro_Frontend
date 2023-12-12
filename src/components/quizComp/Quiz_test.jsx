@@ -8,10 +8,10 @@ import { QuizScoreGreen, QuizScoreRed } from './QuizScoreColor'
 import { quiz, qwitho, scoreatom, valquiz } from '../../Store/store'
 import { useParams } from 'react-router-dom';
 import { useDisclosure } from '@mantine/hooks'
-import axios from 'axios'
-axios.defaults.withCredentials = true;
-axios.defaults.xsrfCookieName = 'csrftoken'
-axios.defaults.xsrfHeaderName = 'x-csrftoken'
+import client from 'axios'
+// axios.defaults.withCredentials = true;
+// axios.defaults.xsrfCookieName = 'csrftoken'
+// axios.defaults.xsrfHeaderName = 'x-csrftoken'
 
 
 
@@ -127,7 +127,7 @@ const Quiz_test = () => {
         // Fetch quiz data using Axios when the component mounts
         // https://the-trivia-api.com/v2/questions
 
-        axios.get('http://192.168.29.220:8000/quiz/',
+        client.get('quiz/',
             {
                 withCredentials: true,
                 params: {
@@ -232,7 +232,7 @@ const Quiz_test = () => {
         // console.log("request body " + JSON.stringify(requestbody))
         // Show the loader when the "SUBMIT" button is clicked
         if (questions.length === allQuestions.length) {
-            axios.post("http://192.168.29.220:8000/quiz_attempt/", request).then((resp) => {
+            client.post("quiz_attempt/", request).then((resp) => {
                 const score = resp.data.quiz_score
                 // setScore(score)
                 // @ts-ignore

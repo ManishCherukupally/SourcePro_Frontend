@@ -7,17 +7,18 @@ import { BiSearch } from 'react-icons/bi'
 import { FaBookOpen } from 'react-icons/fa'
 import { MdPerson } from 'react-icons/md'
 import Head from './dashboard Header/Head'
-import axios from 'axios'
-axios.defaults.withCredentials = true;
-axios.defaults.xsrfCookieName = 'csrftoken'
-axios.defaults.xsrfHeaderName = 'x-csrftoken'
+// import axios from 'axios'
+import client from '../API/api'
+// axios.defaults.withCredentials = true;
+// axios.defaults.xsrfCookieName = 'csrftoken'
+// axios.defaults.xsrfHeaderName = 'x-csrftoken'
 
 
 const Transaction = () => {
   const [subscriptions, setSubscriptions] = useState([]);
 
   useEffect(() => {
-    axios.get("http://192.168.29.220:8000/training_subscription/", {
+    client.get("training_subscription/", {
       withCredentials: true,
     })
       .then(response => {
