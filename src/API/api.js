@@ -4,7 +4,7 @@ import axios from "axios";
 // axios.defaults.xsrfHeaderName = 'x-csrftoken'
 const client = axios.create(
     {
-        baseURL: 'http://0.0.0.0:8000/sourcepro/'
+        baseURL: 'http://0.0.0.0/sourcepro/'
     }
 )
 export default client
