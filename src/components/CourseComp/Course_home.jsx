@@ -40,7 +40,10 @@ const Course_home = () => {
     const lessonId = useParams()
     // console.log(courseidatom)
 
+    const [getLikes, setLikesData] = useState(homeData.course_likes);
 
+
+    const [iconColor, setIconColor] = useState(homeData.like_status);
     console.log("true :  " + iconColor)
     const [extractedTitle, setExtractedTitle] = useState('');
 
@@ -74,10 +77,7 @@ const Course_home = () => {
 
     }, [course.courseid, lessonId.lesson_id])
 
-    const [getLikes, setLikesData] = useState(homeData.course_likes);
 
-
-    const [iconColor, setIconColor] = useState(homeData.like_status);
     useEffect(() => {
         client.get("faq/",
             {

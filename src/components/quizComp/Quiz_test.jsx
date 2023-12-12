@@ -8,7 +8,8 @@ import { QuizScoreGreen, QuizScoreRed } from './QuizScoreColor'
 import { quiz, qwitho, scoreatom, valquiz } from '../../Store/store'
 import { useParams } from 'react-router-dom';
 import { useDisclosure } from '@mantine/hooks'
-import client from 'axios'
+import client from '../../API/api';
+// import axios from 'axios'
 // axios.defaults.withCredentials = true;
 // axios.defaults.xsrfCookieName = 'csrftoken'
 // axios.defaults.xsrfHeaderName = 'x-csrftoken'
