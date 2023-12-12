@@ -34,7 +34,7 @@ function App() {
           <Route path="/courseplayer" Component={CoursePage} />
 
 
-          <Route path="/" Component={LoginPage} />
+          <Route path="/" Component={HomePage} />
           <Route path="/forgot-password" Component={ForgotPassword} />
           <Route path="/forgot-password/set-new-password" Component={SetnewPawsdPage} />
           <Route path="/home" exact Component={HomePage} />
