@@ -1,41 +1,44 @@
-// @ts-ignore
-import { ActionIcon, Box, Card, Container, Divider, Flex, Grid, Group, Image, SimpleGrid, Space, Tabs, TextInput, Title, Tooltip, Text, Menu, Select } from '@mantine/core'
-// @ts-ignore
 import React, { useEffect, useState } from 'react'
+
+import { ActionIcon, Box, Card, Container, Divider, Flex, Grid, Group, Image, SimpleGrid, Space, Tabs, TextInput, Title, Tooltip, Text, Menu, Select } from '@mantine/core'
+
+
 import { BiSearch } from 'react-icons/bi'
 import { BsChevronDown } from 'react-icons/bs'
-// @ts-ignore
+
 import { AiFillHome } from 'react-icons/ai'
-// @ts-ignore
+
 import { FaBookOpen } from 'react-icons/fa'
-// @ts-ignore
+
 import { MdChevronLeft, MdHome, MdPerson } from 'react-icons/md'
-// @ts-ignore
+
 import Mycourses from '../MyCourses/Mycourses'
-// @ts-ignore
+
 import Mydetails from '../Mydetails'
-// @ts-ignore
+
 import EditDetails from '../EditDetails'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-// @ts-ignore
+
 import Book from '../../assets/book.png';
-// @ts-ignore
+
 import Book1 from '../../assets/book1.png';
-// @ts-ignore
+
 import User1 from '../../assets/user1.png';
-// @ts-ignore
+
 import User from '../../assets/user.png';
-// @ts-ignore
+
 import Home from '../../assets/home.png';
-// @ts-ignore
+
 import Home1 from '../../assets/home1.png';
-// @ts-ignore
+
 import ChangePassword from '../ChangePassword'
-// @ts-ignore
+
 import Transaction from '../Transaction'
 import { render } from '@testing-library/react'
 // import axios from 'axios'
 import client from '../../API/api'
+// import Cookies from 'js-cookie';
+import { Cookies, useCookies } from 'react-cookie'
 // axios.defaults.withCredentials = true;
 // axios.defaults.xsrfCookieName = 'csrftoken'
 // axios.defaults.xsrfHeaderName = 'x-csrftoken'
@@ -44,6 +47,8 @@ const Head = () => {
   const course = useParams()
   const lessonId = useParams()
   const [data, setData] = useState([]);
+  const [token, setToken, removeToken] = useCookies(['encsrftok']);
+
   // console.log(data)
   // useEffect(() => {
   //   client.get("home/", {
@@ -61,6 +66,24 @@ const Head = () => {
 
   //     })
   // }, [])
+  const handleLogout = () => {
+    try {
+      client.get("logout/", {
+        withCredentials: true
+      }).then((resp) => {
+        if (resp.data.status === "Logged_out") {
+          removeToken(['encsrftok']);
+
+          // Optionally, redirect user to login page
+          window.location.href = "/";
+        }
+      })
+    }
+    catch (err) {
+      console.error(err)
+    }
+
+  }
 
   return (
     <>
@@ -161,9 +184,7 @@ const Head = () => {
                   </Menu.Item>
                   <Divider />
 
-                  <Menu.Item className='menutext' onClick={() => {
-                    navigate("")
-                  }}>
+                  <Menu.Item className='menutext' onClick={handleLogout}>
                     Logout
                   </Menu.Item>
 

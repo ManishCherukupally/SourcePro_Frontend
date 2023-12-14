@@ -13,6 +13,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import './Components.css'
 // import axios from 'axios'
 import client from '../API/api';
+import { Cookies, useCookies } from 'react-cookie'
+
 // axios.defaults.withCredentials = true;
 // axios.defaults.xsrfCookieName = 'csrftoken'
 // axios.defaults.xsrfHeaderName = 'x-csrftoken'
@@ -22,6 +24,7 @@ const LoginForm = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [error, setError] = useState('')
+
     const handleLogin = async () => {
         setLoader(true);
         try {
@@ -48,6 +51,9 @@ const LoginForm = () => {
             console.error('Error:', error);
         }
     };
+    // const [cookies, setCookies] = useCookies();
+
+
     return (
         <>
             <Box >
@@ -97,7 +103,6 @@ const LoginForm = () => {
 
                                         <Button fullWidth style={{ backgroundColor: "rgba(240, 154, 62, 1)" }} type='submit' radius={"md"} onClick={handleLogin}
                                             loading={loader}>Login</Button>
-
 
                                         <Space h={"5em"} />
 
