@@ -44,6 +44,8 @@ const Home = () => {
       withCredentials: true
     })
       .then((resp) => {
+
+
         const continueapidata = resp.data["Continue_Learning"]
         setContinueLearning(continueapidata)
         // setLessonId(continueapidata.last_viewed_lesson_id)
@@ -66,6 +68,8 @@ const Home = () => {
 
         const allcoursedata = resp.data.All_Courses
         setAllCourses(allcoursedata)
+
+
       })
   }, [])
 

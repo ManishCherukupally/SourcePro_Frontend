@@ -9,7 +9,7 @@ import {
 } from '@mantine/core';
 
 import ForgetPassword from './ForgetPassword';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Components.css'
 // import axios from 'axios'
 import client from '../API/api';
@@ -17,11 +17,11 @@ import client from '../API/api';
 // axios.defaults.xsrfCookieName = 'csrftoken'
 // axios.defaults.xsrfHeaderName = 'x-csrftoken'
 const LoginForm = () => {
-
+    const navigate = useNavigate()
     const [loader, setLoader] = useState(false)
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-
+    const [error, setError] = useState('')
     const handleLogin = async () => {
         setLoader(true);
         try {
@@ -31,16 +31,17 @@ const LoginForm = () => {
                 withcredentials: true
             })
                 .then((resp) => {
-                    console.log(resp.data.generated_token)
-                    client.get('sampleapi/', {
-                        withCredentials: true,
-                        headers: {
-                            Authorization: resp.data.generated_token,
-                        }
-                    }).then((response) => {
-                        console.log("response" + JSON.stringify(response.data))
-                    })
+                    console.log(JSON.stringify(resp.data.status))
+                    if (resp.data.status === "user_validated") {
+                        // window.localStorage.setItem("Authorization", email)
+                        navigate("/home")
+                    }
+                    else {
+                        // setError("Wrong Creds")
+                        navigate("/")
+                    }
                 })
+                .catch(err => console.error(err))
 
 
         } catch (error) {

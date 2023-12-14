@@ -45,15 +45,22 @@ const Head = () => {
   const lessonId = useParams()
   const [data, setData] = useState([]);
   // console.log(data)
-  useEffect(() => {
-    client.get("home/", {
-      withCredentials: true
-    })
-      .then((resp) => {
-        const courses = resp.data["All_Courses"];
-        setData(courses);
-      })
-  }, [])
+  // useEffect(() => {
+  //   client.get("home/", {
+  //     withCredentials: true
+  //   })
+
+  //     .then((resp) => {
+  //       if (resp.data.status === 'unauthorized_user') {
+  //         navigate("/")
+  //       }
+  //       else {
+  //         const courses = resp.data["All_Courses"];
+  //         setData(courses);
+  //       }
+
+  //     })
+  // }, [])
 
   return (
     <>
@@ -68,12 +75,14 @@ const Head = () => {
 
             <Select searchable nothingFound="No related courses" fz={18} w={400} radius={"md"} variant='filled'
               placeholder='Search course'
-              icon={<ActionIcon><BiSearch /></ActionIcon>} data={data.map((option) => {
-                return {
-                  value: option.value,
-                  label: option.course_name,
-                };
-              })} />
+              icon={<ActionIcon><BiSearch /></ActionIcon>} data={["react", "Js"]}
+            // {data.map((option) => {
+            //   return {
+            //     value: option.value,
+            //     label: option.course_name,
+            //   };
+            // })} 
+            />
           </Box>
 
           <Box pt={13} style={{ display: "flex", alignItems: "center" }}>

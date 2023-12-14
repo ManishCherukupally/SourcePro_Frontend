@@ -34,7 +34,7 @@ const Mydetails = () => {
       .catch(err => {
         console.error('Error Fetching:', err)
       })
-  }, [data])
+  }, [])
 
   return (
     <>
