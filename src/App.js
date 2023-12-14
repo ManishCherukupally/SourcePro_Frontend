@@ -16,6 +16,8 @@ import Mycourses from "./components/MyCourses/Mycourses";
 import CoursePage from "./pages/CoursePage";
 import Quiz_test from "./components/quizComp/Quiz_test";
 import { QuizScoreRed } from "./components/quizComp/QuizScoreColor";
+import MycoursesPage from "./pages/MycoursesPage";
+import QuizPage from "./pages/QuizPage";
 
 
 
@@ -28,10 +30,10 @@ function App() {
       <Router>
 
         <Routes>
-
+          {/* 
           <Route path="/green" Component={QuizScoreRed} />
           <Route path="/header" Component={Head} />
-          <Route path="/courseplayer" Component={CoursePage} />
+          <Route path="/courseplayer" Component={CoursePage} /> */}
 
 
           <Route path="/" Component={LoginPage} />
@@ -43,15 +45,15 @@ function App() {
           {/* <Route path="/home/courseplayer/:course_name" Component={CoursePage} /> */}
           <Route path="/mydetails" Component={MydetailsPage} />
           <Route path="/mydetails/editdetails" Component={EditDetailsPage} />
-          <Route path="/changepassword" Component={ChangePaswdPage} />
-          <Route path="/transactiondetails" Component={TransactionPage} />
+          <Route path="/mydetails/changepassword" Component={ChangePaswdPage} />
+          <Route path="/mydetails/transactiondetails" Component={TransactionPage} />
           <Route path="/mycourses"
             // @ts-ignore
-            exact Component={Mycourses} />
+            exact Component={MycoursesPage} />
           {/* <Route path="/mycourses/:courseid" Component={CoursePage} /> */}
           <Route path="/mycourses/:courseid/:lessonid" Component={CoursePage} />
-          <Route path="/quiz" Component={Quiz_test} />
-          <Route path="/quiz/:courseid/:lessonid" Component={Quiz_test} />
+          {/* <Route path="/quiz" Component={Quiz_test} /> */}
+          <Route path="/quiz/:courseid/:lessonid" Component={QuizPage} />
 
         </Routes>
 
