@@ -175,7 +175,7 @@ const Head = () => {
                   </Menu.Item>
 
                   <Menu.Item className='menutext' onClick={() => {
-                    navigate("/trainingsubcriptions");
+                    navigate("/trainingsubscriptions");
 
 
 
