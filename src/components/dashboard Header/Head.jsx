@@ -138,7 +138,7 @@ const Head = () => {
               style={{
                 borderBottom: window.location.pathname === '/mydetails' || window.location.pathname === '/mydetails/editdetails' ||
                   window.location.pathname === '/changepassword' ||
-                  window.location.pathname === '/transactiondetails' ? '3px solid #F09A3E' : "",
+                  window.location.pathname === '/trainingsubcriptions' ? '3px solid #F09A3E' : "",
               }}
             >
               <Menu withArrow shadow="md"
@@ -153,7 +153,7 @@ const Head = () => {
                   <Image width="20px" src=
                     {window.location.pathname === '/mydetails' || window.location.pathname === '/mydetails/editdetails' ||
                       window.location.pathname === '/changepassword' ||
-                      window.location.pathname === '/transactiondetails' ? User1 : User}  ></Image>
+                      window.location.pathname === '/trainingsubcriptions' ? User1 : User}  ></Image>
                 </Menu.Target>
 
                 <Menu.Dropdown >
@@ -175,7 +175,7 @@ const Head = () => {
                   </Menu.Item>
 
                   <Menu.Item className='menutext' onClick={() => {
-                    navigate("/transactiondetails");
+                    navigate("/trainingsubcriptions");
 
 
 

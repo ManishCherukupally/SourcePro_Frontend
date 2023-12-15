@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import LoginPage from './pages/LoginPage'
-import ForgotPassword from "./pages/ForgotPswdPage"
 import { Switch } from "@mantine/core";
 import SetnewPawsdPage from "./pages/SetnewPawsdPage";
 import HomePage from "./pages/HomePage";
@@ -16,9 +15,9 @@ import Mycourses from "./components/MyCourses/Mycourses";
 import CoursePage from "./pages/CoursePage";
 import Quiz_test from "./components/quizComp/Quiz_test";
 import { QuizScoreRed } from "./components/quizComp/QuizScoreColor";
-import MycoursesPage from "./pages/MycoursesPage";
 import QuizPage from "./pages/QuizPage";
-
+import MycoursesPage from "./pages/MycoursesPage";
+import ForgotPassword from "./pages/ForgotPswdPage";
 
 
 
@@ -36,7 +35,7 @@ function App() {
           <Route path="/courseplayer" Component={CoursePage} /> */}
 
 
-          <Route path="/" Component={LoginPage} />
+          <Route path="/" Component={HomePage} />
           <Route path="/forgot-password" Component={ForgotPassword} />
           <Route path="/forgot-password/set-new-password" Component={SetnewPawsdPage} />
           <Route path="/home" exact Component={HomePage} />
@@ -45,8 +44,8 @@ function App() {
           {/* <Route path="/home/courseplayer/:course_name" Component={CoursePage} /> */}
           <Route path="/mydetails" Component={MydetailsPage} />
           <Route path="/mydetails/editdetails" Component={EditDetailsPage} />
-          <Route path="/mydetails/changepassword" Component={ChangePaswdPage} />
-          <Route path="/mydetails/transactiondetails" Component={TransactionPage} />
+          <Route path="/changepassword" Component={ChangePaswdPage} />
+          <Route path="/trainingsubcriptions" Component={TransactionPage} />
           <Route path="/mycourses"
             // @ts-ignore
             exact Component={MycoursesPage} />

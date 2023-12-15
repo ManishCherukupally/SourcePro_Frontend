@@ -2,7 +2,7 @@
 import { Card, Center, Flex, Image, TextInput, Text, Stack, Space, Group, ActionIcon, Box, BackgroundImage, Button, PasswordInput, } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { BiArrowBack } from 'react-icons/bi'
 // @ts-ignore
 import LoginForm from './LoginForm'
@@ -14,6 +14,7 @@ import client from '../API/api'
 
 
 const ForgetPassword = () => {
+  const navigate = useNavigate()
   const form = useForm(
     {
       initialValues: {
@@ -28,7 +29,7 @@ const ForgetPassword = () => {
 
   const handleForgetPaswd = async (/** @type {any} */ values) => {
     try {
-      const response = await client.post('YOUR_API_ENDPOINT', {
+      const response = await client.post('otp/', {
         withCredentials: true,
         values
       });
@@ -68,7 +69,7 @@ const ForgetPassword = () => {
                         <ActionIcon size={"sm"}>< BiArrowBack /></ActionIcon>
                       </Link>
                       <Space w={15} />
-                      <Text fz={18} fw={700} onClick={handleForgetPaswd}>Forgot your Password?</Text>
+                      <Text fz={18} fw={700}>Forgot your Password?</Text>
                     </Flex>
 
                     <Space h={15} />
@@ -88,9 +89,12 @@ const ForgetPassword = () => {
 
                       {/* Onclick fuction here to get the otp */}
                       <div >
-                        <Link to={"/forgot-password/set-new-password"} className='newpaswd'>
+                        <Button className='newpaswd' onClick={() => {
+                          handleForgetPaswd();
+                          navigate("/forgot-password/set-new-password")
+                        }}>
                           SET NEW PASSWORD
-                        </Link>
+                        </Button>
                       </div>
                     </Group>
 
