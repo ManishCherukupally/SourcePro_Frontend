@@ -8,7 +8,7 @@ const ChangePaswdPage = () => {
   const [auth, setAuth] = useState(false)
 
   useEffect(() => {
-    client.put("change_password/").then((resp) => {
+    client.put("change_password/", {}).then((resp) => {
       if (resp.data.status === 'unauthorized_user') {
         navigate("/")
       }
