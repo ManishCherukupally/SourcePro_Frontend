@@ -14,6 +14,7 @@ import './Components.css'
 // import axios from 'axios'
 import client from '../API/api';
 import { Cookies, useCookies } from 'react-cookie'
+import Home from './Home';
 
 // axios.defaults.withCredentials = true;
 // axios.defaults.xsrfCookieName = 'csrftoken'
@@ -24,7 +25,7 @@ const LoginForm = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [error, setError] = useState('')
-
+    const [auth, setAuth] = useState(false);
     const handleLogin = async () => {
         setLoader(true);
         try {

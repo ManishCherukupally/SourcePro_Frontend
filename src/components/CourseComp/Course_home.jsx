@@ -381,7 +381,7 @@ const Course_home = () => {
                             <Box >
                                 <Tabs defaultValue={"overview"}>
                                     <Tabs.List>
-                                        <Flex align={"center"} style={{ paddingLeft: "1rem", gap: "35rem" }} >
+                                        <Flex align={"center"} justify={"space-between"} >
                                             <Group style={{ paddingLeft: 20 }}>
                                                 <Tabs.Tab value='overview'>Overview</Tabs.Tab>
                                                 <Tabs.Tab value='faq'>FAQ</Tabs.Tab>

@@ -22,7 +22,14 @@ import ForgotPassword from "./pages/ForgotPswdPage";
 
 
 function App() {
-
+  const [auth, setAuth] = useState(false)
+  const isLoggedIn = window.localStorage.getItem("sessionid");
+  if (isLoggedIn) {
+    setAuth(true)
+  }
+  else {
+    setAuth(false)
+  }
   return (
     <div className="App">
 
@@ -35,7 +42,7 @@ function App() {
           <Route path="/courseplayer" Component={CoursePage} /> */}
 
 
-          <Route path="/" Component={LoginPage} />
+          <Route path="/" Component={auth ? HomePage : LoginPage} />
           <Route path="/forgot-password" Component={ForgotPassword} />
           <Route path="/forgot-password/set-new-password" Component={SetnewPawsdPage} />
           <Route path="/home" exact Component={HomePage} />
