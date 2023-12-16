@@ -39,6 +39,7 @@ const Home = () => {
   console.log(courseid)
   const [lessonId, setLessonId] = useAtom(lessonidatom)
   console.log("lessonId" + lessonId)
+
   useEffect(() => {
     client.get("home/", {
       withCredentials: true

@@ -43,7 +43,7 @@ const CoursePage = () => {
     })
     return (
         <div>
-            <Course_home />
+            {auth && <Course_home />}
         </div>
     )
 }
