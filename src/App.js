@@ -22,7 +22,7 @@ import ForgotPassword from "./pages/ForgotPswdPage";
 
 
 function App() {
-  var isLoggedIn = window.localStorage.getItem("encsrftok")
+  var isLoggedIn = window.localStorage.getItem("sessionid")
   return (
     <div className="App">
 
