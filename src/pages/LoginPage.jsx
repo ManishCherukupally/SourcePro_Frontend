@@ -3,14 +3,23 @@ import LoginForm from '../components/LoginForm'
 import Home from '../components/Home';
 
 const LoginPage = () => {
+  var isLoggedIn = localStorage.getItem("encsrftok")
 
-  return (
+  if (isLoggedIn) {
+    return (
 
+      <div>
+        <Home />
+
+      </div>
+    )
+  }
+  else {
     <div>
       <LoginForm />
-
     </div>
-  )
+  }
+
 }
 
 export default LoginPage
