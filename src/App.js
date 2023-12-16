@@ -45,7 +45,7 @@ function App() {
           <Route path="/mydetails" Component={MydetailsPage} />
           <Route path="/mydetails/editdetails" Component={EditDetailsPage} />
           <Route path="/changepassword" Component={ChangePaswdPage} />
-          <Route path="/trainingsubcriptions" Component={TransactionPage} />
+          <Route path="/trainingsubscriptions" Component={TransactionPage} />
           <Route path="/mycourses"
             // @ts-ignore
             exact Component={MycoursesPage} />
