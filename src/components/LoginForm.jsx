@@ -9,13 +9,12 @@ import {
 } from '@mantine/core';
 
 import ForgetPassword from './ForgetPassword';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import './Components.css'
 // import axios from 'axios'
 import client from '../API/api';
 import { Cookies, useCookies } from 'react-cookie'
 import Home from './Home';
-
 // axios.defaults.withCredentials = true;
 // axios.defaults.xsrfCookieName = 'csrftoken'
 // axios.defaults.xsrfHeaderName = 'x-csrftoken'
@@ -26,6 +25,7 @@ const LoginForm = () => {
     const [password, setPassword] = useState("")
     const [error, setError] = useState('')
     const [auth, setAuth] = useState(false);
+
     const handleLogin = async () => {
         setLoader(true);
         try {
@@ -44,6 +44,7 @@ const LoginForm = () => {
                         // setError("Wrong Creds")
                         navigate("/")
                     }
+
                 })
                 .catch(err => console.error(err))
 
@@ -51,6 +52,7 @@ const LoginForm = () => {
         } catch (error) {
             console.error('Error:', error);
         }
+
     };
     // const [cookies, setCookies] = useCookies();
 

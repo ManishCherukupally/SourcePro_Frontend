@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 import LoginPage from './pages/LoginPage'
 import { Switch } from "@mantine/core";
@@ -22,14 +22,7 @@ import ForgotPassword from "./pages/ForgotPswdPage";
 
 
 function App() {
-  const [auth, setAuth] = useState(false)
-  const isLoggedIn = window.localStorage.getItem("sessionid");
-  if (isLoggedIn) {
-    setAuth(true)
-  }
-  else {
-    setAuth(false)
-  }
+  var isLoggedIn = window.localStorage.getItem("encsrftok")
   return (
     <div className="App">
 
@@ -42,7 +35,7 @@ function App() {
           <Route path="/courseplayer" Component={CoursePage} /> */}
 
 
-          <Route path="/" Component={auth ? HomePage : LoginPage} />
+          <Route path="/" exact Component={isLoggedIn ? HomePage : LoginPage} />
           <Route path="/forgot-password" Component={ForgotPassword} />
           <Route path="/forgot-password/set-new-password" Component={SetnewPawsdPage} />
           <Route path="/home" exact Component={HomePage} />
@@ -52,7 +45,7 @@ function App() {
           <Route path="/mydetails" Component={MydetailsPage} />
           <Route path="/mydetails/editdetails" Component={EditDetailsPage} />
           <Route path="/changepassword" Component={ChangePaswdPage} />
-          <Route path="/trainingsubscriptions" Component={TransactionPage} />
+          <Route path="/trainingsubcriptions" Component={TransactionPage} />
           <Route path="/mycourses"
             // @ts-ignore
             exact Component={MycoursesPage} />
