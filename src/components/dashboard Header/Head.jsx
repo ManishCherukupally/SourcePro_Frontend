@@ -72,7 +72,7 @@ const Head = () => {
         withCredentials: true
       }).then((resp) => {
         if (resp.data.status === "Logged_out") {
-          removeToken(['sessionid']);
+          removeToken(['encsrftok']);
 
           // Optionally, redirect user to login page
           window.location.href = "/";

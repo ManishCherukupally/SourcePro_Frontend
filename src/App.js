@@ -22,7 +22,8 @@ import ForgotPassword from "./pages/ForgotPswdPage";
 
 
 function App() {
-  var isLoggedIn = window.localStorage.getItem("sessionid")
+  var isLoggedIn = window.localStorage.getItem(["encsrftok"])
+
   return (
     <div className="App">
 
@@ -35,7 +36,7 @@ function App() {
           <Route path="/courseplayer" Component={CoursePage} /> */}
 
 
-          <Route path="/" exact Component={isLoggedIn ? HomePage : LoginPage} />
+          <Route path="/" Component={isLoggedIn ? <HomePage /> : <LoginPage />} />
           <Route path="/forgot-password" Component={ForgotPassword} />
           <Route path="/forgot-password/set-new-password" Component={SetnewPawsdPage} />
           <Route path="/home" exact Component={HomePage} />
