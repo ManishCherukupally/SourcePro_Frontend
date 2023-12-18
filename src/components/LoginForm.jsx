@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     Card, Flex, Image, Text, Space, TextInput, PasswordInput, Checkbox, Button, Center, Stack
     , BackgroundImage,
@@ -18,6 +18,7 @@ import Home from './Home';
 // axios.defaults.withCredentials = true;
 // axios.defaults.xsrfCookieName = 'csrftoken'
 // axios.defaults.xsrfHeaderName = 'x-csrftoken'
+
 const LoginForm = () => {
     const navigate = useNavigate()
     const [loader, setLoader] = useState(false)
@@ -26,8 +27,12 @@ const LoginForm = () => {
     const [error, setError] = useState('')
     const [auth, setAuth] = useState(false);
 
+    useEffect(() => {
+        window.localStorage.email === null ? navigate("/") : navigate("/home")
+    }, [])
+
     const handleLogin = async () => {
-        setLoader(true);
+
         try {
             await client.post('login/', {
                 email,
@@ -37,10 +42,12 @@ const LoginForm = () => {
                 .then((resp) => {
                     console.log(JSON.stringify(resp.data.status))
                     if (resp.data.status === "user_validated") {
-                        // window.localStorage.setItem("Authorization", email)
+                        setLoader(true);
+                        window.localStorage.setItem("email", email)
                         navigate("/home")
                     }
                     else {
+                        setLoader(true);
                         // setError("Wrong Creds")
                         navigate("/")
                     }

@@ -20,6 +20,7 @@ const ChangePaswdPage = () => {
   return (
     <div>
       {auth && <ChangePassword />}
+      {/* <ChangePassword /> */}
     </div>
   )
 }

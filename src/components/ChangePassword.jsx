@@ -1,7 +1,7 @@
-import { AppShell, Card, Paper, Grid, Flex, TextInput, ActionIcon, Tabs, Divider, Image, Container, Title, Button, Group, Space, Stack, PasswordInput, Menu } from '@mantine/core'
+import { AppShell, Card, Paper, Grid, Flex, TextInput, ActionIcon, Tabs, Divider, Image, Container, Title, Button, Group, Space, Stack, PasswordInput, Menu, Text } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useDisclosure } from '@mantine/hooks'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import React, { useState } from 'react'
 import { AiFillHome } from 'react-icons/ai'
 import { BiSearch } from 'react-icons/bi'
@@ -12,6 +12,7 @@ import LoginForm from './LoginForm'
 import Header from './dashboard Header/Head'
 // import axios from 'axios'
 import client from '../API/api'
+import { useCookies } from 'react-cookie'
 // axios.defaults.withCredentials = true;
 // axios.defaults.xsrfCookieName = 'csrftoken'
 // axios.defaults.xsrfHeaderName = 'x-csrftoken'
@@ -40,18 +41,41 @@ import client from '../API/api'
 //   );
 // };
 const ChangePassword = () => {
+  const navigate = useNavigate()
+  const [current_password, setCurrentPassword] = useState("")
+  const [new_password, setNewPassword] = useState("")
+  const [confirm_new_password, setConfirmPassword] = useState("")
+  const [currentError, setCurrentError] = useState("")
+  const [confirmError, setConfirmError] = useState("")
+  const [token, setToken, removeToken] = useCookies(['encsrftok']);
+  const [loader, setLoader] = useState(false)
+  const [success, setSuccess] = useState("")
 
-  const location = useLocation();
-  const currentPassword = location.state ? location.state.currentpassowrd : '';
-  const [formData, setFormData] = useState({
-
-  });
 
   const changePassword = async () => {
     try {
-      const res = await client.put("user_details/", {
-        withCredentials: true,
-        formData
+      await client.put("change_password/", {
+        current_password,
+        new_password,
+        confirm_new_password
+
+      }).then((resp) => {
+        if (resp.data.status === "successfull") {
+          setLoader(true)
+          setSuccess("Successful!")
+          removeToken(['encsrftok']);
+
+          // Optionally, redirect user to login page
+          window.location.href = "/";
+        }
+        else if (resp.data.status === "you_have_entered_wrong_password") {
+          setCurrentError("You’ve entered wrong password")
+          console.log("current password")
+        }
+        else if (resp.data.status === "password_do_not_match") {
+          setConfirmError("Passwords do not match")
+          console.log("confirm password")
+        }
       });
     }
     catch (err) {
@@ -59,23 +83,22 @@ const ChangePassword = () => {
     }
   }
 
-  const form = useForm(
-    {
-      initialValues: {
-        currentpassword: { currentPassword },
-        newpassword: '',
-        confirmpassword: '',
+  // const form = useForm(
+  //   {
+  //     initialValues: {
+  //       currentpassword: { currentPassword },
+  //       newpassword: '',
+  //       confirmpassword: '',
 
-      },
-      validate: {
-        currentpassword: (val) => (val != currentPassword ? "You've entered wrong password" : null),
-        newpassword: (newval) => (newval.length < 6 ? 'Password should include at least 6 characters' : null),
-        confirmpassword: (val, values) => val !== values.newpassword ? 'Password did not match!' : null,
+  //     },
+  //     validate: {
+  //       currentpassword: (val) => (val != currentPassword ? "You've entered wrong password" : null),
+  //       newpassword: (newval) => (newval.length < 6 ? 'Password should include at least 6 characters' : null),
+  //       confirmpassword: (val, values) => val !== values.newpassword ? 'Password did not match!' : null,
 
-      }
-    }
-  );
-  const [visible, { toggle }] = useDisclosure(false);
+  //     }
+  //   }
+  // );
 
 
   return (
@@ -90,38 +113,49 @@ const ChangePassword = () => {
               <Link to={"/mydetails"}>
                 <Button variant='outline' color='dark'>CANCEL</Button>
               </Link>
-              <Button variant='filled' type='submit' onClick={changePassword} style={{ backgroundColor: "rgba(240, 154, 62, 1)" }}>CHANGE PASSWORD</Button>
+              <Button loading={loader} variant='filled' type='submit' onClick={changePassword} style={{ backgroundColor: "rgba(240, 154, 62, 1)" }}>CHANGE PASSWORD</Button>
             </Group>
           </Group>
         </Card >
         <Divider />
         <Space h={15} />
 
-        <Card style={{ width: "25rem" }}>
+        <Card pt={0} style={{ width: "25rem" }}>
+          {success && <Text fw={600} c={"green"}>{success}</Text>}
           <Stack>
+
             <PasswordInput
               className='password'
               label="Enter current Password"
               // @ts-ignore
-              value={currentPassword}
-              {...form.getInputProps('currentpassword')}
+
+              onChange={(p) => setCurrentPassword(p.currentTarget.value)}
+              error={!!currentError}
             />
+            {
+              currentError && <Text c={"red"} fz={12}>{currentError}</Text>
+            }
 
             <PasswordInput
               className='password'
               label="New Password"
-              visible={visible}
-              onVisibilityChange={toggle}
-              {...form.getInputProps('newpassword')}
+              // visible={visible}
+              // onVisibilityChange={toggle}
+              onChange={(p) => setNewPassword(p.currentTarget.value)}
             />
 
-            <PasswordInput
+            <PasswordInput width={"100%"}
               className='password'
               label="Confirm new password"
-              visible={visible}
-              onVisibilityChange={toggle}
-              {...form.getInputProps('confirmpassword')}
+              // visible={visible}
+              // onVisibilityChange={toggle}
+              onChange={(p) => setConfirmPassword(p.currentTarget.value)}
+              error={!!confirmError}
             />
+            {
+              confirmError && <Text c={"red"} fz={12}>{confirmError}</Text>
+            }
+
           </Stack>
         </Card>
       </Container>

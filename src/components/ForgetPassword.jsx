@@ -1,7 +1,7 @@
 // @ts-ignore
-import { Card, Center, Flex, Image, TextInput, Text, Stack, Space, Group, ActionIcon, Box, BackgroundImage, Button, PasswordInput, } from '@mantine/core'
+import { Card, Center, Flex, Image, TextInput, Text, Stack, Space, Group, ActionIcon, Box, BackgroundImage, Button, PasswordInput, UnstyledButton, } from '@mantine/core'
 import { useForm } from '@mantine/form'
-import React from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { BiArrowBack } from 'react-icons/bi'
 // @ts-ignore
@@ -14,27 +14,37 @@ import client from '../API/api'
 
 
 const ForgetPassword = () => {
+  const [err, setErr] = useState("")
+  const [email, setEmail] = useState("")
   const navigate = useNavigate()
-  const form = useForm(
-    {
-      initialValues: {
-        email: "",
-      },
-      validate: {
-        email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid.Please enter your Email'),
-      }
-    }
-  );
+  // const form = useForm(
+  //   {
+  //     initialValues: {
+  //       email: "",
+  //     },
+  //     validate: {
+  //       email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid.Please enter your Email'),
+  //     }
+  //   }
+  // );
 
 
-  const handleForgetPaswd = async (/** @type {any} */ values) => {
+  const handleForgetPaswd = async () => {
     try {
-      const response = await client.post('otp/', {
+      await client.post('otp/', {
         withCredentials: true,
-        values
-      });
+        email
+      }).then((resp) => {
+        if (resp.data.status === 'Please_provide_valid_email') {
 
-      console.log(response)
+          setErr("Please provide valid email ID")
+        }
+        else {
+          window.location.href = "/forgot-password/set-new-password";
+        }
+      });
+      console.log(email)
+      // console.log(response.data)
     }
 
     catch (error) {
@@ -62,7 +72,8 @@ const ForgetPassword = () => {
                       src={"https://www.sourceprotraining.com/wp-content/uploads/2021/09/logo.png"} />
 
                   </Center>
-                  <form onSubmit={form.onSubmit((values) => console.log(values))} >
+                  <>
+                    {/* <form onSubmit={form.onSubmit((values) => console.log(values))} > */}
 
                     <Flex align={"center"}>
                       <Link to={"/"}>
@@ -77,7 +88,12 @@ const ForgetPassword = () => {
                     <TextInput className='email'
                       label="Email ID"
                       placeholder="your@email.com"
+                      onChange={(e) => setEmail(e.currentTarget.value)}
+                      error={!!err}
                     />
+                    {
+                      err && <Text color='red' fz={12}>{err}</Text>
+                    }
                     <Space h={10} />
                     <Text fz={"xs"}>An OTP will be sent your registered email</Text>
 
@@ -89,16 +105,16 @@ const ForgetPassword = () => {
 
                       {/* Onclick fuction here to get the otp */}
                       <div >
-                        <Button className='newpaswd' onClick={() => {
+                        <UnstyledButton type='submit' className='newpaswd' onClick={() => {
                           handleForgetPaswd();
-                          navigate("/forgot-password/set-new-password")
                         }}>
                           SET NEW PASSWORD
-                        </Button>
+                        </UnstyledButton>
                       </div>
                     </Group>
 
-                  </form>
+                    {/* </form> */}
+                  </>
                 </Card>
               </div>
             </Flex>
