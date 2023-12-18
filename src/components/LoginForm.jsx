@@ -28,8 +28,8 @@ const LoginForm = () => {
     const [auth, setAuth] = useState(false);
 
     useEffect(() => {
-        window.localStorage.email === null ? navigate("/") : navigate("/home")
-    }, [])
+        window.localStorage.sessionid === null ? navigate("/") : navigate("/home")
+    }, [navigate])
 
     const handleLogin = async () => {
 
@@ -43,7 +43,7 @@ const LoginForm = () => {
                     console.log(JSON.stringify(resp.data.status))
                     if (resp.data.status === "user_validated") {
                         setLoader(true);
-                        window.localStorage.setItem("email", email)
+
                         navigate("/home")
                     }
                     else {
