@@ -27,9 +27,9 @@ const LoginForm = () => {
     const [error, setError] = useState('')
     const [auth, setAuth] = useState(false);
 
-    useEffect(() => {
-        window.localStorage.sessionid === null ? navigate("/") : navigate("/home")
-    }, [navigate])
+    // useEffect(() => {
+    //     window.localStorage.sessionid === null ? navigate("/") : navigate("/home")
+    // }, [navigate])
 
     const handleLogin = async () => {
 
