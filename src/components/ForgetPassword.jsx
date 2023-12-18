@@ -35,13 +35,15 @@ const ForgetPassword = () => {
         withCredentials: true,
         email
       }).then((resp) => {
-        if (resp.data.status === 'Please_provide_valid_email') {
+        if (resp.data.status === 'OTP sent successfully') {
+          navigate("/set-new-password")
+        }
+
+        else {
 
           setErr("Please provide valid email ID")
         }
-        else {
-          window.location.href = "/forgot-password/set-new-password";
-        }
+        console.log(resp)
       });
       console.log(email)
       // console.log(response.data)
@@ -107,6 +109,8 @@ const ForgetPassword = () => {
                       <div >
                         <UnstyledButton type='submit' className='newpaswd' onClick={() => {
                           handleForgetPaswd();
+
+
                         }}>
                           SET NEW PASSWORD
                         </UnstyledButton>
