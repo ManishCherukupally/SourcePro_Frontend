@@ -259,7 +259,7 @@ const Course_home = () => {
         try {
             await client.put("usr_course_page_lesson/", {
 
-                minutes_completed: (time),
+                minutes_completed: "00:00:30",
                 course_id: course.courseid,
                 lesson_id: lessonId.lessonid,
 
