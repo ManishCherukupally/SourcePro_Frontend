@@ -62,6 +62,11 @@ export function QuizScoreGreen() {
 
     const handleButtonClick = () => {
         // Trigger a re-render by setting the state to false and then back to true
+        console.log("button Clicked")
+        setShouldRerender(false);
+        setTimeout(() => {
+            setShouldRerender(true);
+        }, 1000)
 
     };
 
@@ -81,12 +86,7 @@ export function QuizScoreGreen() {
                         {/* <Link to={`/quiz/${course.courseid}/${lessonId.lessonid}`}> */}
                         <Button mr={"3.5rem"} variant='outline'
                             onClick={() => {
-                                console.log("button Clicked")
-                                setShouldRerender(false);
-                                setTimeout(() => {
-                                    setShouldRerender(true);
-                                }, 1000)
-
+                                handleButtonClick();
                                 shouldRerender &&
                                     navigate(`/quiz/${course.courseid}/${lessonId.lessonid}`)
                             }}

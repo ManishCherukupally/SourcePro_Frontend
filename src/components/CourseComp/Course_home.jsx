@@ -632,7 +632,7 @@ const Course_home = () => {
 
                                                                                             item.quiz_attempt_status === true ?
 
-                                                                                                (<Flex gap={"9rem"}>
+                                                                                                (<Flex gap={120}>
                                                                                                     <Flex gap={5}>
                                                                                                         <Text fz={"xs"} c={"white"}>Score :</Text>
                                                                                                         <Text fz={"xs"} c={"rgba(0, 156, 23, 1)"}>{item.
