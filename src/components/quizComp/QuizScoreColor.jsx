@@ -87,8 +87,8 @@ export function QuizScoreGreen() {
                         <Button mr={"3.5rem"} variant='outline'
                             onClick={() => {
                                 handleButtonClick();
-                                shouldRerender &&
-                                    navigate(`/quiz/${course.courseid}/${lessonId.lessonid}`)
+                                shouldRerender && <Quiz_test />
+                                // navigate(`/quiz/${course.courseid}/${lessonId.lessonid}`)
                             }}
                             style={{ color: "rgba(255, 255, 255, 1)", borderColor: "rgba(255, 255, 255, 1)" }}
                         > RE-TAKE QUIZ</Button>
