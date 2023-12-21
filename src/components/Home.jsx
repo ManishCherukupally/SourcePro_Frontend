@@ -103,9 +103,7 @@ const Home = () => {
                   <Card className="coursecard" shadow='sm' w={277} p={0} withBorder radius={"md"}>
                     <Card h={120} w={277} p={0} radius={0} >
                       <Image style={{ position: "relative" }}
-                        src={card.
-                          // @ts-ignore
-                          thumbnail}
+                        src={card.thumbnail}
 
                         height={140}
 
@@ -153,9 +151,7 @@ const Home = () => {
                 <Card shadow='sm' w={277} p={0} withBorder radius={"md"}>
                   <Card h={120} p={0} radius={0} >
                     <Image
-                      src={card.
-                        // @ts-ignore
-                        thumbnail}
+                      src={card.thumbnail}
 
                       height={130}
 
@@ -197,9 +193,7 @@ const Home = () => {
                   <Card shadow='sm' mb={"1rem"} w={277} p={0} withBorder radius={"md"}>
                     <Card h={120} p={0} radius={0} >
                       <Image
-                        src={card.
-                          // @ts-ignore
-                          thumbnail}
+                        src={card.thumbnail}
                         height={130}
 
                       />

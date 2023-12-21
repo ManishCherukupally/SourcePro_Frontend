@@ -69,11 +69,14 @@ const Course_home = () => {
                 axios.get(data).then((response) => {
                     // console.log(response.data)
                     setTextContent(response.data);
-                });
+                })
+                    .catch((error) => console.log(error));
+
                 setLikesData(resp.data["course_data"].course_likes)
                 setIconColor(resp.data["course_data"].like_status)
 
             }))
+            .catch((error) => console.log(error))
 
     }, [course.courseid, lessonId.lesson_id])
 
@@ -91,6 +94,7 @@ const Course_home = () => {
             // console.log(faqData)
             setFdata(faqData)
         })
+            .catch((error) => console.log(error))
     }, [course.courseid])
 
     useEffect(() => {
@@ -104,6 +108,7 @@ const Course_home = () => {
             .then((resp) => (
                 setLearners(resp.data.Learners)
             ))
+            .catch((error) => console.log(error))
     }, [course.courseid])
 
 
@@ -122,19 +127,23 @@ const Course_home = () => {
             .then((resp) => {
                 // console.log(JSON.stringify(resp.data["all_lessons"].materials))
                 const data = (resp.data["all_lessons"])
+                console.log(data)
+                setLessonData(data)
+                setLessonName(resp.data["all_lessons"].lesson_name)
+                // setClipboardContent(resp.data.all_lessons.clipboards)
                 const clipData = resp.data.all_lessons.map(item => item.clipboards)
-                let link;
-                // console.log(clipData)
-                clipData.map((item) => (
-                    link = item
-                    // console.log(item)
-                ))
+                // let link;
+                setClipboardContent(clipData[0])
+                // clipData.map((item) => (
+                //     // link = item
+                //     console.log("pp : " + item)
+                // ))
 
-                axios.get(link)
-                    .then((response) => {
-                        setClipboardContent(response.data)
+                // axios.get(link)
+                //     .then((response) => {
+                //         setClipboardContent(response.data)
 
-                    })
+                //     })
                 data.sort((/** @type {{ lesson_id: number; }} */ a, /** @type {{ lesson_id: number; }} */ b) => {
                     if (a.lesson_id < b.lesson_id) {
                         return -1
@@ -150,8 +159,7 @@ const Course_home = () => {
                 // const [hours, minutes, seconds] = resp.data.minutes_completed.split(':').map(Number);
                 // const totalSeconds = hours * 3600 + minutes * 60 + seconds;
                 // setTimeToStart(10)
-                setLessonData(data)
-                setLessonName(resp.data["all_lessons"].lesson_name)
+
                 // const clipData = resp.data["all_lessons"].map((item) => {
                 //     // if (item.length > 6) {
                 //     //     item.find(item => {
@@ -163,6 +171,7 @@ const Course_home = () => {
                 // console.log("clipdata" + JSON.stringify(clipData))
 
             })
+            .catch((error) => console.log(error))
         // }
 
     }, [course.courseid, lessonId.lessonid])
@@ -172,33 +181,34 @@ const Course_home = () => {
 
     const handleIconClick = () => {
         console.log("icon Clicked")
-        try {
-            client.put("likes_count/")
-                .then((resp) => {
-                    // setLdata(resp.data)
-                    setIconColor(resp.data.status)
+        // try {
+        //     client.put("likes_count/")
+        //         .then((resp) => {
+        //             // setLdata(resp.data)
+        //             setIconColor(resp.data.status)
 
-                    setLikes(resp.data.Likes)
+        //             setLikes(resp.data.Likes)
 
-                    client.get("usr_course_page/", {
+        //             client.get("usr_course_page/", {
 
-                        params:
-                        {
-                            course_id: course.courseid,
-                            lesson_id: lessonId.lessonid
-                        },
-                        withCredentials: true
-                    })
-                        .then((resp) => {
-                            setLikesData(resp.data.course_data.course_likes)
-                        })
-                })
+        //                 params:
+        //                 {
+        //                     course_id: course.courseid,
+        //                     lesson_id: lessonId.lessonid
+        //                 },
+        //                 withCredentials: true
+        //             })
+        //                 .then((resp) => {
+        //                     setLikesData(resp.data.course_data.course_likes)
+        //                 })
+        //         })
 
-        }
-        catch (error) {
+        // }
+        // catch (error) {
 
-            console.error('Error while updating likes:', error);
-        }
+        //     console.log('Error while updating likes:', error);
+        // }
+
     };
 
 
@@ -244,29 +254,35 @@ const Course_home = () => {
     //     };
     // }, []);
 
-
+    var time;
     const [play, setPlay] = useState(0);
     console.log(play)
     var date = new Date(play * 1000);
     console.log(date)
     // Multiply by 1000 to convert seconds to milliseconds
-    var time = date.toISOString().slice(11, 19)
+    time = date.toISOString().slice(11, 19)
 
     console.log(time)
     // const [last_lesson,setLast_Lesson] = useState(lessonId.lessonid)
 
-    const handlePause = async () => {
+    const handlePause = () => {
+        console.log("paused")
+        const timeArray = time.split(':').map(Number);
+        console.log(timeArray)
+        const playseconds = timeArray[0] * 3600 + timeArray[1] * 60 + timeArray[2];
+        console.log(playseconds)
+        window.localStorage.setItem("playSeconds", playseconds)
         try {
-            await client.put("usr_course_page_lesson/", {
+            client.put("usr_course_page_lesson/", {
 
-                minutes_completed: "00:00:30",
+                minutes_completed: time,
                 course_id: course.courseid,
                 lesson_id: lessonId.lessonid,
 
             })
         }
         catch (err) {
-            console.error(err)
+            console.log(err)
         }
 
     }
@@ -281,9 +297,13 @@ const Course_home = () => {
         setShowOverlay(false)
         setFill("blur(0px)")
     };
+
+
     const seekToTime = () => {
+        const seconds = window.localStorage.getItem("playSeconds")
+        console.log(seconds)
         if (playerRef.current) {
-            playerRef.current.seekTo(10, 'seconds');
+            playerRef.current.seekTo(seconds, 'seconds');
         }
     };
 
@@ -381,12 +401,12 @@ const Course_home = () => {
                             <Box >
                                 <Tabs defaultValue={"overview"}>
                                     <Tabs.List>
-                                        <Flex align={"center"} justify={"space-between"} >
+                                        <Flex   >
                                             <Group style={{ paddingLeft: 20 }}>
                                                 <Tabs.Tab value='overview'>Overview</Tabs.Tab>
                                                 <Tabs.Tab value='faq'>FAQ</Tabs.Tab>
                                             </Group>
-                                            <Group spacing={20}>
+                                            <Group spacing={20} pl={400}>
                                                 <Group spacing={5}>
                                                     <ActionIcon onClick={handleIconClick}><BiSolidLike size={22} color={iconColor === true ? "rgba(240, 154, 62, 1)" : "rgba(58, 58, 58, 1)"} /></ActionIcon>
                                                     <Text fw={"600"} fz={14}>{getLikes} </Text>
@@ -427,7 +447,7 @@ const Course_home = () => {
                                             <Text fz={15} color="#3A3A3A" fw={"600"} mt={4}>Course description</Text>
                                             <Space h={10} />
                                             <Spoiler maxHeight={20} showLabel="Show more" hideLabel="Hide" fz={14}>
-                                                {textContent}
+                                                {homeData.course_description}
                                             </Spoiler>
                                         </Card>
                                     </Tabs.Panel>
@@ -435,7 +455,7 @@ const Course_home = () => {
 
 
                                         <Accordion >
-                                            {fData.length > 0 ? (fData.map((item) => (
+                                            {fData ? (fData.map((item) => (
                                                 <Accordion.Item key={item.
 
                                                     question}
@@ -489,7 +509,7 @@ const Course_home = () => {
                                                                 console.log(`Lesson ID ${lesson.lesson_id}: ${extracted}`);
                                                             }
 
-                                                            return <Text color='#FFFFFF' key={lesson.lesson_id}>{extracted}</Text>;
+                                                            return <Text color='#FFFFFF' key={lesson.lesson_id}>Back to basics</Text>;
                                                         })
                                                     }
 
@@ -530,7 +550,7 @@ const Course_home = () => {
 
                                                                 const materialUrl = lesson.materials[0];
                                                                 extracted = materialUrl.split('/').slice(-2, -1)[0].replace(/_/g, ' ').replace(/\.[^/.]+$/, '');
-                                                                return <Text id='txt' color='#FFFFFF' key={lesson.lesson_id}>{extracted}</Text>;
+                                                                return <Text id='txt' color='#FFFFFF' key={lesson.lesson_id}>Back to Basics</Text>;
 
                                                             }
 
