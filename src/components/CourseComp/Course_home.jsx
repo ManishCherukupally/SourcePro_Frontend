@@ -546,7 +546,7 @@ const Course_home = () => {
                             <Container fluid style={{ backgroundColor: "#3A3A3A" }}>
                                 <Text color="#FFFFFF" pb={10} p={20} fw={400} fz={22}>Contents</Text>
                                 <Divider className='divider' />
-                                <Accordion defaultValue={"clipboard"} chevronSize={0}>
+                                <Accordion defaultValue={"material"} chevronSize={0}>
                                     <Accordion.Item value='material'>
                                         <Accordion.Control className='accbtn' ><Text color='#FFFFFF'>Materials</Text></Accordion.Control>
                                         <Accordion.Panel  >
@@ -559,11 +559,11 @@ const Course_home = () => {
 
                                                             if (lesson.materials) {
                                                                 const materialUrl = lesson.materials[0];
-                                                                extracted = materialUrl.split('/').slice(-2, -1)[0].replace(/_/g, ' ').replace(/\.[^/.]+$/, '');
+                                                                extracted = materialUrl.split('/').pop().replace(/_/g, ' ').replace(/\.[^/.]+$/, '');
                                                                 console.log(`Lesson ID ${lesson.lesson_id}: ${extracted}`);
                                                             }
 
-                                                            return <Text color='#FFFFFF' key={lesson.lesson_id}>Back to basics</Text>;
+                                                            return <Text color='#FFFFFF' key={lesson.lesson_id}>{extracted}</Text>;
                                                         })
                                                     }
 
@@ -594,11 +594,12 @@ const Course_home = () => {
 
                                     <Accordion.Item value='clipboard'>
                                         <Accordion.Control className='accbtn' ><Text color='#FFFFFF'>Clipboard</Text></Accordion.Control>
-                                        <Accordion.Panel  >
-                                            <Spoiler maxHeight={200}>
-                                                {
-                                                    clipboards.map((item, index) => (
-                                                        <Group className='clipgrp' >
+
+                                        <Spoiler maxHeight={100} showLabel="More clipboards" hideLabel="Show less">
+                                            {
+                                                clipboards.map((item, index) => (
+                                                    <Accordion.Panel  >
+                                                        <Flex className='clipgrp' >
                                                             <div>
                                                                 {/* {
                                                             lessonData.map((lesson) => {
@@ -617,7 +618,7 @@ const Course_home = () => {
 
                                                             </div>
                                                             <CopyButton
-                                                                value={copyTextToClipboard}
+                                                                value={item}
                                                                 timeout={2000}>
                                                                 {({ copied, copy }) => (
                                                                     <Tooltip label={copied ? 'Copied' : 'Copy to Clipboard'} withArrow>
@@ -632,13 +633,13 @@ const Course_home = () => {
                                                                 )}
                                                             </CopyButton>
 
-                                                        </Group>
+                                                        </Flex>
+                                                    </Accordion.Panel>
+                                                ))
+                                            }
 
-                                                    ))
-                                                }
+                                        </Spoiler>
 
-                                            </Spoiler>
-                                        </Accordion.Panel>
                                     </Accordion.Item>
                                 </Accordion>
 
