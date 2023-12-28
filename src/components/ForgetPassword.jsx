@@ -59,14 +59,13 @@ const ForgetPassword = () => {
       <Box >
         <BackgroundImage className='bgimg'
           // @ts-ignore
-          h={["80vh", "80vh", "100vh", "100vh"]}
-
-          src='https://images.squarespace-cdn.com/content/v1/5cd4cc35fd679362f1f3ebbc/1591947513340-19FJMD8KICOK13Q49BDR/1a.jpg?format=1500w'>
+          h={"auto"} w={"100%"}
+          src='https://images.squarespace-cdn.com/content/v1/5cd4cc35fd679362f1f3ebbc/1591947513340-19FJMD8KICOK13Q49BDR/1a.jpg'>
           <BackgroundImage className='blur' zIndex="998" w="100%"
             // @ts-ignore
             h={["80vh", "80vh", "100vh", "100vh"]} >
             <Flex justify={"end"}>
-              <div className="forgotpaswd" style={{ marginTop: "8em", marginRight: "7em", marginBottom: "146px" }}>
+              <div className="forgotpaswd" style={{ marginTop: "8em", marginRight: "7em" }}>
                 <Card withBorder style={{ width: "23em", height: "30rem", padding: "2em" }} radius={"xl"}>
                   <Center>
                     <Image
@@ -91,6 +90,7 @@ const ForgetPassword = () => {
                       label="Email ID"
                       placeholder="your@email.com"
                       onChange={(e) => setEmail(e.currentTarget.value)}
+                      required
                       error={!!err}
                     />
                     {

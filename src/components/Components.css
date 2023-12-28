@@ -1,10 +1,17 @@
 @media screen and (max-width: 480px) {
-    .logincard {
+    /* .logincard {
         transform: translateX("3rem");
         margin: "1em";
-        /* Adjust the margin as needed */
-    }
+    } */
+    /* Adjust the margin as needed */
 }
+
+.logincard {
+    display: flex;
+
+    justify-content: end;
+}
+
 
 .email label,
 .sp label,
