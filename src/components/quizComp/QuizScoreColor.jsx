@@ -53,21 +53,13 @@ export function QuizScoreGreen() {
 
     }, [course.courseid, lessonId.lessonid])
 
-    const [shouldRerender, setShouldRerender] = useState(false);
 
-    useEffect(() => {
-        // Set the initial state of the component
-        setShouldRerender(true);
-    }, [course.courseid, lessonId.lessonid]);
+
 
     const handleButtonClick = () => {
         // Trigger a re-render by setting the state to false and then back to true
         console.log("button Clicked")
-        setShouldRerender(false);
-        setTimeout(() => {
-            setShouldRerender(true);
-        }, 1000)
-
+        window.location.href(`/quiz/${course.courseid}/${lessonId.lessonid}`)
     };
 
 
@@ -85,11 +77,8 @@ export function QuizScoreGreen() {
                     <Flex>
                         {/* <Link to={`/quiz/${course.courseid}/${lessonId.lessonid}`}> */}
                         <Button mr={"3.5rem"} variant='outline'
-                            onClick={() => {
-                                handleButtonClick();
-                                shouldRerender && <Quiz_test />
-                                // navigate(`/quiz/${course.courseid}/${lessonId.lessonid}`)
-                            }}
+                            onClick={handleButtonClick}
+
                             style={{ color: "rgba(255, 255, 255, 1)", borderColor: "rgba(255, 255, 255, 1)" }}
                         > RE-TAKE QUIZ</Button>
                         {/* </Link> */}
@@ -134,9 +123,10 @@ export function QuizScoreRed() {
             })
 
     })
-    const handleRetakeQuiz = () => {
-        setShowQuiz(true);
-
+    const handleButtonClick = () => {
+        // Trigger a re-render by setting the state to false and then back to true
+        console.log("button Clicked")
+        window.location.href(`/quiz/${course.courseid}/${lessonId.lessonid}`)
     };
     return (
         <>
@@ -151,7 +141,7 @@ export function QuizScoreRed() {
 
                         </Group>
                         <Flex>
-                            <Button mr={"3.5rem"} variant='outline' style={{ color: "rgba(255, 255, 255, 1)", borderColor: "rgba(255, 255, 255, 1)" }}
+                            <Button onClick={handleButtonClick} mr={"3.5rem"} variant='outline' style={{ color: "rgba(255, 255, 255, 1)", borderColor: "rgba(255, 255, 255, 1)" }}
                             >RE-TAKE QUIZ</Button>
                             <Link to={`/home/${course.courseid}/${lessonId.lessonid}`}>
                                 <Button mr={"3.5rem"} variant='filled' style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }} >WATCH LESSON AGAIN</Button>

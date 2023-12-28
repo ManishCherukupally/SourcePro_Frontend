@@ -23,8 +23,9 @@ const LoginForm = () => {
     const navigate = useNavigate()
     const [loader, setLoader] = useState(false)
     const [email, setEmail] = useState("")
+    const [emailError, setEmailError] = useState("")
     const [password, setPassword] = useState("")
-    const [error, setError] = useState('')
+    const [passworderror, setPasswordError] = useState('')
     const [auth, setAuth] = useState(false);
 
     // useEffect(() => {
@@ -47,8 +48,12 @@ const LoginForm = () => {
                         navigate("/home")
                     }
                     else {
-                        setLoader(true);
-                        // setError("Wrong Creds")
+                        if (email === "" || "Invalid Credentials") {
+                            setEmailError("The email address you entered is invalid")
+                        }
+                        if (password === "" || "Invalid Credentials") {
+                            setPasswordError("The password you entered is incorrect")
+                        }
                         navigate("/")
                     }
 
@@ -67,12 +72,12 @@ const LoginForm = () => {
     return (
         <>
             <Box >
-                <BackgroundImage className='bgimg' h={["80vh", "80vh", "100vh", "100vh"]}
+                <BackgroundImage className='bgimg' h={"auto"} w={"100%"}
 
-                    src='https://images.squarespace-cdn.com/content/v1/5cd4cc35fd679362f1f3ebbc/1591947513340-19FJMD8KICOK13Q49BDR/1a.jpg?format=1500w'>
+                    src='https://images.squarespace-cdn.com/content/v1/5cd4cc35fd679362f1f3ebbc/1591947513340-19FJMD8KICOK13Q49BDR/1a.jpg'>
                     <BackgroundImage className='blur' zIndex="998" w="100%" h={["80vh", "80vh", "100vh", "100vh"]} >
                         <Flex justify={"end"}>
-                            <div className="logincard" style={{ marginTop: "8em", marginRight: "7em", marginBottom: "146px" }}>
+                            <div className="logincard" style={{ marginTop: "8em", marginRight: "7em" }}>
                                 <Card withBorder style={{ width: "23em", height: "30rem", padding: "2em" }} radius={"xl"}>
 
                                     <Center>
@@ -84,24 +89,34 @@ const LoginForm = () => {
 
                                     <Stack>
                                         <Text fz={18} fw={700}>Log In</Text>
-                                        <TextInput className='email'
-                                            withAsterisk
-                                            label="Email ID"
-                                            placeholder="your@email.com"
-                                            value={email}
-                                            onChange={(e) => setEmail(e.currentTarget.value)}
-                                        />
-
-                                        <Flex direction={"column"}>
-                                            <PasswordInput
-                                                className='password'
+                                        <div>
+                                            <TextInput className='email'
                                                 withAsterisk
-                                                label='Password'
-                                                placeholder="Enter your Password"
-                                                value={password}
-                                                onChange={(e) => setPassword(e.currentTarget.value)}
+                                                label="Email ID"
+                                                placeholder="your@email.com"
+                                                value={email}
+                                                onChange={(e) => setEmail(e.currentTarget.value)}
+                                                error={!!emailError}
                                             />
-
+                                            {
+                                                emailError && <Text fz={12} c={"red"}>{emailError}</Text>
+                                            }
+                                        </div>
+                                        <Flex direction={"column"}>
+                                            <div>
+                                                <PasswordInput
+                                                    className='password'
+                                                    withAsterisk
+                                                    label='Password'
+                                                    placeholder="Enter your Password"
+                                                    value={password}
+                                                    onChange={(e) => setPassword(e.currentTarget.value)}
+                                                    error={!!passworderror}
+                                                />
+                                                {
+                                                    passworderror && <Text fz={12} c={"red"}>{passworderror}</Text>
+                                                }
+                                            </div>
 
                                             <Link to="/forgot-password"
                                                 className="forgot-password-link" >
@@ -114,7 +129,7 @@ const LoginForm = () => {
                                         <Button fullWidth style={{ backgroundColor: "rgba(240, 154, 62, 1)" }} type='submit' radius={"md"} onClick={handleLogin}
                                             loading={loader}>Login</Button>
 
-                                        <Space h={"5em"} />
+
 
                                     </Stack>
 

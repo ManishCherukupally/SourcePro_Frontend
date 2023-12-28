@@ -25,6 +25,7 @@ const Course_home = () => {
     const [textContent, setTextContent] = useState('');
     const [clipboardContent, setClipboardContent] = useState("")
     console.log(clipboardContent)
+    const [clipboards, setClipboards] = useState([])
     const [homeData, setHomeData] = useState({})
 
     const [fData, setFdata] = useState([])
@@ -32,19 +33,14 @@ const Course_home = () => {
     const [lessonData, setLessonData] = useState([])
 
     const [lessonName, setLessonName] = useState("")
-    const [likes, setLikes] = useState({})
-    console.log("likes" + likes)
 
     const [learners, setLearners] = useState(0)
     const course = useParams()
     const lessonId = useParams()
     // console.log(courseidatom)
 
-    const [getLikes, setLikesData] = useState(homeData.course_likes);
-
-
-    const [iconColor, setIconColor] = useState(homeData.like_status);
-    console.log("true :  " + iconColor)
+    const [like, setLike] = useState(false)
+    const [likescount, setLikesCount] = useState(0)
     const [extractedTitle, setExtractedTitle] = useState('');
 
 
@@ -65,20 +61,22 @@ const Course_home = () => {
             .then((resp => {
                 setHomeData(resp.data["course_data"])
                 const data = resp.data.course_data.course_description
+                setLikesCount(resp.data["course_data"].course_likes)
+                setLike(resp.data["course_data"].like_status)
+                setLearners(resp.data["course_data"].course_views)
 
-                axios.get(data).then((response) => {
-                    // console.log(response.data)
-                    setTextContent(response.data);
-                })
-                    .catch((error) => console.log(error));
+                // axios.get(data).then((response) => {
+                //     // console.log(response.data)
+                //     setTextContent(response.data);
+                // })
+                //     .catch((error) => console.log(error));
 
-                setLikesData(resp.data["course_data"].course_likes)
-                setIconColor(resp.data["course_data"].like_status)
+
 
             }))
             .catch((error) => console.log(error))
 
-    }, [course.courseid, lessonId.lesson_id])
+    }, [course.courseid, lessonId.lesson_id, like])
 
 
     useEffect(() => {
@@ -97,19 +95,19 @@ const Course_home = () => {
             .catch((error) => console.log(error))
     }, [course.courseid])
 
-    useEffect(() => {
-        client.get("learners_count/",
-            {
-                withCredentials: true,
-                params: {
-                    course_id: course.courseid
-                }
-            })
-            .then((resp) => (
-                setLearners(resp.data.Learners)
-            ))
-            .catch((error) => console.log(error))
-    }, [course.courseid])
+    // useEffect(() => {
+    //     client.get("learners_count/",
+    //         {
+    //             withCredentials: true,
+    //             params: {
+    //                 course_id: course.courseid
+    //             }
+    //         })
+    //         .then((resp) => (
+    //             setLearners(resp.data.Learners)
+    //         ))
+    //         .catch((error) => console.log(error))
+    // }, [course.courseid])
 
 
     useEffect(() => {
@@ -132,8 +130,23 @@ const Course_home = () => {
                 setLessonName(resp.data["all_lessons"].lesson_name)
                 // setClipboardContent(resp.data.all_lessons.clipboards)
                 const clipData = resp.data.all_lessons.map(item => item.clipboards)
+                console.log(clipData.toString())
+                const url = clipData.toString()
+
+                axios.get(url)
+                    .then((resp) => {
+                        const dataArray = resp.data.split("\n")
+                        console.log(dataArray)
+                        setClipboards(dataArray)
+
+                    })
+                    .catch(error => console.log(error))
+
                 // let link;
-                setClipboardContent(clipData[0])
+
+                // setClipboardContent(clipData)
+                // console.log(clipboardContent)
+
                 // clipData.map((item) => (
                 //     // link = item
                 //     console.log("pp : " + item)
@@ -175,12 +188,53 @@ const Course_home = () => {
         // }
 
     }, [course.courseid, lessonId.lessonid])
+
+    // useEffect(() => {
+    //     const handleClipBoard = () => {
+    //         axios.get(clipboardContent)
+    //             .then((resp) => {
+    //                 console.log(resp.data)
+    //             })
+    //             .catch(error => console.log(error))
+    //     }
+    //     handleClipBoard()
+    // }, [course.courseid])
+
     // const clr = useMemo(homeData.like_status)
     // console.log("clr" + iconColor)
-    console.log("upgradedLikes" + getLikes)
 
     const handleIconClick = () => {
         console.log("icon Clicked")
+        try {
+            client.put("likes_count/", {
+                course_id: course.courseid
+            })
+                .then((resp) => {
+                    if (resp.data.status === true) {
+                        setLike(true)
+
+                    }
+                    if (resp.data.status === false) {
+                        setLike(false)
+
+                    }
+                })
+
+                .then(client.get("usr_course_page/", {
+                    params: {
+                        course_id: course.courseid,
+                        lesson_id: lessonId.lessonid
+                    }
+                })
+                    .then((response) => {
+                        setLikesCount(response.data["course_data"].course_likes)
+                    }))
+        }
+        catch (err) {
+            console.error(err)
+        }
+
+
         // try {
         //     client.put("likes_count/")
         //         .then((resp) => {
@@ -408,8 +462,8 @@ const Course_home = () => {
                                             </Group>
                                             <Group spacing={20} pl={400}>
                                                 <Group spacing={5}>
-                                                    <ActionIcon onClick={handleIconClick}><BiSolidLike size={22} color={iconColor === true ? "rgba(240, 154, 62, 1)" : "rgba(58, 58, 58, 1)"} /></ActionIcon>
-                                                    <Text fw={"600"} fz={14}>{getLikes} </Text>
+                                                    <ActionIcon onClick={handleIconClick}><BiSolidLike size={22} color={like === true ? "rgba(240, 154, 62, 1)" : "rgba(58, 58, 58, 1)"} /></ActionIcon>
+                                                    <Text fw={"600"} fz={14}>{likescount} </Text>
                                                 </Group>
                                                 <Group style={{ display: "flex", alignItems: "center" }} >
                                                     <Text fz={18}> . </Text>
@@ -541,40 +595,49 @@ const Course_home = () => {
                                     <Accordion.Item value='clipboard'>
                                         <Accordion.Control className='accbtn' ><Text color='#FFFFFF'>Clipboard</Text></Accordion.Control>
                                         <Accordion.Panel  >
-                                            <Group className='clipgrp' >
-                                                <div>
-                                                    {
-                                                        lessonData.map((lesson) => {
-                                                            let extracted;
-                                                            if (lesson.clipboards) {
+                                            <Spoiler maxHeight={200}>
+                                                {
+                                                    clipboards.map((item, index) => (
+                                                        <Group className='clipgrp' >
+                                                            <div>
+                                                                {/* {
+                                                            lessonData.map((lesson) => {
+                                                                let extracted;
+                                                                if (lesson.clipboards) {
 
-                                                                const materialUrl = lesson.materials[0];
-                                                                extracted = materialUrl.split('/').slice(-2, -1)[0].replace(/_/g, ' ').replace(/\.[^/.]+$/, '');
-                                                                return <Text id='txt' color='#FFFFFF' key={lesson.lesson_id}>Back to Basics</Text>;
+                                                                    // const materialUrl = lesson.materials[0];
+                                                                    // extracted = materialUrl.split('/').slice(-2, -1)[0].replace(/_/g, ' ').replace(/\.[^/.]+$/, '');
+                                                                    // return <Text id='txt' color='#FFFFFF' key={lesson.lesson_id}>Back to Basics</Text>;
 
-                                                            }
+                                                                }
 
-                                                        })
-                                                    }
-                                                </div>
-                                                <CopyButton
+                                                            })
+                                                        } */}
+                                                                <Text id='txt' color='#FFFFFF' key={index}>{item}</Text>
 
-                                                    value={clipboardContent}
-                                                    timeout={2000}>
-                                                    {({ copied, copy }) => (
-                                                        <Tooltip label={copied ? 'Copied' : 'Copy to Clipboard'} withArrow>
-                                                            <ActionIcon variant="transperant" onClick={copy}>
-                                                                {copied ? (
-                                                                    <TiTick style={{ width: 16 }} color={copied ? 'teal' : 'gray'} />
-                                                                ) : (
-                                                                    <TbCopy style={{ width: 16 }} color={copied ? 'teal' : 'gray'} />
+                                                            </div>
+                                                            <CopyButton
+                                                                value={copyTextToClipboard}
+                                                                timeout={2000}>
+                                                                {({ copied, copy }) => (
+                                                                    <Tooltip label={copied ? 'Copied' : 'Copy to Clipboard'} withArrow>
+                                                                        <ActionIcon variant="transperant" onClick={copy}>
+                                                                            {copied ? (
+                                                                                <TiTick style={{ width: 16 }} color={copied ? 'teal' : 'gray'} />
+                                                                            ) : (
+                                                                                <TbCopy style={{ width: 16 }} color={copied ? 'teal' : 'gray'} />
+                                                                            )}
+                                                                        </ActionIcon>
+                                                                    </Tooltip>
                                                                 )}
-                                                            </ActionIcon>
-                                                        </Tooltip>
-                                                    )}
-                                                </CopyButton>
+                                                            </CopyButton>
 
-                                            </Group>
+                                                        </Group>
+
+                                                    ))
+                                                }
+
+                                            </Spoiler>
                                         </Accordion.Panel>
                                     </Accordion.Item>
                                 </Accordion>
@@ -589,7 +652,6 @@ const Course_home = () => {
                                                     <Container pl={0} pr={0} w={"100%"} fluid  >
 
                                                         {
-
                                                             item.lesson_status === "locked" ?
                                                                 (<div style={{ pointerEvents: 'none' }}>
                                                                     <Flex p={"1rem"} align={"center"} gap={15}>
