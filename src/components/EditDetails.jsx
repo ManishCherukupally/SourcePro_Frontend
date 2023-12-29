@@ -1,6 +1,7 @@
 // @ts-ignore
 import { AppShell, Card, Paper, Grid, Flex, TextInput, ActionIcon, Tabs, Divider, Container, Title, Image, Group, Text, Button, SimpleGrid, Space, Header } from '@mantine/core'
 import React, { useState, useEffect } from 'react'
+import { useForm } from '@mantine/form'
 // @ts-ignore
 import { AiFillHome } from 'react-icons/ai'
 // @ts-ignore
@@ -18,12 +19,14 @@ import client from '../API/api'
 
 
 const EditDetails = () => {
+
+
   const navigate = useNavigate();
   const [getData, setGetData] = useState([])
   // @ts-ignore
 
   const [formData, setFormData] = useState({
-    user_id: '',
+
     name: '',
     contact_no: '',
     company: '',
@@ -72,6 +75,28 @@ const EditDetails = () => {
         console.error('Error Fetching:', err)
       })
   }, [])
+
+  const form = useForm({
+    initialValues: {
+      name: getData.name,
+      contact_no: getData.contact_no,
+      company: getData.company,
+      business_email: getData.business_email,
+      years_of_experience: getData.years_of_experience,
+      job_position: getData.job_position,
+      location: getData.location,
+    },
+
+    transformValues: (values) => ({
+      name: `${values.name}`,
+      contact_no: `${values.contact_no}`,
+      company: `${values.company}`,
+      business_email: `${values.business_email}`,
+      years_of_experience: `${values.years_of_experience}`,
+      job_position: `${values.job_position}`,
+      location: `${values.location}`,
+    }),
+  })
   return (
 
     <div>
@@ -97,19 +122,20 @@ const EditDetails = () => {
           <Divider />
           <Space h={15} />
           <Container style={{ marginLeft: 0 }}>
-            <SimpleGrid cols={2}>
-              {/* <TextInput
+            <form>
+              <SimpleGrid cols={2}>
+                {/* <TextInput
                 label='User ID'
                 name='user_id'
                 value={formData.user_id}
                 onChange={handleInputChange}
               /> */}
 
-              <TextInput
+                {/* <TextInput
                 label="Name"
                 name='name'
                 // @ts-ignore
-                placeholder={getData.name}
+                value={getData.name}
                 onChange={handleInputChange}
               />
               <TextInput label="Contact No."
@@ -147,8 +173,58 @@ const EditDetails = () => {
                 // @ts-ignore
                 placeholder={getData.location}
                 onChange={handleInputChange}
-              />
-            </SimpleGrid>
+              /> */}
+                <TextInput
+                  label="Name"
+                  name='name'
+                  placeholder="Name"
+                  {...form.getInputProps('name')}
+                />
+
+                <TextInput
+                  label="Contact No."
+                  name='contact_no'
+                  placeholder="your contact no."
+                  {...form.getInputProps('contact_no')}
+                />
+
+                <TextInput
+                  label="Company"
+                  name='company'
+                  placeholder="your organization name"
+                  {...form.getInputProps('company')}
+                />
+
+                <TextInput
+                  label="Email"
+                  name='business_email'
+                  placeholder="your business email"
+                  {...form.getInputProps('business_email')}
+                />
+
+                <TextInput
+                  label="Years of Experience"
+                  name='years_of_experience'
+                  placeholder="years of experience"
+                  {...form.getInputProps('years_of_experience')}
+                />
+
+                <TextInput
+                  label="Job Position"
+                  name='job_position'
+                  placeholder="your designation"
+                  {...form.getInputProps('job_position')}
+                />
+
+                <TextInput
+                  label="Location"
+                  name='location'
+                  placeholder="your location"
+                  {...form.getInputProps('location')}
+                />
+
+              </SimpleGrid>
+            </form>
           </Container>
         </Container>
 

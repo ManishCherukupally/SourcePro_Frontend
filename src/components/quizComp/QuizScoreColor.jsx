@@ -1,11 +1,12 @@
-import { ActionIcon, Button, Card, Flex, Group, Text } from '@mantine/core'
-import React, { useEffect, useState } from 'react'
+import { ActionIcon, Button, Card, Flex, Group, Modal, Space, Text } from '@mantine/core'
+import React, { useEffect, useRef, useState } from 'react'
 import { BiArrowBack } from 'react-icons/bi'
 import Quiz_test from './Quiz_test'
 import { scoreatom } from '../../Store/store'
-import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
+import { Link, Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
 // import axios from 'axios'
 import client from '../../API/api'
+import { useDisclosure } from '@mantine/hooks'
 // axios.defaults.withCredentials = true;
 // axios.defaults.xsrfCookieName = 'csrftoken'
 // axios.defaults.xsrfHeaderName = 'x-csrftoken'
@@ -18,20 +19,9 @@ export function QuizScoreGreen() {
     const lessonId = useParams()
     const [nextLessonData, setNextLessonData] = useState({})
     const [lessonData, setLessonData] = useState({})
+    // const [modal, setModal] = useState(false)
+    const [opened, { open, close }] = useDisclosure(false);
     // console.log("LData" + lessonData)
-    useEffect(() => {
-        client.get("next_lesson/", {
-            withCredentials: true,
-            params: {
-                course_id: course.courseid,
-                lesson_id: lessonId.lessonid
-            }
-        })
-            .then((resp) => {
-                setNextLessonData(resp.data)
-            })
-
-    }, [])
 
     useEffect(() => {
         client.get("usr_course_page_lesson/",
@@ -54,22 +44,62 @@ export function QuizScoreGreen() {
     }, [course.courseid, lessonId.lessonid])
 
 
+    // const { pathname } = useLocation();
+    // // const currentref = useRef(null)
+    // const handleButtonClick = () => {
+    //     // Trigger a re-render by setting the state to false and then back to true
+    //     console.log("button Clicked")
+    //     // window.location.href(`/quiz/${course.courseid}/${lessonId.lessonid}`)
 
+    //     const targetPath = `/quiz/${course.courseid}/${lessonId.lessonid}`;
 
-    const handleButtonClick = () => {
-        // Trigger a re-render by setting the state to false and then back to true
-        console.log("button Clicked")
-        window.location.href(`/quiz/${course.courseid}/${lessonId.lessonid}`)
-    };
+    //     if (pathname === targetPath) {
+    //         // Manually trigger re-render
+    //         this.forceUpdate(); // Assuming you have a forceUpdate method
+    //     } else {
+    //         navigate(targetPath);
+    //     }
+    // };
+
+    const handleNextLesson = () => {
+        client.get("next_lesson/", {
+            withCredentials: true,
+            params: {
+                course_id: course.courseid,
+                lesson_id: lessonId.lessonid
+            }
+        })
+            .then((resp) => {
+                setLessonData(resp.data)
+                if (resp.data.course_id && resp.data.next_lesson_id) {
+                    navigate(`/home/${nextLessonData.course_id}/${nextLessonData.next_lesson_id}`)
+
+                }
+                else {
+                    navigate(`/home/${course.courseid}/${lessonId.lessonid}`)
+                }
+            })
+
+    }
 
 
     return (<>
+
+        <Modal opened={opened} onClose={close} title="Are you sure?!">
+            <Text>Do you really want to exit the quiz?</Text>
+            <Space h={15} />
+            <Flex justify={"end"}>
+                <Button variant='filled' onClick={() => navigate(`/home/${course.courseid}/${lessonId.lessonid}`)}>Yes</Button>
+                <Button variant='outline' onClick={close}>No</Button>
+            </Flex>
+        </Modal>
 
         <div>
             <Card pl={"2rem"} radius={0} h={"4rem"} style={{ backgroundColor: "#262626" }}>
                 <Flex justify={"space-between"} align={"center"} gap={"1rem"}>
                     <Group>
-                        <ActionIcon variant='transparent'><BiArrowBack color='#FFFFFF' size={25} /></ActionIcon>
+                        <ActionIcon onClick={open}
+                            variant='transparent'><BiArrowBack color='#FFFFFF' size={25} /></ActionIcon>
 
                         <Text c={"#FFFFFF"} fw={600} key={lessonData.lesson_id} >Quiz 1.{lessonData.lesson_name}</Text>
 
@@ -77,19 +107,15 @@ export function QuizScoreGreen() {
                     <Flex>
                         {/* <Link to={`/quiz/${course.courseid}/${lessonId.lessonid}`}> */}
                         <Button mr={"3.5rem"} variant='outline'
-                            onClick={handleButtonClick}
+                            onClick={() => window.location.reload()}
 
                             style={{ color: "rgba(255, 255, 255, 1)", borderColor: "rgba(255, 255, 255, 1)" }}
                         > RE-TAKE QUIZ</Button>
                         {/* </Link> */}
-                        <Link to={`/home/${
-                            // @ts-ignore
-                            course.courseid}/${nextLessonData.
-                                // @ts-ignore
-                                next_lesson_id}`}>
-                            <Button mr={"3.5rem"} variant='filled' style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}
-                            >NEXT LESSON</Button>
-                        </Link>
+
+                        <Button onClick={handleNextLesson} mr={"3.5rem"} variant='filled' style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}
+                        >NEXT LESSON</Button>
+
                     </Flex>
                 </Flex>
             </Card>

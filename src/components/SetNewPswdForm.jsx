@@ -1,5 +1,5 @@
 // @ts-ignore
-import { Center, Flex, Text, TextInput, Image, Card, BackgroundImage, Stack, ActionIcon, Space, NumberInput, Group, Button, Box, UnstyledButton } from '@mantine/core'
+import { Center, Flex, Text, TextInput, Image, Card, BackgroundImage, Stack, ActionIcon, Space, NumberInput, Group, Button, Box, UnstyledButton, PasswordInput } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import React, { useEffect, useState } from 'react'
 import { BiArrowBack } from 'react-icons/bi'
@@ -153,7 +153,7 @@ const SetNewPswdForm = () => {
 
                                         <Space h={15} />
                                         <Stack>
-                                            <TextInput className='sp'
+                                            <PasswordInput className='sp'
                                                 label="Enter your new password"
                                                 onChange={(e) => setPassword(e.currentTarget.value)}
                                             />
