@@ -402,8 +402,11 @@ const Course_home = () => {
                                 }
 
                                 {shouldRerender &&
+
                                     lessonData.map((item) => (
-                                        <ReactPlayer ref={playerRef} key={item.lesson_id} height={"100%"} width={"100%"}
+                                        <ReactPlayer ref={playerRef}
+                                            style={{ pointerEvents: showOverlay && 'none', filter: fill }}
+                                            key={item.lesson_id} height={"100%"} width={"100%"}
                                             controls
                                             playing={isPlaying}
                                             onStart={seekToTime}
@@ -422,7 +425,7 @@ const Course_home = () => {
                                             onEnded={() => {
                                                 setShowOverlay(true)
                                                 setFill("blur(1px)")
-                                                setIsPlaying(!isPlaying)
+                                                setIsPlaying(false)
                                             }}
 
                                             config={{
@@ -446,7 +449,7 @@ const Course_home = () => {
 
                                                 }
                                             }}
-                                            style={{ filter: fill }}
+
                                         />
                                     ))
                                 }
