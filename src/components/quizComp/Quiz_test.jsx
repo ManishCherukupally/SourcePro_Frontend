@@ -2,11 +2,11 @@ import React, { useEffect, useRef, useState } from 'react'
 import Head from '../dashboard Header/Head'
 import { atom, useAtom } from 'jotai';
 // @ts-ignore
-import { ActionIcon, Box, Button, Card, Center, Checkbox, Container, Divider, Flex, Group, Loader, LoadingOverlay, Overlay, Radio, Space, Stack, Text, Title } from '@mantine/core'
+import { ActionIcon, Box, Button, Card, Center, Checkbox, Container, Divider, Flex, Group, Loader, LoadingOverlay, Modal, Overlay, Radio, Space, Stack, Text, Title } from '@mantine/core'
 import { BiArrowBack } from 'react-icons/bi'
 import { QuizScoreGreen, QuizScoreRed } from './QuizScoreColor'
 import { quiz, qwitho, scoreatom, valquiz } from '../../Store/store'
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDisclosure } from '@mantine/hooks'
 import client from '../../API/api';
 // import axios from 'axios'
@@ -86,7 +86,8 @@ export const Result = (props) => {
     )
 }
 const Quiz_test = () => {
-
+    const [opened, { open, close }] = useDisclosure(false);
+    const navigate = useNavigate()
     const [quizData, setQuizData] = useState([]);
     // @ts-ignore
     const quiz = quizData
@@ -165,6 +166,25 @@ const Quiz_test = () => {
 
     }, []);
 
+    const [lessonName, setLessonName] = useState("");
+    var lesson;
+    useEffect(() => {
+        client.get("usr_course_page_lesson/",
+            {
+                withCredentials: true,
+                params: {
+                    course_id: course.courseid,
+                    lesson_id: lessonId.lessonid
+                }
+            })
+            .then((resp) => {
+
+                lesson = resp.data["all_lessons"].map(item => item.lesson_name)
+                setLessonName(lesson.toString())
+            })
+
+
+    }, [])
 
 
     // @ts-ignore
@@ -317,8 +337,8 @@ const Quiz_test = () => {
                 <Card pl={"2rem"} radius={0} h={"4rem"} style={{ backgroundColor: "#262626" }}>
                     <Flex justify={"space-between"} align={"center"} gap={"1rem"}>
                         <Group>
-                            <ActionIcon variant='transparent'><BiArrowBack color='#FFFFFF' size={25} /></ActionIcon>
-                            <Text c={"#FFFFFF"} fw={600}>Quiz 1. Lesson 1</Text>
+                            <ActionIcon onClick={open} variant='transparent'><BiArrowBack color='#FFFFFF' size={25} /></ActionIcon>
+                            <Text c={"#FFFFFF"} fw={600}>Quiz 1.{" " + lessonName}</Text>
                         </Group>
                         <Button mr={'3.5rem'}
                             variant="filled"
@@ -328,12 +348,21 @@ const Quiz_test = () => {
                     </Flex>
                 </Card>
             }
+            <Modal style={{ display: "flex", justifyContent: "center" }} opened={opened} onClose={close} title="Are you sure?!">
+                <Text>Do you really want to exit the quiz?</Text>
+                <Space h={15} />
+                <Flex justify={"end"} gap={"2%"}>
+                    <Button variant='filled' onClick={() => navigate(`/home/${course.courseid}/${lessonId.lessonid}`)}>Yes</Button>
+                    <Button variant='outline' onClick={close}>No</Button>
+                </Flex>
+            </Modal>
             {
                 quizHeadgreen && <QuizScoreGreen />
             }
             {
                 quizHeadRed && <QuizScoreRed />
             }
+
 
             <Box>
                 {loaderVisible && (
@@ -361,6 +390,8 @@ const Quiz_test = () => {
                         </div>
                     </Overlay>
                 )}
+
+
             </Box>
             {attempt && <Container mt={"2.5rem"} size={"xl"} style={submit ? { pointerEvents: 'unset' } : { pointerEvents: 'none' }}>
                 <>

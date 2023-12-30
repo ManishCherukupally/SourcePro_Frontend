@@ -43,6 +43,7 @@ const LoginForm = () => {
                 .then((resp) => {
                     console.log(JSON.stringify(resp.data.status))
                     if (resp.data.status === "user_validated") {
+
                         setLoader(true);
 
                         navigate("/home")

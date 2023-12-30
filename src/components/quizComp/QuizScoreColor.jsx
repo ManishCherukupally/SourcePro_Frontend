@@ -1,4 +1,4 @@
-import { ActionIcon, Button, Card, Flex, Group, Modal, Space, Text } from '@mantine/core'
+import { ActionIcon, Button, Card, Center, Container, Dialog, Drawer, Flex, Group, Modal, Space, Text } from '@mantine/core'
 import React, { useEffect, useRef, useState } from 'react'
 import { BiArrowBack } from 'react-icons/bi'
 import Quiz_test from './Quiz_test'
@@ -22,7 +22,10 @@ export function QuizScoreGreen() {
     // const [modal, setModal] = useState(false)
     const [opened, { open, close }] = useDisclosure(false);
     // console.log("LData" + lessonData)
+    const [lessonName, setLessonName] = useState("");
+    const [slowTransitionOpened, setSlowTransitionOpened] = useState(false);
 
+    var lesson;
     useEffect(() => {
         client.get("usr_course_page_lesson/",
             {
@@ -33,17 +36,15 @@ export function QuizScoreGreen() {
                 }
             })
             .then((resp) => {
-                const data = resp.data["all_lessons"]
-                console.log(data)
-                const result = data.find(({ lesson_id }) => lesson_id === lessonId.lessonid)
-                console.log(result)
 
+                lesson = resp.data["all_lessons"].map(item => item.lesson_name)
+                setLessonName(lesson.toString())
             })
 
 
-    }, [course.courseid, lessonId.lessonid])
+    }, [])
 
-
+    console.log(lessonName)
     // const { pathname } = useLocation();
     // // const currentref = useRef(null)
     // const handleButtonClick = () => {
@@ -84,16 +85,30 @@ export function QuizScoreGreen() {
 
 
     return (<>
+        <Center>
+            <Modal centered opened={slowTransitionOpened}
+                onClose={() => setSlowTransitionOpened(false)} title="Are you sure?!">
+                <Text>Do you really want to RE-TAKE the quiz?</Text>
+                <Space h={15} />
+                <Flex justify={"end"} gap={"2%"}>
+                    <Button variant='filled'
+                        style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }} onClick={() => window.location.reload()}>Yes</Button>
+                    <Button variant='outline' color='dark' onClick={() => setSlowTransitionOpened(false)}>No</Button>
+                </Flex>
+            </Modal>
+        </Center>
 
-        <Modal opened={opened} onClose={close} title="Are you sure?!">
-            <Text>Do you really want to exit the quiz?</Text>
-            <Space h={15} />
-            <Flex justify={"end"}>
-                <Button variant='filled' onClick={() => navigate(`/home/${course.courseid}/${lessonId.lessonid}`)}>Yes</Button>
-                <Button variant='outline' onClick={close}>No</Button>
-            </Flex>
-        </Modal>
-
+        <Center>
+            <Modal centered opened={opened} onClose={close} title="Are you sure?!">
+                <Text>Do you really want to exit the quiz?</Text>
+                <Space h={15} />
+                <Flex justify={"end"} gap={"2%"}>
+                    <Button style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}
+                        variant='filled' onClick={() => navigate(`/home/${course.courseid}/${lessonId.lessonid}`)}>Yes</Button>
+                    <Button variant='outline' color='dark' onClick={close}>No</Button>
+                </Flex>
+            </Modal>
+        </Center>
         <div>
             <Card pl={"2rem"} radius={0} h={"4rem"} style={{ backgroundColor: "#262626" }}>
                 <Flex justify={"space-between"} align={"center"} gap={"1rem"}>
@@ -101,13 +116,13 @@ export function QuizScoreGreen() {
                         <ActionIcon onClick={open}
                             variant='transparent'><BiArrowBack color='#FFFFFF' size={25} /></ActionIcon>
 
-                        <Text c={"#FFFFFF"} fw={600} key={lessonData.lesson_id} >Quiz 1.{lessonData.lesson_name}</Text>
+                        <Text c={"#FFFFFF"} fw={600} key={lessonData.lesson_id} >Quiz 1. {lessonName}</Text>
 
                     </Group>
                     <Flex>
                         {/* <Link to={`/quiz/${course.courseid}/${lessonId.lessonid}`}> */}
                         <Button mr={"3.5rem"} variant='outline'
-                            onClick={() => window.location.reload()}
+                            onClick={() => setSlowTransitionOpened(true)}
 
                             style={{ color: "rgba(255, 255, 255, 1)", borderColor: "rgba(255, 255, 255, 1)" }}
                         > RE-TAKE QUIZ</Button>
@@ -132,42 +147,74 @@ export function QuizScoreGreen() {
 }
 
 export function QuizScoreRed() {
+    const navigate = useNavigate()
     const course = useParams()
     const lessonId = useParams()
-    const [showQuiz, setShowQuiz] = useState(false); // Use local state to manage quiz visibility
-    const [lessonData, setLessonData] = useState([])
+    // const [showQuiz, setShowQuiz] = useState(false); // Use local state to manage quiz visibility
+    const [opened, { open, close }] = useDisclosure(false);
+    const [slowTransitionOpened, setSlowTransitionOpened] = useState(false);
 
+    const [lessonName, setLessonName] = useState("");
+    var lesson;
     useEffect(() => {
-        client.get("usr_course_page_lesson/", {
-            params: {
-                course_id: course.courseid,
-                lesson_id: lessonId.lessonid
-            }
-        })
+        client.get("usr_course_page_lesson/",
+            {
+                withCredentials: true,
+                params: {
+                    course_id: course.courseid,
+                    lesson_id: lessonId.lessonid
+                }
+            })
             .then((resp) => {
-                setLessonData(resp.data)
+
+                lesson = resp.data["all_lessons"].map(item => item.lesson_name)
+                setLessonName(lesson.toString())
             })
 
-    })
-    const handleButtonClick = () => {
-        // Trigger a re-render by setting the state to false and then back to true
-        console.log("button Clicked")
-        window.location.href(`/quiz/${course.courseid}/${lessonId.lessonid}`)
-    };
+
+    }, [])
+
     return (
         <>
+            <Center>
+                <Modal centered opened={slowTransitionOpened}
+                    onClose={() => setSlowTransitionOpened(false)} title="Are you sure?!">
+                    <Text>Do you really want to RE-TAKE the quiz?</Text>
+                    <Space h={15} />
+                    <Flex justify={"end"} gap={"2%"}>
+                        <Button style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}
+                            variant='filled' onClick={() => window.location.reload()}>Yes</Button>
+                        <Button variant='outline' color='dark' onClick={() => setSlowTransitionOpened(false)}>No</Button>
+                    </Flex>
+                </Modal>
+            </Center>
+            <Center>
+                <Modal centered opened={opened} onClose={close} title="Are you sure?!">
+                    <Text>Do you really want to exit the quiz?</Text>
+                    <Space h={15} />
+                    <Flex justify={"end"} gap={"2%"}>
+                        <Button variant='filled'
+                            style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}
+                            onClick={() => navigate(`/home/${course.courseid}/${lessonId.lessonid}`)}>Yes</Button>
+                        <Button variant='outline' color='dark' onClick={close}>No</Button>
+                    </Flex>
+                </Modal>
+            </Center>
 
             <div>
                 <Card pl={"2rem"} radius={0} h={"4rem"} style={{ backgroundColor: "#262626" }}>
                     <Flex justify={"space-between"} align={"center"} gap={"1rem"}>
                         <Group>
-                            <ActionIcon variant='transparent'><BiArrowBack color='#FFFFFF' size={25} /></ActionIcon>
+                            <ActionIcon onClick={open} variant='transparent'><BiArrowBack color='#FFFFFF' size={25} /></ActionIcon>
 
-                            <Text c={"#FFFFFF"} fw={600} key={lessonId.lessonid}>Quiz 1.{lessonData.lesson_name}</Text>
+                            <Text c={"#FFFFFF"} fw={600} key={lessonId.lessonid}>Quiz 1.{lessonName}</Text>
 
                         </Group>
                         <Flex>
-                            <Button onClick={handleButtonClick} mr={"3.5rem"} variant='outline' style={{ color: "rgba(255, 255, 255, 1)", borderColor: "rgba(255, 255, 255, 1)" }}
+                            <Button onClick={() => {
+
+                                setSlowTransitionOpened(true)
+                            }} mr={"3.5rem"} variant='outline' style={{ color: "rgba(255, 255, 255, 1)", borderColor: "rgba(255, 255, 255, 1)" }}
                             >RE-TAKE QUIZ</Button>
                             <Link to={`/home/${course.courseid}/${lessonId.lessonid}`}>
                                 <Button mr={"3.5rem"} variant='filled' style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }} >WATCH LESSON AGAIN</Button>
