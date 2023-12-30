@@ -35,6 +35,7 @@ const Home = () => {
   const [continueLearning, setContinueLearning] = useState([])
   const [newCourses, setNewCourses] = useState([])
   const [allCourses, setAllCourses] = useState([])
+  const lesson_Id = useParams()
   const [courseid, setCourseid] = useAtom(courseidatom)
   console.log(courseid)
   const [lessonId, setLessonId] = useAtom(lessonidatom)
@@ -73,7 +74,26 @@ const Home = () => {
 
       })
   }, [])
+  var intialId;
+  useEffect(() => {
+    client.get("usr_course_page_lesson/", {
+      withCredentials: true,
+      params: {
+        course_id: continueLearning.course_id,
+        lesson_id: null
+      }
+    })
+      .then(resp => intialId = resp.data.all_lessons.lesson_id)
+  })
 
+  const handleLessonPlay = () => {
+    if (continueLearning.last_viewed_lesson_id === null) {
+      navigate(`/home/${continueLearning.course_id}/${intialId}`)
+    }
+    else {
+      navigate(`/home/${continueLearning.course_id}/${continueLearning.last_viewed_lesson_id}`)
+    }
+  }
 
   return (
     <>
@@ -97,9 +117,7 @@ const Home = () => {
           {continueLearning.map((card) => (
             <>
               <Carousel.Slide>
-                <div onClick={() => navigate(`/home/${card.
-                  // @ts-ignore
-                  course_id}/${card.last_viewed_lesson_id}`)}>
+                <div onClick={handleLessonPlay}>
                   <Card className="coursecard" shadow='sm' w={277} p={0} withBorder radius={"md"}>
                     <Card h={120} w={277} p={0} radius={0} >
                       <Image style={{ position: "relative" }}

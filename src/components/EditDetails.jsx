@@ -22,69 +22,64 @@ const EditDetails = () => {
 
 
   const navigate = useNavigate();
-  const [getData, setGetData] = useState([])
+  const [getData, setGetData] = useState({})
+  const [state, setState] = useState(true)
+  // console.log(getData.name)
   // @ts-ignore
 
-  const [formData, setFormData] = useState({
+  // const [formData, setFormData] = useState({
 
-    name: '',
-    contact_no: '',
-    company: '',
-    business_email: '',
-    years_of_experience: '',
-    job_position: '',
-    location: '',
-  });
+  //   name: '',
+  //   contact_no: '',
+  //   company: '',
+  //   business_email: '',
+  //   years_of_experience: '',
+  //   job_position: '',
+  //   location: '',
+  // });
 
-  const handleInputChange = (/** @type {{ target: { name: any; value: any; }; }} */ event) => {
-    const { name, value } = event.target;
+  // const handleInputChange = (/** @type {{ target: { name: any; value: any; }; }} */ event) => {
+  //   const { name, value } = event.target;
 
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+  //   setFormData({
+  //     ...formData,
+  //     [name]: value,
+  //   });
 
-  }
-
-  const updateData = async () => {
-
-    try {
-      const response = await client.put("user_details/", formData);
-      navigate("/mydetails");
-      console.log("response from the server:", response.data);
-
-    } catch (error) {
-
-      console.error('Error while updating details:', error);
-    }
-
-
-
-  };
+  // }
+  const userData = []
   useEffect(() => {
-    client.get("user_details/", {
-      withCredentials: true,
-    })
-
-      .then(res => {
-        console.log(res.data)
-        setGetData(res.data["user_details"]);
+    const fun = () => {
+      client.get("user_details/", {
+        withCredentials: true,
       })
 
-      .catch(err => {
-        console.error('Error Fetching:', err)
-      })
+        .then(res => {
+          console.log(res.data)
+          console.log(res.data.user_details.business_email)
+          // 
+          setGetData(res.data["user_details"]);
+
+        })
+
+        .catch(err => {
+          console.error('Error Fetching:', err)
+        })
+    }
+    fun()
   }, [])
+
+
 
   const form = useForm({
     initialValues: {
-      name: getData.name,
-      contact_no: getData.contact_no,
-      company: getData.company,
-      business_email: getData.business_email,
-      years_of_experience: getData.years_of_experience,
-      job_position: getData.job_position,
-      location: getData.location,
+      name: window.localStorage.getItem("username"),
+      contact_no: window.localStorage.getItem("contact_no"),
+      company: window.localStorage.getItem("company"),
+      business_email: window.localStorage.getItem("business_email"),
+      years_of_experience: window.localStorage.getItem("years_of_experience"),
+      job_position: window.localStorage.getItem("job_position"),
+      location: window.localStorage.getItem("location"),
     },
 
     transformValues: (values) => ({
@@ -97,6 +92,27 @@ const EditDetails = () => {
       location: `${values.location}`,
     }),
   })
+
+
+  const updateData = () => {
+    window.localStorage.setItem("username", form.values.name)
+    window.localStorage.setItem("contact_no", form.values.contact_no)
+    window.localStorage.setItem("company", form.values.company)
+    window.localStorage.setItem("business_email", form.values.business_email)
+    window.localStorage.setItem("years_of_experience", form.values.years_of_experience)
+    window.localStorage.setItem("job_position", form.values.job_position)
+    window.localStorage.setItem("location", form.values.location)
+
+    try {
+      const response = client.put("user_details/", form.getTransformedValues());
+      navigate("/mydetails");
+      console.log("response from the server:", response.data);
+
+    } catch (error) {
+
+      console.error('Error while updating details:', error);
+    }
+  };
   return (
 
     <div>
@@ -122,7 +138,7 @@ const EditDetails = () => {
           <Divider />
           <Space h={15} />
           <Container style={{ marginLeft: 0 }}>
-            <form>
+            <form >
               <SimpleGrid cols={2}>
                 {/* <TextInput
                 label='User ID'
@@ -179,6 +195,7 @@ const EditDetails = () => {
                   name='name'
                   placeholder="Name"
                   {...form.getInputProps('name')}
+
                 />
 
                 <TextInput

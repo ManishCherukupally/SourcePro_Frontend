@@ -16,6 +16,13 @@ const MydetailsPage = () => {
         navigate("/")
       }
       else {
+        window.localStorage.setItem("username", resp.data.user_details.name)
+        window.localStorage.setItem("contact_no", resp.data.user_details.contact_no)
+        window.localStorage.setItem("company", resp.data.user_details.company)
+        window.localStorage.setItem("business_email", resp.data.user_details.business_email)
+        window.localStorage.setItem("years_of_experience", resp.data.user_details.years_of_experience)
+        window.localStorage.setItem("job_position", resp.data.user_details.job_position)
+        window.localStorage.setItem("location", resp.data.user_details.location)
         setAuth(true)
       }
     })

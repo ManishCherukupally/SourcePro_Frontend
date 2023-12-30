@@ -47,7 +47,7 @@ const Head = () => {
   const course = useParams()
   const lessonId = useParams()
   const [data, setData] = useState([]);
-  const [token, setToken, removeToken] = useCookies(['encsrftok']);
+  const [token, setToken, removeToken] = useCookies(['sessionid']);
 
   // console.log(data)
   // useEffect(() => {
@@ -72,8 +72,8 @@ const Head = () => {
         withCredentials: true
       }).then((resp) => {
         if (resp.data.status === "Logged_out") {
-          removeToken(['encsrftok']);
-
+          removeToken(['sessionid']);
+          window.localStorage.clear()
           // Optionally, redirect user to login page
           window.location.href = "/";
         }
