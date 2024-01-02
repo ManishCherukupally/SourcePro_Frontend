@@ -35,11 +35,10 @@ const Home = () => {
   const [continueLearning, setContinueLearning] = useState([])
   const [newCourses, setNewCourses] = useState([])
   const [allCourses, setAllCourses] = useState([])
-  const lesson_Id = useParams()
   const [courseid, setCourseid] = useAtom(courseidatom)
-  console.log(courseid)
+  // console.log(courseid)
   const [lessonId, setLessonId] = useAtom(lessonidatom)
-  console.log("lessonId" + lessonId)
+  // console.log("lessonId" + lessonId)
 
   useEffect(() => {
     client.get("home/", {
@@ -51,16 +50,12 @@ const Home = () => {
         const continueapidata = resp.data["Continue_Learning"]
         setContinueLearning(continueapidata)
         // setLessonId(continueapidata.last_viewed_lesson_id)
-        setCourseid(resp.data.Continue_Learning.map((/** @type {{ course_id: any; }} */ courseid) => (
-          courseid.course_id
+        // setCourseid(resp.data.Continue_Learning.map((courseid) => (courseid.course_id)))
+        // console.log(courseid)
+        // setLessonId(resp.data.Continue_Learning.map((lesson) => (lesson.last_viewed_lesson_id)))
+        // console.log(lessonId)
+        // Get the course ID dynamically
 
-        )))
-        const courseId = courseid; // Get the course ID dynamically
-        const lastViewedLesson = continueapidata.find((course) => course.course_id === courseId);
-
-        if (lastViewedLesson) {
-          setLessonId(lastViewedLesson.last_viewed_lesson_id);
-        }
         // console.log(courseid)
         // @ts-ignore
         // console.log(JSON.stringify(resp.data.Continue_Learning[0].course_id))
@@ -74,26 +69,28 @@ const Home = () => {
 
       })
   }, [])
-  var intialId;
-  useEffect(() => {
-    client.get("usr_course_page_lesson/", {
-      withCredentials: true,
-      params: {
-        course_id: continueLearning.course_id,
-        lesson_id: null
-      }
-    })
-      .then(resp => intialId = resp.data.all_lessons.lesson_id)
-  })
+  // var intialId;
+  // useEffect(() => {
+  //   client.get("usr_course_page_lesson/", {
+  //     withCredentials: true,
+  //     params: {
+  //       course_id: courseid,
+  //       lesson_id: "",
+  //     }
+  //   })
+  //     .then(resp => console.log(resp.data))
+  // })
 
-  const handleLessonPlay = () => {
-    if (continueLearning.last_viewed_lesson_id === null) {
-      navigate(`/home/${continueLearning.course_id}/${intialId}`)
-    }
-    else {
-      navigate(`/home/${continueLearning.course_id}/${continueLearning.last_viewed_lesson_id}`)
-    }
-  }
+  // const handleLessonPlay = () => {
+  //   if (lessonId === null) {
+  //     console.log("null executing")
+  //     navigate(`/home/${courseid}/${intialId}`)
+  //   }
+  //   else {
+  //     console.log("else executing")
+  //     navigate(`/home/${courseid}/${lessonId}`)
+  //   }
+  // }
 
   return (
     <>
@@ -117,8 +114,8 @@ const Home = () => {
           {continueLearning.map((card) => (
             <>
               <Carousel.Slide>
-                <div onClick={handleLessonPlay}>
-                  <Card className="coursecard" shadow='sm' w={277} p={0} withBorder radius={"md"}>
+                <div >
+                  <Card onClick={() => navigate(`/home/${card.course_id}/${card.last_viewed_lesson_id}`)} className="coursecard" shadow='sm' w={277} p={0} withBorder radius={"md"}>
                     <Card h={120} w={277} p={0} radius={0} >
                       <Image style={{ position: "relative" }}
                         src={card.thumbnail}
