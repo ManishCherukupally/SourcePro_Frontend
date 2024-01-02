@@ -36,7 +36,7 @@ const ForgetPassword = () => {
         email
       }).then((resp) => {
         if (resp.data.status === 'OTP sent successfully') {
-          navigate("/set-new-password")
+          window.location.href = "/set-new-password"
         }
 
         else {

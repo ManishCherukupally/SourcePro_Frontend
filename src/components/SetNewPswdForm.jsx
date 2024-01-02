@@ -19,6 +19,7 @@ const SetNewPswdForm = () => {
     const [otp, setOtp] = useState(null)
     const [emailerror, setemailError] = useState("")
     const [otpError, setOtpError] = useState("")
+    const [samePaswdError, setSamePaswdError] = useState("")
     const [token, setToken, removeToken] = useCookies(['encsrftok']);
 
 
@@ -42,24 +43,33 @@ const SetNewPswdForm = () => {
     // const values = {
 
     // }
-    const handleSetPassword = async () => {
+    const handleSetPassword = () => {
+        console.log("clicked")
         try {
-            const response = await client.post('set_password/', {
+            client.post('set_password/', {
                 email,
                 otp,
                 password
             }).then((resp) => {
-                if (resp.data.status === 'Successfull') {
+                if (resp.data.status === 'Invalid_OTP' || otp === "") {
+
+                    setOtpError("Wrong OTP.Please check the OTP & enter again")
+                }
+                else if (resp.data.status === 'Invaid_email_id' || email === "") {
+                    setemailError("Please provide correct email ID")
+                }
+                else if (password === "") {
+                    setSamePaswdError("Password cannot be empty")
+                }
+                else if (resp.data.status === 'current_password_cannot_be_set_as_new_password') {
+                    setSamePaswdError("Current password cannot be set as new password")
+                }
+
+                else if (resp.data.status === 'Successfull') {
                     removeToken(['encsrftok']);
 
                     // Optionally, redirect user to login page
                     window.location.href = "/";
-                }
-                else if (resp.data.status === 'Invaid_email_id') {
-                    setemailError("Please provide correct email ID")
-                }
-                else if (resp.data.status === 'Invalid_OTP') {
-                    setOtpError("Wrong OTP.Please check the OTP & enter again")
                 }
             });
             console.log(email)
@@ -72,9 +82,9 @@ const SetNewPswdForm = () => {
             console.error('Error:', error);
         }
     };
-    const handleresend = async () => {
+    const handleresend = () => {
         try {
-            await client.post('otp/', {
+            client.post('otp/', {
                 withCredentials: true,
                 email
             }).then((resp) => {
@@ -123,40 +133,48 @@ const SetNewPswdForm = () => {
                                                 <Space w={15} />
                                                 <Text fz={18} fw={700}>Set New Password</Text>
                                             </Flex>
-
-                                            <TextInput className='email'
-                                                label="Email ID"
-                                                placeholder="your@email.com"
-                                                onChange={(e) => setEmail(e.currentTarget.value)}
-                                                error={!!emailerror}
-                                            />
-                                            {
-                                                emailerror && <Text pt={0} fz={12} c='red'>{emailerror}</Text>
-                                            }
-
-                                            <TextInput type='number' className='numinp' label="Enter OTP code"
-                                                error={!!otpError}
-                                                rightSection={
-                                                    <UnstyledButton style={{ paddingRight: "2em" }} onClick={handleresend}>
-                                                        <Text color={"blue"} fz={"xs"} fw={600} >RESEND</Text>
-                                                    </UnstyledButton>
-
-
+                                            <div>
+                                                <TextInput className='email'
+                                                    label="Email ID"
+                                                    placeholder="your@email.com"
+                                                    onChange={(e) => setEmail(e.currentTarget.value)}
+                                                    error={!!emailerror}
+                                                />
+                                                {
+                                                    emailerror && <Text pt={0} fz={12} c='red'>{emailerror}</Text>
                                                 }
-                                                onChange={(e) => setOtp(e.currentTarget.value)} />
-                                            {
-                                                otpError && <Text pt={0} fz={12} c='red'>{otpError}</Text>
-                                            }
+                                            </div>
+                                            <div>
+                                                <TextInput type='number' className='numinp' label="Enter OTP code"
+                                                    error={!!otpError}
+                                                    rightSection={
+                                                        <UnstyledButton style={{ paddingRight: "2em" }} onClick={handleresend}>
+                                                            <Text color={"blue"} fz={"xs"} fw={600} >RESEND</Text>
+                                                        </UnstyledButton>
+
+
+                                                    }
+                                                    onChange={(e) => setOtp(e.currentTarget.value)} />
+                                                {
+                                                    otpError && <Text pt={0} fz={12} c='red'>{otpError}</Text>
+                                                }
+                                            </div>
                                         </Stack>
                                         <Space h={3} />
                                         <Text fz={"xs"}>Please enter the OTP set to your registered Email ID</Text>
 
                                         <Space h={15} />
                                         <Stack>
-                                            <PasswordInput className='sp'
-                                                label="Enter your new password"
-                                                onChange={(e) => setPassword(e.currentTarget.value)}
-                                            />
+                                            <div>
+                                                <PasswordInput className='sp'
+                                                    label="Enter your new password"
+                                                    onChange={(e) => setPassword(e.currentTarget.value)}
+                                                    error={!!samePaswdError}
+                                                />
+                                                {
+                                                    samePaswdError && <Text pt={0} fz={12} c='red'>{samePaswdError}</Text>
+                                                }
+                                            </div>
 
                                             <Button color='orange' type="submit" radius={"md"} onClick={handleSetPassword} >Done</Button>
                                         </Stack>

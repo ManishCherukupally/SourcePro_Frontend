@@ -1,4 +1,4 @@
-import { AppShell, Card, Paper, Grid, Flex, TextInput, ActionIcon, Tabs, Divider, Image, Container, Title, Button, Group, Space, Stack, PasswordInput, Menu, Text } from '@mantine/core'
+import { AppShell, Card, Paper, Grid, Flex, TextInput, ActionIcon, Tabs, Divider, Image, Container, Title, Button, Group, Space, Stack, PasswordInput, Menu, Text, Modal } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useDisclosure } from '@mantine/hooks'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -52,14 +52,17 @@ const ChangePassword = () => {
   const [success, setSuccess] = useState("")
 
 
-  const changePassword = async () => {
+  const changePassword = () => {
     try {
-      await client.put("change_password/", {
+      client.put("change_password/", {
         current_password,
         new_password,
         confirm_new_password
 
       }).then((resp) => {
+        console.log(resp.data.status.length > 1)
+
+
         if (resp.data.status === "successfull") {
           setLoader(true)
           setSuccess("Successful!")
@@ -68,15 +71,22 @@ const ChangePassword = () => {
           // Optionally, redirect user to login page
           window.location.href = "/";
         }
-        else if (resp.data.status === "you_have_entered_wrong_password") {
-          setCurrentError("You’ve entered wrong password")
+        else if (resp.data.status === 'New_password_cannot_be_the_same_as_the_old_password') {
+          setConfirmError("New password cannot be the same as the old password")
+        }
+        else if (resp.data.status.length > 1 && current_password === "" && confirm_new_password === "") {
+          setCurrentError("You've entered wrong password")
+          setConfirmError("Passwords do not match")
+        }
+        else if (resp.data.status === "you_have_entered_wrong_password" || current_password === "") {
+          setCurrentError("You've entered wrong password")
           console.log("current password")
         }
-        else if (resp.data.status === "password_do_not_match") {
+        else if (resp.data.status === "password_do_not_match" || confirm_new_password === "") {
           setConfirmError("Passwords do not match")
           console.log("confirm password")
         }
-      });
+      })
     }
     catch (err) {
       console.error(err)
@@ -125,6 +135,7 @@ const ChangePassword = () => {
           <Stack>
             <div>
               <PasswordInput
+                required
                 className='password'
                 label="Enter current Password"
                 // @ts-ignore
@@ -136,7 +147,7 @@ const ChangePassword = () => {
                 currentError && <Text c={"red"} fz={12}>{currentError}</Text>
               }
             </div>
-            <PasswordInput
+            <PasswordInput required
               className='password'
               label="New Password"
               // visible={visible}
@@ -144,7 +155,9 @@ const ChangePassword = () => {
               onChange={(p) => setNewPassword(p.currentTarget.value)}
             />
             <div>
-              <PasswordInput width={"100%"}
+              <PasswordInput
+
+                required
                 className='password'
                 label="Confirm new password"
                 // visible={visible}
