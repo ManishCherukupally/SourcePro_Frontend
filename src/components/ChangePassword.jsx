@@ -123,19 +123,19 @@ const ChangePassword = () => {
         <Card pt={0} style={{ width: "25rem" }}>
           {success && <Text fw={600} c={"green"}>{success}</Text>}
           <Stack>
+            <div>
+              <PasswordInput
+                className='password'
+                label="Enter current Password"
+                // @ts-ignore
 
-            <PasswordInput
-              className='password'
-              label="Enter current Password"
-              // @ts-ignore
-
-              onChange={(p) => setCurrentPassword(p.currentTarget.value)}
-              error={!!currentError}
-            />
-            {
-              currentError && <Text c={"red"} fz={12}>{currentError}</Text>
-            }
-
+                onChange={(p) => setCurrentPassword(p.currentTarget.value)}
+                error={!!currentError}
+              />
+              {
+                currentError && <Text c={"red"} fz={12}>{currentError}</Text>
+              }
+            </div>
             <PasswordInput
               className='password'
               label="New Password"
@@ -143,19 +143,19 @@ const ChangePassword = () => {
               // onVisibilityChange={toggle}
               onChange={(p) => setNewPassword(p.currentTarget.value)}
             />
-
-            <PasswordInput width={"100%"}
-              className='password'
-              label="Confirm new password"
-              // visible={visible}
-              // onVisibilityChange={toggle}
-              onChange={(p) => setConfirmPassword(p.currentTarget.value)}
-              error={!!confirmError}
-            />
-            {
-              confirmError && <Text c={"red"} fz={12}>{confirmError}</Text>
-            }
-
+            <div>
+              <PasswordInput width={"100%"}
+                className='password'
+                label="Confirm new password"
+                // visible={visible}
+                // onVisibilityChange={toggle}
+                onChange={(p) => setConfirmPassword(p.currentTarget.value)}
+                error={!!confirmError}
+              />
+              {
+                confirmError && <Text c={"red"} fz={12}>{confirmError}</Text>
+              }
+            </div>
           </Stack>
         </Card>
       </Container>
