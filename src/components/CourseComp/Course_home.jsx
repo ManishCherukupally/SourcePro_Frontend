@@ -19,6 +19,7 @@ axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'x-csrftoken'
 
 const Course_home = () => {
+    const [copied, setCopied] = useState(false)
     const playerRef = useRef(null);
     const [isActive, setIsActive] = useState(false);
 
@@ -361,6 +362,14 @@ const Course_home = () => {
         }
     };
 
+    // function copyPageUrl(value) {
+    //     try {
+    //         navigator.clipboard.writeText(value);
+    //         console.log('item copied');
+    //     } catch (err) {
+    //         console.error('Failed to copy: ', err);
+    //     }
+    // }
     return (
         <>
             <Box>
@@ -620,12 +629,16 @@ const Course_home = () => {
                                                                 <Text id='txt' color='#FFFFFF' key={index}>{item}</Text>
 
                                                             </div>
-                                                            <CopyButton
+                                                            {/* <CopyButton
                                                                 value={item}
                                                                 timeout={2000}>
                                                                 {({ copied, copy }) => (
                                                                     <Tooltip label={copied ? 'Copied' : 'Copy to Clipboard'} withArrow>
-                                                                        <ActionIcon variant="transperant" onClick={copy}>
+                                                                        <ActionIcon variant="transperant" onClick={() => {
+                                                                            copy();
+                                                                            console.log("copy hitted")
+                                                                            console.log(item)
+                                                                        }}>
                                                                             {copied ? (
                                                                                 <TiTick style={{ width: 16 }} color={copied ? 'teal' : 'gray'} />
                                                                             ) : (
@@ -634,8 +647,44 @@ const Course_home = () => {
                                                                         </ActionIcon>
                                                                     </Tooltip>
                                                                 )}
-                                                            </CopyButton>
+                                                            </CopyButton> */}
+                                                            <div key={index}>
+                                                                <Tooltip label={copied ? 'Copied' : 'Copy to Clipboard'} withArrow>
+                                                                    <ActionIcon variant="transperant" onClick={() => {
+                                                                        // setCopied(true);
+                                                                        var textToCopy = item
+                                                                        console.log(textToCopy)
+                                                                        const textArea = document.createElement('textarea');
+                                                                        textArea.value = textToCopy;
+                                                                        document.body.appendChild(textArea);
+                                                                        textArea.select();
 
+                                                                        try {
+                                                                            const successful = document.execCommand('copy');
+                                                                            const message = successful ? 'Text copied to clipboard!' : 'Unable to copy text.';
+                                                                            setCopied(true);
+                                                                        } catch (err) {
+                                                                            console.error('Failed to copy: ', err);
+                                                                        }
+
+                                                                        document.body.removeChild(textArea);
+                                                                        setTimeout(() => {
+                                                                            setCopied(false)
+                                                                        }, 3000)
+                                                                        // console.log("copy hitted")
+                                                                        // console.log(item)
+                                                                    }}>
+                                                                        <TbCopy style={{ width: 16 }} color={'gray'} />
+                                                                        {/* {copied ? (
+                                                                            <TiTick style={{ width: 16 }} color={copied ? 'teal' : 'gray'} />
+                                                                        ) : (
+                                                                            <TbCopy style={{ width: 16 }} color={copied ? 'teal' : 'gray'} />
+                                                                        )} */}
+
+
+                                                                    </ActionIcon>
+                                                                </Tooltip>
+                                                            </div>
                                                         </Flex>
                                                     </Accordion.Panel>
                                                 ))

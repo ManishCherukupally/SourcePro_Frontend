@@ -15,30 +15,44 @@ import './Components.css'
 import client from '../API/api';
 import { Cookies, useCookies } from 'react-cookie'
 import Home from './Home';
+import { isEmail, useForm } from '@mantine/form';
 // axios.defaults.withCredentials = true;
 // axios.defaults.xsrfCookieName = 'csrftoken'
 // axios.defaults.xsrfHeaderName = 'x-csrftoken'
 
 const LoginForm = () => {
+    const form = useForm({
+        initialValues: {
+            email: '',
+            password: ''
+        },
+
+        // functions will be used to validate values at corresponding key
+        validate: {
+            // email: (value) => (/^\S+@\S+$/.test(value) ? null : 'The email address you entered is invalid'),
+            // email: isEmail('The email address you entered is invalid'),
+            email: (value) => (value === "" ? "The email address you entered is invalid" : null),
+            password: (value) => (value < 6 ? 'The password you entered is incorrect' : null),
+        },
+    })
     const navigate = useNavigate()
     const [loader, setLoader] = useState(false)
-    const [email, setEmail] = useState("")
-    const [emailError, setEmailError] = useState("")
-    const [password, setPassword] = useState("")
-    const [passworderror, setPasswordError] = useState('')
-    const [auth, setAuth] = useState(false);
+    // const [email, setEmail] = useState("")
+    // const [emailError, setEmailError] = useState("")
+    // const [password, setPassword] = useState("")
+    // const [passworderror, setPasswordError] = useState('')
+    // const [auth, setAuth] = useState(false);
 
     // useEffect(() => {
     //     window.localStorage.sessionid === null ? navigate("/") : navigate("/home")
     // }, [navigate])
 
-    const handleLogin = async () => {
+    const handleLogin = async (values) => {
 
         try {
             await client.post('login/', {
-                email,
-                password,
-                withcredentials: true
+                email: values.email,
+                password: values.password,
             })
                 .then((resp) => {
                     console.log(JSON.stringify(resp.data.status))
@@ -48,15 +62,15 @@ const LoginForm = () => {
 
                         navigate("/home")
                     }
-                    else {
-                        if (email === "" || "Invalid Credentials") {
-                            setEmailError("The email address you entered is invalid")
-                        }
-                        if (password === "" || "Invalid Credentials") {
-                            setPasswordError("The password you entered is incorrect")
-                        }
-                        navigate("/")
-                    }
+                    // else {
+                    //     if (email === "" || "Invalid Credentials") {
+                    //         setEmailError("The email address you entered is invalid")
+                    //     }
+                    //     if (password === "" || "Invalid Credentials") {
+                    //         setPasswordError("The password you entered is incorrect")
+                    //     }
+                    //     navigate("/")
+                    // }
 
                 })
                 .catch(err => console.error(err))
@@ -79,7 +93,7 @@ const LoginForm = () => {
                     <BackgroundImage className='blur' zIndex="998" w="100%" h={["80vh", "80vh", "100vh", "100vh"]} >
                         <Flex justify={"end"}>
                             <div className="logincard" style={{ marginTop: "8em", marginRight: "7em" }}>
-                                <Card withBorder style={{ width: "23em", height: "30rem", padding: "2em" }} radius={"xl"}>
+                                <Card withBorder style={{ width: "402px", height: "530px", padding: "2em" }} radius={"xl"}>
 
                                     <Center>
                                         <Image
@@ -87,53 +101,51 @@ const LoginForm = () => {
                                             src={"https://www.sourceprotraining.com/wp-content/uploads/2021/09/logo.png"} />
                                     </Center>
 
+                                    <form onSubmit={form.onSubmit(handleLogin)}>
+                                        <Stack>
 
-                                    <Stack>
-                                        <Text fz={18} fw={700}>Log In</Text>
-                                        <div>
-                                            <TextInput className='email'
-                                                withAsterisk
-                                                label="Email ID"
-                                                placeholder="your@email.com"
-                                                value={email}
-                                                onChange={(e) => setEmail(e.currentTarget.value)}
-                                                error={!!emailError}
-                                            />
-                                            {
-                                                emailError && <Text fz={12} c={"red"}>{emailError}</Text>
-                                            }
-                                        </div>
-                                        <Flex direction={"column"}>
+                                            <Text fz={18} fw={700}>Log In</Text>
                                             <div>
-                                                <PasswordInput
-                                                    className='password'
+                                                <TextInput className='email'
                                                     withAsterisk
-                                                    label='Password'
-                                                    placeholder="Enter your Password"
-                                                    value={password}
-                                                    onChange={(e) => setPassword(e.currentTarget.value)}
-                                                    error={!!passworderror}
+                                                    label="Email ID"
+                                                    placeholder="your@email.com"
+                                                    {...form.getInputProps('email')}
                                                 />
-                                                {
-                                                    passworderror && <Text fz={12} c={"red"}>{passworderror}</Text>
-                                                }
+                                                {/* {
+                                                    emailError && <Text fz={12} c={"red"}>{emailError}</Text>
+                                                } */}
                                             </div>
+                                            <Flex direction={"column"}>
+                                                <div>
+                                                    <PasswordInput
+                                                        className='password'
+                                                        withAsterisk
+                                                        label='Password'
+                                                        placeholder="Enter your Password"
 
-                                            <Link to="/forgot-password"
-                                                className="forgot-password-link" >
+                                                        {...form.getInputProps('password')}
+                                                    />
+                                                    {/* {
+                                                        passworderror && <Text fz={12} c={"red"}>{passworderror}</Text>
+                                                    } */}
+                                                </div>
 
-                                                Forgot your password?
-                                            </Link>
-                                        </Flex>
+                                                <Link to="/forgot-password"
+                                                    className="forgot-password-link" >
+
+                                                    Forgot your password?
+                                                </Link>
+                                            </Flex>
 
 
-                                        <Button fullWidth style={{ backgroundColor: "rgba(240, 154, 62, 1)" }} type='submit' radius={"md"} onClick={handleLogin}
-                                            loading={loader}>Login</Button>
+                                            <Button fullWidth style={{ backgroundColor: "rgba(240, 154, 62, 1)" }} type='submit' radius={"md"}
+                                                loading={loader}>Login</Button>
 
 
 
-                                    </Stack>
-
+                                        </Stack>
+                                    </form>
                                 </Card>
                             </div>
                         </Flex>

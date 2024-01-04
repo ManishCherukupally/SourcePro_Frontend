@@ -4,23 +4,23 @@ import ChangePassword from '../components/ChangePassword'
 import client from '../API/api'
 
 const ChangePaswdPage = () => {
-  const navigate = useNavigate()
-  const [auth, setAuth] = useState(false)
+  // const navigate = useNavigate()
+  // const [auth, setAuth] = useState(false)
 
-  useEffect(() => {
-    client.get("home/").then((resp) => {
-      if (resp.data.status === 'unauthorized_user') {
-        navigate("/")
-      }
-      else {
-        setAuth(true)
-      }
-    })
-  })
+  // useEffect(() => {
+  //   client.get("home/").then((resp) => {
+  //     if (resp.data.status === 'unauthorized_user') {
+  //       navigate("/")
+  //     }
+  //     else {
+  //       setAuth(true)
+  //     }
+  //   })
+  // })
   return (
     <div>
-      {auth && <ChangePassword />}
-      {/* <ChangePassword /> */}
+      {/* {auth && <ChangePassword />} */}
+      <ChangePassword />
     </div>
   )
 }
