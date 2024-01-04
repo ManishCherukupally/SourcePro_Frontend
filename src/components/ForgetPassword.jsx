@@ -1,6 +1,6 @@
 // @ts-ignore
 import { Card, Center, Flex, Image, TextInput, Text, Stack, Space, Group, ActionIcon, Box, BackgroundImage, Button, PasswordInput, UnstyledButton, } from '@mantine/core'
-import { useForm } from '@mantine/form'
+import { isEmail, useForm } from '@mantine/form'
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { BiArrowBack } from 'react-icons/bi'
@@ -14,38 +14,41 @@ import client from '../API/api'
 
 
 const ForgetPassword = () => {
-  const [err, setErr] = useState("")
-  const [email, setEmail] = useState("")
+
+  // const [err, setErr] = useState("")
+  // const [email, setEmail] = useState("")
   const navigate = useNavigate()
-  // const form = useForm(
-  //   {
-  //     initialValues: {
-  //       email: "",
-  //     },
-  //     validate: {
-  //       email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid.Please enter your Email'),
-  //     }
-  //   }
-  // );
+  const form = useForm(
+
+    {
+      initialValues: {
+        email: "",
+      },
+      validate: {
+        email: isEmail('Invalid.Please enter your Email'),
+      }
+    }
+  );
 
 
-  const handleForgetPaswd = async () => {
+  const handleForgetPaswd = async (values) => {
+    console.log("forgot paswd clicked")
     try {
       await client.post('otp/', {
+        email: values.email,
         withCredentials: true,
-        email
+
       }).then((resp) => {
         if (resp.data.status === 'OTP sent successfully') {
           window.location.href = "/set-new-password"
         }
 
-        else {
+        // else {
 
-          setErr("Please provide valid email ID")
-        }
+        //   setErr("Please provide valid email ID")
+        // }
         console.log(resp)
       });
-      console.log(email)
       // console.log(response.data)
     }
 
@@ -66,7 +69,7 @@ const ForgetPassword = () => {
             h={["80vh", "80vh", "100vh", "100vh"]} >
             <Flex justify={"end"}>
               <div className="forgotpaswd" style={{ marginTop: "8em", marginRight: "7em" }}>
-                <Card withBorder style={{ width: "23em", height: "30rem", padding: "2em" }} radius={"xl"}>
+                <Card withBorder style={{ width: "402px", height: "530px", padding: "2em" }} radius={"xl"}>
                   <Center>
                     <Image
                       maw={150}
@@ -74,50 +77,44 @@ const ForgetPassword = () => {
 
                   </Center>
                   <>
-                    {/* <form onSubmit={form.onSubmit((values) => console.log(values))} > */}
+                    <form onSubmit={form.onSubmit((values) => handleForgetPaswd(values))} >
 
-                    <Flex align={"center"}>
-                      <Link to={"/"}>
-                        <ActionIcon size={"sm"}>< BiArrowBack /></ActionIcon>
-                      </Link>
-                      <Space w={15} />
-                      <Text fz={18} fw={700}>Forgot your Password?</Text>
-                    </Flex>
+                      <Flex align={"center"}>
+                        <Link to={"/"}>
+                          <ActionIcon size={"sm"}>< BiArrowBack /></ActionIcon>
+                        </Link>
+                        <Space w={15} />
+                        <Text fz={18} fw={700}>Forgot your Password?</Text>
+                      </Flex>
 
-                    <Space h={15} />
+                      <Space h={15} />
 
-                    <TextInput className='email'
-                      label="Email ID"
-                      placeholder="your@email.com"
-                      onChange={(e) => setEmail(e.currentTarget.value)}
-                      required
-                      error={!!err}
-                    />
-                    {
-                      err && <Text color='red' fz={12}>{err}</Text>
-                    }
-                    <Space h={10} />
-                    <Text fz={"xs"}>An OTP will be sent your registered email</Text>
+                      <TextInput className='email'
+                        label="Email ID"
+                        placeholder="your@email.com"
+                        {...form.getInputProps("email")}
+                      />
+                      {/* {
+                        err && <Text color='red' fz={12}>{err}</Text>
+                      } */}
+                      <Space h={10} />
+                      <Text fz={"xs"}>An OTP will be sent your registered email</Text>
 
-                    <Space h={30} />
-                    <Group position='right'>
-                      <Link to={"/"} className='cancelbtn' >
-                        CANCEL
-                      </Link>
+                      <Space h={30} />
+                      <Group position='right'>
+                        <Link to={"/"} className='cancelbtn' >
+                          CANCEL
+                        </Link>
 
-                      {/* Onclick fuction here to get the otp */}
-                      <div >
-                        <UnstyledButton type='submit' className='newpaswd' onClick={() => {
-                          handleForgetPaswd();
+                        {/* Onclick fuction here to get the otp */}
+                        <div >
+                          <UnstyledButton type='submit' className='newpaswd' >
+                            SET NEW PASSWORD
+                          </UnstyledButton>
+                        </div>
+                      </Group>
 
-
-                        }}>
-                          SET NEW PASSWORD
-                        </UnstyledButton>
-                      </div>
-                    </Group>
-
-                    {/* </form> */}
+                    </form>
                   </>
                 </Card>
               </div>
