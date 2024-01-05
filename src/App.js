@@ -39,7 +39,7 @@ function App() {
           <Route path="/forgot-password" Component={ForgotPassword} />
           <Route path="/set-new-password" Component={SetnewPawsdPage} />
           <Route path="/home" exact Component={HomePage} />
-          <Route path="/home/:courseid/:lessonid" Component={CoursePage} />
+          <Route path="/courseplayer/:courseid/:lessonid" Component={CoursePage} />
           {/* <Route path="/home/:courseid" Component={CoursePage} /> */}
           {/* <Route path="/home/courseplayer/:course_name" Component={CoursePage} /> */}
           <Route path="/mydetails" Component={MydetailsPage} />
@@ -50,7 +50,7 @@ function App() {
             // @ts-ignore
             exact Component={MycoursesPage} />
           {/* <Route path="/mycourses/:courseid" Component={CoursePage} /> */}
-          <Route path="/mycourses/:courseid/:lessonid" Component={CoursePage} />
+          {/* <Route path="/:courseid/:lessonid" Component={CoursePage} /> */}
           {/* <Route path="/quiz" Component={Quiz_test} /> */}
           <Route path="/quiz/:courseid/:lessonid" Component={QuizPage} />
 

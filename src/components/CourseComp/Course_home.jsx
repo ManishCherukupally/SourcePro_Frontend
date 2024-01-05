@@ -14,6 +14,7 @@ import { Link, json, useNavigate, useParams } from 'react-router-dom'
 import ReactPlayer from 'react-player'
 import client from '../../API/api';
 import axios from 'axios';
+import { useClipboard } from '@mantine/hooks';
 axios.defaults.withCredentials = true;
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'x-csrftoken'
@@ -110,7 +111,7 @@ const Course_home = () => {
     //         .catch((error) => console.log(error))
     // }, [course.courseid])
 
-
+    const [totalMinutesCalculated, settotalMinutesCalculated] = useState("")
     useEffect(() => {
 
 
@@ -128,6 +129,22 @@ const Course_home = () => {
                 const data = (resp.data["all_lessons"])
                 console.log(data)
                 setLessonData(data)
+
+                var time = resp.data.all_lessons.map((item) => item.lesson_duration)
+                const [hours, minutes, seconds] = time.toString().split(":");
+                var minutestime = Number(hours) * 60 + Number(minutes) + Number(seconds) / 60
+                // Calculate total minutes
+                settotalMinutesCalculated(minutestime)
+
+                const playTime = resp.data.all_lessons.map((item) => item.minutes_completed)
+                console.log(playTime.toString())
+                const timeArray = playTime.toString().split(':').map(Number);
+                console.log(timeArray)
+                const playseconds = timeArray[0] * 3600 + timeArray[1] * 60 + timeArray[2];
+                console.log(playseconds)
+                window.localStorage.setItem("playSeconds", playseconds)
+
+
                 setLessonName(resp.data["all_lessons"].lesson_name)
                 // setClipboardContent(resp.data.all_lessons.clipboards)
                 const clipData = resp.data.all_lessons.map(item => item.clipboards)
@@ -322,11 +339,8 @@ const Course_home = () => {
 
     const handlePause = () => {
         console.log("paused")
-        const timeArray = time.split(':').map(Number);
-        console.log(timeArray)
-        const playseconds = timeArray[0] * 3600 + timeArray[1] * 60 + timeArray[2];
-        console.log(playseconds)
-        window.localStorage.setItem("playSeconds", playseconds)
+
+        // window.localStorage.setItem("playSeconds", playseconds)
         try {
             client.put("usr_course_page_lesson/", {
 
@@ -370,6 +384,10 @@ const Course_home = () => {
     //         console.error('Failed to copy: ', err);
     //     }
     // }
+    const clipboard = useClipboard({ timeout: 1000 });
+    const [copiedIndex, setCopiedIndex] = useState(-1);
+
+
     return (
         <>
             <Box>
@@ -424,6 +442,7 @@ const Course_home = () => {
 
                                             onProgress={(progress) => {
                                                 const integerValue = Math.floor(progress.playedSeconds);
+                                                console.log(integerValue)
                                                 setPlay(integerValue);
                                             }}
 
@@ -649,37 +668,44 @@ const Course_home = () => {
                                                                 )}
                                                             </CopyButton> */}
                                                             <div key={index}>
-                                                                <Tooltip label={copied ? 'Copied' : 'Copy to Clipboard'} withArrow>
+                                                                <Tooltip label={copiedIndex === index ? 'Copied' : 'Copy to Clipboard'} withArrow>
                                                                     <ActionIcon variant="transperant" onClick={() => {
                                                                         // setCopied(true);
-                                                                        var textToCopy = item
-                                                                        console.log(textToCopy)
-                                                                        const textArea = document.createElement('textarea');
-                                                                        textArea.value = textToCopy;
-                                                                        document.body.appendChild(textArea);
-                                                                        textArea.select();
+                                                                        // var textToCopy = item
+                                                                        // console.log(textToCopy)
+                                                                        // const textArea = document.createElement('textarea');
+                                                                        // textArea.value = textToCopy;
+                                                                        // document.body.appendChild(textArea);
+                                                                        // textArea.select();
 
-                                                                        try {
-                                                                            const successful = document.execCommand('copy');
-                                                                            const message = successful ? 'Text copied to clipboard!' : 'Unable to copy text.';
-                                                                            setCopied(true);
-                                                                        } catch (err) {
-                                                                            console.error('Failed to copy: ', err);
-                                                                        }
+                                                                        // try {
+                                                                        //     const successful = document.execCommand('copy');
+                                                                        //     const message = successful ? 'Text copied to clipboard!' : 'Unable to copy text.';
+                                                                        //     setCopied(true);
+                                                                        // } catch (err) {
+                                                                        //     console.error('Failed to copy: ', err);
+                                                                        // }
 
-                                                                        document.body.removeChild(textArea);
+                                                                        // document.body.removeChild(textArea);
+                                                                        // setTimeout(() => {
+                                                                        //     setCopied(false)
+                                                                        // }, 3000)
+                                                                        // // console.log("copy hitted")
+                                                                        // // console.log(item)
+
+                                                                        clipboard.copy(item);
+                                                                        setCopiedIndex(index);
                                                                         setTimeout(() => {
-                                                                            setCopied(false)
-                                                                        }, 3000)
-                                                                        // console.log("copy hitted")
-                                                                        // console.log(item)
+                                                                            setCopiedIndex(-1)
+                                                                            clipboard.reset()
+                                                                        }, 1000)
                                                                     }}>
-                                                                        <TbCopy style={{ width: 16 }} color={'gray'} />
-                                                                        {/* {copied ? (
-                                                                            <TiTick style={{ width: 16 }} color={copied ? 'teal' : 'gray'} />
+                                                                        {/* <TbCopy style={{ width: 16 }} color={'gray'} /> */}
+                                                                        {copiedIndex === index ? (
+                                                                            <TiTick style={{ width: 16 }} color={copiedIndex === index ? 'teal' : 'gray'} />
                                                                         ) : (
-                                                                            <TbCopy style={{ width: 16 }} color={copied ? 'teal' : 'gray'} />
-                                                                        )} */}
+                                                                            <TbCopy style={{ width: 16 }} color={copiedIndex === index ? 'teal' : 'gray'} />
+                                                                        )}
 
 
                                                                     </ActionIcon>
@@ -698,6 +724,7 @@ const Course_home = () => {
                                 <Container fluid >
                                     {
                                         lessonData.map((item, index) => (
+
                                             <div key={item.
 
                                                 lesson_id}>
@@ -740,9 +767,7 @@ const Course_home = () => {
                                                                                     <Space h={8} />
                                                                                     <Flex gap={10} >
 
-                                                                                        <Text color='#FFFFFF' fz={"xs"}>{item.
-
-                                                                                            lesson_duration}m </Text>
+                                                                                        <Text color='#FFFFFF' fz={"xs"}>{Math.floor(totalMinutesCalculated)}m </Text>
                                                                                         {
 
                                                                                             item.quiz_attempt_status === true ?

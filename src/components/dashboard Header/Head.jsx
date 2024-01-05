@@ -112,25 +112,22 @@ const Head = () => {
             <Box w={80} className='iconbox'
               style={{
                 borderBottom: `${window.location.pathname === "/home"
-                  || window.location.pathname === `/home/${course.courseid}/${lessonId.lessonid}` ? "3px solid #F09A3E" : ""}`
+                  || window.location.pathname === `/courseplayer/${course.courseid}/${lessonId.lessonid}` ? "3px solid #F09A3E" : ""}`
               }}
             >
               <Link to={"/home"}>
                 <Image width="23px" src={window.location.pathname === "/home" ||
-                  window.location.pathname === `/home/${course.courseid}/${lessonId.lessonid}` ||
-                  window.location.pathname === `/home/${course.courseid}` ? Home1 : Home} ></Image>
+                  window.location.pathname === `/courseplayer/${course.courseid}/${lessonId.lessonid}` ? Home1 : Home} ></Image>
               </Link>
             </Box>
 
             <Box h={"100%"} w={80} className='iconbox'
               style={{
-                borderBottom: `${window.location.pathname === "/mycourses" ||
-                  window.location.pathname === `/mycourses/${course.courseid}/${lessonId.lessonid}` ? "3px solid #F09A3E" : ""}`
+                borderBottom: `${window.location.pathname === "/mycourses" ? "3px solid #F09A3E" : ""}`
               }}
             >
               <Link to={"/mycourses"}>
-                <Image width="25px" src={window.location.pathname === "/mycourses" ||
-                  window.location.pathname === `/mycourses/${course.courseid}/${lessonId.lessonid}` ? Book1 : Book} ></Image>
+                <Image width="25px" src={window.location.pathname === "/mycourses" ? Book1 : Book} ></Image>
               </Link>
             </Box>
 
@@ -159,26 +156,18 @@ const Head = () => {
                 <Menu.Dropdown >
                   <Menu.Item className='menutext' onClick={() => {
                     navigate("/mydetails");
-
-
                   }}>
                     My details
                   </Menu.Item>
 
                   <Menu.Item className='menutext' onClick={() => {
                     navigate("/changepassword");
-
-
-
                   }}>
                     Change Password
                   </Menu.Item>
 
                   <Menu.Item className='menutext' onClick={() => {
                     navigate("/trainingsubscriptions");
-
-
-
                   }}>
                     Training Subscription
                   </Menu.Item>
@@ -190,8 +179,6 @@ const Head = () => {
 
                 </Menu.Dropdown>
               </Menu>
-
-
             </Box>
           </Box>
         </Flex>
