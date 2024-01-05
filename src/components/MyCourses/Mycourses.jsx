@@ -17,11 +17,15 @@ import client from '../../API/api';
 
 function ProgressCard({ data }) {
     const navigate = useNavigate();
+    const [hours, minutes, seconds] = data.minutes_left.split(":");
+
+    // Calculate total minutes
+    const totalMinutesCalculated = Number(hours) * 60 + Number(minutes) + Number(seconds) / 60;
     return (
         <>
             <Flex >
 
-                <Card className='coursecard' onClick={() => { navigate(`/mycourses/${data.course_id}/${data.last_viewed_lesson_id}`) }}>
+                <Card className='coursecard' onClick={() => { navigate(`/courseplayer/${data.course_id}/${data.last_viewed_lesson_id}`) }}>
                     <CardSection>
                         <Image
                             radius={"md"}
@@ -49,14 +53,15 @@ function ProgressCard({ data }) {
                     </Flex >
                     <Text fz={12} fw={600}>By: {data.
 
-                        author} . {new Date(data.subscription_datetime).toLocaleDateString('en-US')} </Text>
+                        author} . {new Date(data.subscription_datetime).toLocaleDateString('en-GB')} </Text>
                     <Space h={32} />
-                    <Group>
+                    <Group >
+
                         <Progress w={150} color="yellow" radius={"xl"}
 
                             value={data.percentage_completed} />
 
-                        <Text fz={12} fw={400}>{data.minutes_left}</Text>
+                        <Text fz={12} fw={400}>{Math.floor(totalMinutesCalculated)}min left</Text>
                     </Group>
                 </Flex>
 
@@ -102,9 +107,7 @@ function HistoryCard({ hdata }) {
                                 <Flex gap={"0.2rem"} align={"end"}><Text fz={12} fw={600}>Course has been deactivated</Text>
 
                                 </Flex >
-                                <Text fz={12} fw={600}>By: {hdata.
-
-                                    author} . {new Date(hdata.subscription_datetime).toLocaleDateString('en-UK')} </Text>
+                                <Text fz={12} fw={600}>By: {hdata.author} . {new Date(hdata.subscription_datetime).toLocaleDateString('en-GB')} </Text>
                                 <Space h={28} />
                                 <div>
                                     <Flex align={"center"} >
@@ -119,7 +122,7 @@ function HistoryCard({ hdata }) {
                 ) : (
                     <Flex >
 
-                        <Card className='coursecard' onClick={() => { navigate(`/mycourses/${hdata.course_id}/${hdata.last_viewed_lesson_id}`) }}>
+                        <Card className='coursecard' onClick={() => { navigate(`/courseplayer/${hdata.course_id}/${hdata.last_viewed_lesson_id}`) }}>
                             <CardSection>
                                 <Image
                                     radius={"md"}

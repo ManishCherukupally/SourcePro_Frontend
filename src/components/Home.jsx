@@ -115,7 +115,7 @@ const Home = () => {
             <>
               <Carousel.Slide>
                 <div >
-                  <Card onClick={() => navigate(`/home/${card.course_id}/${card.last_viewed_lesson_id}`)} className="coursecard" shadow='sm' w={277} p={0} withBorder radius={"md"}>
+                  <Card onClick={() => navigate(`/courseplayer/${card.course_id}/${card.last_viewed_lesson_id}`)} className="coursecard" shadow='sm' w={277} p={0} withBorder radius={"md"}>
                     <Card h={120} w={277} p={0} radius={0} >
                       <Image style={{ position: "relative" }}
                         src={card.thumbnail}

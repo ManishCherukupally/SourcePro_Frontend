@@ -56,9 +56,7 @@ const Transaction = () => {
                   <Flex align={"center"}>
                     <Text c={"dimmed"} fw={500} fz={"sm"}>Date :</Text>
                     <Space w={5} />
-                    <Text fw={500} fz={"sm"} >{new Date(data.
-                      // @ts-ignore
-                      subscription_date).toLocaleDateString('en-UK')}</Text>
+                    <Text fw={500} fz={"sm"} >{new Date(data.subscription_date).toLocaleDateString('en-GB')}</Text>
                   </Flex>
 
                   <Space h={5} />
