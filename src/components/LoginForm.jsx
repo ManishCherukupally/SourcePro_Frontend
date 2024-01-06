@@ -37,6 +37,7 @@ const LoginForm = () => {
     })
     const navigate = useNavigate()
     const [loader, setLoader] = useState(false)
+    const [errorStatus, setErrorStatus] = useState(false)
     // const [email, setEmail] = useState("")
     // const [emailError, setEmailError] = useState("")
     // const [password, setPassword] = useState("")
@@ -61,6 +62,16 @@ const LoginForm = () => {
                         setLoader(true);
 
                         navigate("/home")
+                    }
+                    else {
+                        setErrorStatus(true)
+                        const errorMessage = resp.data.status === "unauthorized_user" || "Invalid credentials"
+                            ? "Invalid credentials.Please check and enter again."
+                            : resp.data.error; // Use a more specific error message if available
+                        form.setErrors({
+                            email: errorMessage,
+                            password: errorMessage,
+                        });
                     }
                     // else {
                     //     if (email === "" || "Invalid Credentials") {
@@ -115,6 +126,9 @@ const LoginForm = () => {
                                                 {/* {
                                                     emailError && <Text fz={12} c={"red"}>{emailError}</Text>
                                                 } */}
+                                                {/* {errorStatus && <Text fz={12} color="red" className="error-message">
+                                                    {form.errors.email}
+                                                </Text>} */}
                                             </div>
                                             <Flex direction={"column"}>
                                                 <div>
@@ -129,6 +143,9 @@ const LoginForm = () => {
                                                     {/* {
                                                         passworderror && <Text fz={12} c={"red"}>{passworderror}</Text>
                                                     } */}
+                                                    {/* {errorStatus && <Text fz={12} color="red" className="error-message">
+                                                        {form.errors.password}
+                                                    </Text>} */}
                                                 </div>
 
                                                 <Link to="/forgot-password"
