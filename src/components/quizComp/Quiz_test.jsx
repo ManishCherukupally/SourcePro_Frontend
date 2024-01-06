@@ -217,14 +217,16 @@ const Quiz_test = () => {
         updatedSelectedOptions[questionid] = optionKey
         // @ts-ignore
         const presentSelectedOption = [...questionwithoption]
+        // console.log("1st present" + JSON.stringify(presentSelectedOption))
+
         const q_id = String(questionid)
         // @ts-ignore
         presentSelectedOption[questionid] = { question_id: q_id, option: [optionKey] }
 
         // @ts-ignore
-        presentSelectedOption[questionid] = { question_id: q_id, option: optionKey }
+        presentSelectedOption[questionid] = { question_id: q_id, option: optionKey.sort((a, b) => a.localeCompare(b)) }
 
-
+        console.log("present options" + JSON.stringify(presentSelectedOption))
 
         // console.log("a :" + JSON.stringify(presentSelectedOption))
         // setSelectedOptions(updatedSelectedOptions)
@@ -258,7 +260,7 @@ const Quiz_test = () => {
                 // setScore(score)
                 // @ts-ignore
                 const statusArray = resp.data.answer_status
-
+                console.log("status array" + statusArray)
                 // @ts-ignore
                 const questionsArray = quizData
 
