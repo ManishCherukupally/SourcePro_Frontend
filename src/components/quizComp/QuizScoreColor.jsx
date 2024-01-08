@@ -73,11 +73,11 @@ export function QuizScoreGreen() {
             .then((resp) => {
                 setLessonData(resp.data)
                 if (resp.data.course_id && resp.data.next_lesson_id) {
-                    navigate(`/home/${nextLessonData.course_id}/${nextLessonData.next_lesson_id}`)
+                    navigate(`/courseplayer/${nextLessonData.course_id}/${nextLessonData.next_lesson_id}`)
 
                 }
                 else {
-                    navigate(`/home/${course.courseid}/${lessonId.lessonid}`)
+                    navigate(`/courseplayer/${course.courseid}/${lessonId.lessonid}`)
                 }
             })
 
@@ -104,7 +104,7 @@ export function QuizScoreGreen() {
                 <Space h={15} />
                 <Flex justify={"end"} gap={"2%"}>
                     <Button style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}
-                        variant='filled' onClick={() => navigate(`/home/${course.courseid}/${lessonId.lessonid}`)}>Yes</Button>
+                        variant='filled' onClick={() => navigate(`/courseplayer/${course.courseid}/${lessonId.lessonid}`)}>Yes</Button>
                     <Button variant='outline' color='dark' onClick={close}>No</Button>
                 </Flex>
             </Modal>
@@ -195,7 +195,7 @@ export function QuizScoreRed() {
                     <Flex justify={"end"} gap={"2%"}>
                         <Button variant='filled'
                             style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}
-                            onClick={() => navigate(`/home/${course.courseid}/${lessonId.lessonid}`)}>Yes</Button>
+                            onClick={() => navigate(`/courseplayer/${course.courseid}/${lessonId.lessonid}`)}>Yes</Button>
                         <Button variant='outline' color='dark' onClick={close}>No</Button>
                     </Flex>
                 </Modal>
@@ -216,7 +216,7 @@ export function QuizScoreRed() {
                                 setSlowTransitionOpened(true)
                             }} mr={"3.5rem"} variant='outline' style={{ color: "rgba(255, 255, 255, 1)", borderColor: "rgba(255, 255, 255, 1)" }}
                             >RE-TAKE QUIZ</Button>
-                            <Link to={`/home/${course.courseid}/${lessonId.lessonid}`}>
+                            <Link to={`/courseplayer/${course.courseid}/${lessonId.lessonid}`}>
                                 <Button mr={"3.5rem"} variant='filled' style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }} >WATCH LESSON AGAIN</Button>
                             </Link>
                         </Flex>
