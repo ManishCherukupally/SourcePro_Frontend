@@ -8,58 +8,23 @@ import { BiArrowBack } from 'react-icons/bi'
 import LoginForm from './LoginForm'
 // import axios from 'axios'
 import client from '../API/api'
+import { useMediaQuery } from '@mantine/hooks'
+import ForgetPasswordCard from './CommonComponents/ForgetPasswordCard'
 // axios.defaults.withCredentials = true;
 // axios.defaults.xsrfCookieName = 'csrftoken'
 // axios.defaults.xsrfHeaderName = 'x-csrftoken'
 
 
 const ForgetPassword = () => {
-
-  // const [err, setErr] = useState("")
-  // const [email, setEmail] = useState("")
-  const navigate = useNavigate()
-  const form = useForm(
-
-    {
-      initialValues: {
-        email: "",
-      },
-      validate: {
-        email: isEmail('Invalid.Please enter your Email'),
-      }
-    }
-  );
+  const mediumScreen = useMediaQuery("(min-width: 900px)");
+  const largeScreen = useMediaQuery("(min-width: 1440px)");
+  const extraLargeScreen = useMediaQuery("(min-width: 1770px)");
 
 
-  const handleForgetPaswd = async (values) => {
-    console.log("forgot paswd clicked")
-    try {
-      await client.post('otp/', {
-        email: values.email,
-        withCredentials: true,
-
-      }).then((resp) => {
-        if (resp.data.status === 'OTP sent successfully') {
-          window.location.href = "/set-new-password"
-        }
-
-        // else {
-
-        //   setErr("Please provide valid email ID")
-        // }
-        console.log(resp)
-      });
-      // console.log(response.data)
-    }
-
-    catch (error) {
-      console.error('Error:', error);
-    }
-  };
 
   return (
     <>
-      <Box >
+      {mediumScreen ? (<Box >
         <BackgroundImage className='bgimg'
           // @ts-ignore
           h={"auto"} w={"100%"}
@@ -69,59 +34,12 @@ const ForgetPassword = () => {
             h={["80vh", "80vh", "100vh", "100vh"]} >
             <Flex justify={"end"}>
               <div className="forgotpaswd" style={{ marginTop: "8em", marginRight: "7em" }}>
-                <Card withBorder style={{ width: "402px", height: "530px", padding: "2em" }} radius={"xl"}>
-                  <Center>
-                    <Image
-                      maw={150}
-                      src={"https://www.sourceprotraining.com/wp-content/uploads/2021/09/logo.png"} />
-
-                  </Center>
-                  <>
-                    <form onSubmit={form.onSubmit((values) => handleForgetPaswd(values))} >
-
-                      <Flex align={"center"}>
-                        <Link to={"/"}>
-                          <ActionIcon size={"sm"}>< BiArrowBack /></ActionIcon>
-                        </Link>
-                        <Space w={15} />
-                        <Text fz={18} fw={700}>Forgot your Password?</Text>
-                      </Flex>
-
-                      <Space h={15} />
-
-                      <TextInput className='email'
-                        label="Email ID"
-                        placeholder="your@email.com"
-                        {...form.getInputProps("email")}
-                      />
-                      {/* {
-                        err && <Text color='red' fz={12}>{err}</Text>
-                      } */}
-                      <Space h={10} />
-                      <Text fz={"xs"}>An OTP will be sent your registered email</Text>
-
-                      <Space h={30} />
-                      <Group position='right'>
-                        <Link to={"/"} className='cancelbtn' >
-                          CANCEL
-                        </Link>
-
-                        {/* Onclick fuction here to get the otp */}
-                        <div >
-                          <UnstyledButton type='submit' className='newpaswd' >
-                            SET NEW PASSWORD
-                          </UnstyledButton>
-                        </div>
-                      </Group>
-
-                    </form>
-                  </>
-                </Card>
+                <ForgetPasswordCard style={{ width: "402px", height: "530px", padding: "2em" }} />
               </div>
             </Flex>
           </BackgroundImage>
         </BackgroundImage>
-      </Box>
+      </Box>) : (<ForgetPasswordCard />)}
     </>
   )
 }
