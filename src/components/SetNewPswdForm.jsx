@@ -6,7 +6,6 @@ import { BiArrowBack } from 'react-icons/bi'
 import { Link, useNavigate } from 'react-router-dom'
 import abemail from "./LoginForm"
 // import axios from 'axios'
-import client from '../API/api'
 import { useCookies } from 'react-cookie'
 import SetnewPasswordCard from './CommonComponents/SetnewPasswordCard'
 import { useMediaQuery } from '@mantine/hooks'
@@ -20,7 +19,7 @@ const SetNewPswdForm = () => {
 
     return (
         <>
-            {mediumScreen ? (<Box >
+            {largeScreen ? (<Box >
                 <BackgroundImage className='bgimg'
                     // @ts-ignore
                     h={"auto"} w={"100%"}
