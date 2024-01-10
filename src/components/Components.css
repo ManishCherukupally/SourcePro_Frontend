@@ -244,3 +244,19 @@
     justify-content: center;
     z-index: 1;
 }
+
+.name {
+    font-size: 100px;
+    font-family: Brush Script MT;
+    position: absolute;
+    top: 370px;
+    /* Adjust based on your image template */
+
+
+    /* Adjust for desired font size */
+}
+
+.bg {
+    background-repeat: no-repeat;
+    background-size: contain;
+}

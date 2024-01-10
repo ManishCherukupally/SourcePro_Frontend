@@ -1,4 +1,4 @@
-import { ActionIcon, Button, Card, Center, Container, Dialog, Drawer, Flex, Group, Modal, Space, Text } from '@mantine/core'
+import { ActionIcon, Button, Card, Center, Container, Dialog, Drawer, Flex, Group, Image, Modal, Space, Text } from '@mantine/core'
 import React, { useEffect, useRef, useState } from 'react'
 import { BiArrowBack } from 'react-icons/bi'
 import Quiz_test from './Quiz_test'
@@ -7,10 +7,11 @@ import { Link, Navigate, useLocation, useNavigate, useParams } from 'react-route
 // import axios from 'axios'
 import client from '../../API/api'
 import { useDisclosure } from '@mantine/hooks'
+import generatePDF, { Resolution } from 'react-to-pdf'
 // axios.defaults.withCredentials = true;
 // axios.defaults.xsrfCookieName = 'csrftoken'
 // axios.defaults.xsrfHeaderName = 'x-csrftoken'
-
+import certificate from '../../assets/certificate.png'
 
 
 export function QuizScoreGreen() {
@@ -24,7 +25,7 @@ export function QuizScoreGreen() {
     // console.log("LData" + lessonData)
     const [lessonName, setLessonName] = useState("");
     const [slowTransitionOpened, setSlowTransitionOpened] = useState(false);
-
+    const [status, setStatus] = useState(false)
     var lesson;
     useEffect(() => {
         client.get("usr_course_page_lesson/",
@@ -82,9 +83,45 @@ export function QuizScoreGreen() {
             })
 
     }
+    useEffect(() => {
+        client.get("usr_course_page/", {
+            params: {
+                course_id: course.courseid
+            }
+        }).then(resp => {
+            if (resp.data.course_data.course_status === "Completed") {
+                setStatus(true)
+            }
+        })
+    })
 
+    const targetRef = useRef()
+    // const { toPDF, tragetRef } = usePDF({ filename: "Certificate.pdf" });
+    const name = "Manish.C"
 
+    const options = {
+
+        // default is 'A4'
+        format: 'certificate',
+        method: 'open',
+        resolution: Resolution.NORMAL,
+        page: {
+
+            orientation: 'landscape',
+        },
+        overrides: {
+            // see https://artskydj.github.io/jsPDF/docs/jsPDF.html for more options
+            pdf: {
+                compress: true
+            }
+        }
+    }
+
+    const handleDownloadCertificate = () => {
+
+    }
     return (<>
+
         <Center>
             <Modal centered opened={slowTransitionOpened}
                 onClose={() => setSlowTransitionOpened(false)} title="Are you sure?!">
@@ -128,8 +165,12 @@ export function QuizScoreGreen() {
                         > RE-TAKE QUIZ</Button>
                         {/* </Link> */}
 
-                        <Button onClick={handleNextLesson} mr={"3.5rem"} variant='filled' style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}
-                        >NEXT LESSON</Button>
+                        {status ? (<Button mr={"3.5rem"} variant='filled'
+                            onClick={handleDownloadCertificate}
+                            style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}
+                        >DOWNLOAD CERTIFICATE</Button>) :
+                            (<Button onClick={handleNextLesson} mr={"3.5rem"} variant='filled' style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}
+                            >NEXT LESSON</Button>)}
 
                     </Flex>
                 </Flex>
@@ -140,7 +181,7 @@ export function QuizScoreGreen() {
                 </Flex>
             </Card>
 
-        </div>
+        </div >
 
     </>
     )

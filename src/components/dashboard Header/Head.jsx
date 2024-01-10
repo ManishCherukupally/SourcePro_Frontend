@@ -39,10 +39,14 @@ import { render } from '@testing-library/react'
 import client from '../../API/api'
 // import Cookies from 'js-cookie';
 import { Cookies, useCookies } from 'react-cookie'
+import { useMediaQuery } from '@mantine/hooks'
 // axios.defaults.withCredentials = true;
 // axios.defaults.xsrfCookieName = 'csrftoken'
 // axios.defaults.xsrfHeaderName = 'x-csrftoken'
 const Head = () => {
+  const mediumScreen = useMediaQuery("(min-width: 900px)");
+  const largeScreen = useMediaQuery("(min-width: 1440px)");
+  const extraLargeScreen = useMediaQuery("(min-width: 1770px)");
   const navigate = useNavigate();
   const course = useParams()
   const lessonId = useParams()

@@ -18,6 +18,7 @@ import { QuizScoreRed } from "./components/quizComp/QuizScoreColor";
 import QuizPage from "./pages/QuizPage";
 import MycoursesPage from "./pages/MycoursesPage";
 import ForgotPassword from "./pages/ForgotPswdPage";
+import MobileHead from "./components/dashboard Header/MobileHead";
 
 
 
@@ -34,7 +35,7 @@ function App() {
           <Route path="/header" Component={Head} />
           <Route path="/courseplayer" Component={CoursePage} /> */}
 
-
+          <Route path="/mobileHead" Component={MobileHead} />
           <Route path="/" Component={LoginPage} />
           <Route path="/forgot-password" Component={ForgotPassword} />
           <Route path="/set-new-password" Component={SetnewPawsdPage} />
