@@ -28,7 +28,7 @@ const LoginForm = () => {
 
     return (
         <>
-            {largeScreen ? (<Box >
+            {mediumScreen ? (<Box >
                 <BackgroundImage className='bgimg' h={"auto"} w={"100%"}
 
                     src='https://images.squarespace-cdn.com/content/v1/5cd4cc35fd679362f1f3ebbc/1591947513340-19FJMD8KICOK13Q49BDR/1a.jpg'>

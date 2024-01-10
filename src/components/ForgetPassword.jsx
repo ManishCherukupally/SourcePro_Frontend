@@ -24,7 +24,7 @@ const ForgetPassword = () => {
 
   return (
     <>
-      {largeScreen ? (<Box >
+      {mediumScreen ? (<Box >
         <BackgroundImage className='bgimg'
           // @ts-ignore
           h={"auto"} w={"100%"}
