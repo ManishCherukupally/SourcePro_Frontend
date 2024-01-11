@@ -22,7 +22,7 @@ import { isEmail, useForm } from '@mantine/form';
 import LoginCard from './CommonComponents/LoginCard';
 import { useMediaQuery } from '@mantine/hooks';
 const LoginForm = () => {
-    const mediumScreen = useMediaQuery("(min-width: 900px)");
+    const mediumScreen = useMediaQuery("(min-width: 1200px)");
     const largeScreen = useMediaQuery("(min-width: 1440px)");
     const extraLargeScreen = useMediaQuery("(min-width: 1770px)");
 
