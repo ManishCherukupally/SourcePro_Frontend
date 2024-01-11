@@ -74,10 +74,10 @@ const HomeComp = () => {
     }, [])
     return (
         <div>
-            <Container mt={"4rem"} size={"xl"}>
+            <Container mt={mediumScreen ? "4rem" : "2rem"} size={"xl"}>
                 <Text fz={20} fw={500}>Continue Learning</Text>
                 <Space h={10} />
-                <Carousel slideSize="0%"
+                <Carousel
                     classNames={classes}
                     align={"start"}
                     slidesToScroll={mediumScreen ? 4 : 1}
@@ -127,11 +127,12 @@ const HomeComp = () => {
                 <Text fz={20} fw={500}>New Courses</Text>
                 <Space h={10} />
                 <Carousel slideSize="0%"
+                    classNames={classes}
                     align={"start"}
-                    slidesToScroll={4}
+                    slidesToScroll={mediumScreen ? 4 : 1}
                     slideGap={19}
                     draggable
-                    classNames={classes}
+
 
                 >
                     {newCourses.map((card) => {
@@ -169,7 +170,7 @@ const HomeComp = () => {
                 <Carousel slideSize="0%"
                     classNames={classes}
                     align={"start"}
-                    slidesToScroll={4}
+                    slidesToScroll={mediumScreen ? 4 : 1}
                     slideGap={19}
                     draggable
 
@@ -208,6 +209,8 @@ const HomeComp = () => {
                             </>
                         )
                     })}
+
+
 
 
 

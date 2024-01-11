@@ -139,10 +139,10 @@ const Head = () => {
               style={{
                 borderBottom: window.location.pathname === '/mydetails' || window.location.pathname === '/mydetails/editdetails' ||
                   window.location.pathname === '/changepassword' ||
-                  window.location.pathname === '/trainingsubcriptions' ? '3px solid #F09A3E' : "",
+                  window.location.pathname === '/trainingsubscriptions' ? '3px solid #F09A3E' : "",
               }}
             >
-              <Menu withArrow shadow="md"
+              <Menu position="top" withArrow shadow="md"
                 width={200}
                 styles={{
                   dropdown: {
@@ -154,7 +154,7 @@ const Head = () => {
                   <Image width="20px" src=
                     {window.location.pathname === '/mydetails' || window.location.pathname === '/mydetails/editdetails' ||
                       window.location.pathname === '/changepassword' ||
-                      window.location.pathname === '/trainingsubcriptions' ? User1 : User}  ></Image>
+                      window.location.pathname === '/trainingsubscriptions' ? User1 : User}  ></Image>
                 </Menu.Target>
 
                 <Menu.Dropdown >

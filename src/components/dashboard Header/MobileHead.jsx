@@ -49,7 +49,7 @@ const MobileHead = () => {
         <div>
             <Flex style={{ zIndex: 2, position: "fixed", bottom: 20, left: 57, right: 58 }} align={"center"} justify={"center"}>
 
-                <Card p={0} w={220} h={40} bg={"white"} radius={"xl"}>
+                <Card withBorder p={0} w={220} h={40} bg={"white"} radius={"xl"}>
                     <Box p={8} style={{ display: "flex", alignItems: "center" }}>
                         <Box w={80} className='iconbox'
                         // style={{
@@ -92,7 +92,7 @@ const MobileHead = () => {
                                     <Image width="20px" src=
                                         {window.location.pathname === '/mydetails' || window.location.pathname === '/mydetails/editdetails' ||
                                             window.location.pathname === '/changepassword' ||
-                                            window.location.pathname === '/trainingsubcriptions' ? User1 : User}  ></Image>
+                                            window.location.pathname === '/trainingsubscriptions' ? User1 : User}  ></Image>
                                 </Menu.Target>
 
                                 <Menu.Dropdown >
