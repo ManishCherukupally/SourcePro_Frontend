@@ -1,4 +1,4 @@
-import { ActionIcon, Button, Card, Center, Container, Dialog, Drawer, Flex, Group, Image, Modal, Space, Text } from '@mantine/core'
+import { ActionIcon, AppShell, Button, Card, Center, Container, Dialog, Divider, Drawer, Flex, Footer, Grid, Group, Image, Modal, Space, Text } from '@mantine/core'
 import React, { useEffect, useRef, useState } from 'react'
 import { BiArrowBack } from 'react-icons/bi'
 import Quiz_test from './Quiz_test'
@@ -6,7 +6,7 @@ import { scoreatom } from '../../Store/store'
 import { Link, Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
 // import axios from 'axios'
 import client from '../../API/api'
-import { useDisclosure } from '@mantine/hooks'
+import { useDisclosure, useMediaQuery } from '@mantine/hooks'
 import generatePDF, { Resolution } from 'react-to-pdf'
 // axios.defaults.withCredentials = true;
 // axios.defaults.xsrfCookieName = 'csrftoken'
@@ -15,6 +15,10 @@ import certificate from '../../assets/certificate.png'
 
 
 export function QuizScoreGreen() {
+    const mediumScreen = useMediaQuery("(min-width: 1200px)");
+    const largeScreen = useMediaQuery("(min-width: 1440px)");
+    const extraLargeScreen = useMediaQuery("(min-width: 1770px)");
+
     const navigate = useNavigate()
     const course = useParams()
     const lessonId = useParams()
@@ -95,99 +99,99 @@ export function QuizScoreGreen() {
         })
     })
 
-    const targetRef = useRef()
-    // const { toPDF, tragetRef } = usePDF({ filename: "Certificate.pdf" });
-    const name = "Manish.C"
 
-    const options = {
-
-        // default is 'A4'
-        format: 'certificate',
-        method: 'open',
-        resolution: Resolution.NORMAL,
-        page: {
-
-            orientation: 'landscape',
-        },
-        overrides: {
-            // see https://artskydj.github.io/jsPDF/docs/jsPDF.html for more options
-            pdf: {
-                compress: true
-            }
-        }
-    }
-
-    const handleDownloadCertificate = () => {
-
-    }
     return (<>
+        <AppShell footer={<Footer>
+            {mediumScreen ? (null) : (
+                <Group position='apart' spacing={0} style={{ display: "flex", flexWrap: "nowrap" }} >
 
-        <Center>
-            <Modal centered opened={slowTransitionOpened}
-                onClose={() => setSlowTransitionOpened(false)} title="Are you sure?!">
-                <Text>Do you really want to RE-TAKE the quiz?</Text>
-                <Space h={15} />
-                <Flex justify={"end"} gap={"2%"}>
-                    <Button variant='filled'
-                        style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }} onClick={() => window.location.reload()}>Yes</Button>
-                    <Button variant='outline' color='dark' onClick={() => setSlowTransitionOpened(false)}>No</Button>
-                </Flex>
-            </Modal>
-        </Center>
+                    <Button h={"4rem"} w={"50%"} variant='outline' radius={0}
+                        onClick={() => setSlowTransitionOpened(true)}
+                        style={{ borderBlockColor: "white", color: "black" }}
 
-        <Center>
-            <Modal centered opened={opened} onClose={close} title="Are you sure?!">
-                <Text>Do you really want to exit the quiz?</Text>
-                <Space h={15} />
-                <Flex justify={"end"} gap={"2%"}>
-                    <Button style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}
-                        variant='filled' onClick={() => navigate(`/courseplayer/${course.courseid}/${lessonId.lessonid}`)}>Yes</Button>
-                    <Button variant='outline' color='dark' onClick={close}>No</Button>
-                </Flex>
-            </Modal>
-        </Center>
-        <div>
-            <Card pl={"2rem"} radius={0} h={"4rem"} style={{ backgroundColor: "#262626" }}>
-                <Flex justify={"space-between"} align={"center"} gap={"1rem"}>
-                    <Group>
-                        <ActionIcon onClick={open}
-                            variant='transparent'><BiArrowBack color='#FFFFFF' size={25} /></ActionIcon>
+                    > RE-TAKE QUIZ</Button>
 
-                        <Text c={"#FFFFFF"} fw={600} key={lessonData.lesson_id} >Quiz 1. {lessonName}</Text>
 
-                    </Group>
-                    <Flex>
-                        {/* <Link to={`/quiz/${course.courseid}/${lessonId.lessonid}`}> */}
-                        <Button mr={"3.5rem"} variant='outline'
-                            onClick={() => setSlowTransitionOpened(true)}
+                    {status ? (<Button radius={0} h={"4rem"} w={"50%"} variant='filled'
 
-                            style={{ color: "rgba(255, 255, 255, 1)", borderColor: "rgba(255, 255, 255, 1)" }}
-                        > RE-TAKE QUIZ</Button>
-                        {/* </Link> */}
-
-                        {status ? (<Button mr={"3.5rem"} variant='filled'
-                            onClick={handleDownloadCertificate}
-                            style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}
-                        >DOWNLOAD CERTIFICATE</Button>) :
-                            (<Button onClick={handleNextLesson} mr={"3.5rem"} variant='filled' style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}
-                            >NEXT LESSON</Button>)}
-
+                        style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}
+                    >DOWNLOAD CERTIFICATE</Button>) :
+                        (<Button radius={0} h={"4rem"} w={"50%"} onClick={handleNextLesson} variant='filled' style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}
+                        >NEXT LESSON</Button>)}
+                </Group>
+            )}
+        </Footer>}>
+            <Center>
+                <Modal opened={slowTransitionOpened}
+                    onClose={() => setSlowTransitionOpened(false)} title="Are you sure?!">
+                    <Text>Do you really want to RE-TAKE the quiz?</Text>
+                    <Space h={15} />
+                    <Flex justify={"end"} gap={"2%"}>
+                        <Button variant='filled'
+                            style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }} onClick={() => window.location.reload()}>Yes</Button>
+                        <Button variant='outline' color='dark' onClick={() => setSlowTransitionOpened(false)}>No</Button>
                     </Flex>
-                </Flex>
-            </Card>
-            <Card pl={"2.2rem"} radius={0} style={{ backgroundColor: "rgba(0, 156, 23, 1)" }}>
-                <Flex align={"center"}>
-                    <Text c={"#FFFFFF"}>Yayy! You've Passed!</Text>
-                </Flex>
-            </Card>
+                </Modal>
+            </Center>
 
-        </div >
+            <Center>
+                <Modal centered opened={opened} onClose={close} title="Are you sure?!">
+                    <Text>Do you really want to exit the quiz?</Text>
+                    <Space h={15} />
+                    <Flex justify={"end"} gap={"2%"}>
+                        <Button style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}
+                            variant='filled' onClick={() => navigate(`/courseplayer/${course.courseid}/${lessonId.lessonid}`)}>Yes</Button>
+                        <Button variant='outline' color='dark' onClick={close}>No</Button>
+                    </Flex>
+                </Modal>
+            </Center>
+            <div>
 
+                <Card pl={"2rem"} radius={0} h={"4rem"} style={{ backgroundColor: "#262626" }}>
+                    <Flex justify={"space-between"} align={"center"} gap={"1rem"}>
+                        <Group>
+                            <ActionIcon onClick={open}
+                                variant='transparent'><BiArrowBack color='#FFFFFF' size={25} /></ActionIcon>
+
+                            <Text c={"#FFFFFF"} fw={600} key={lessonData.lesson_id} >Quiz 1. {lessonName}</Text>
+
+                        </Group>
+                        {mediumScreen ? (<Flex>
+                            {/* <Link to={`/quiz/${course.courseid}/${lessonId.lessonid}`}> */}
+                            <Button mr={"3.5rem"} variant='outline'
+                                onClick={() => setSlowTransitionOpened(true)}
+
+                                style={{ color: "rgba(255, 255, 255, 1)", borderColor: "rgba(255, 255, 255, 1)" }}
+                            > RE-TAKE QUIZ</Button>
+                            {/* </Link> */}
+
+                            {status ? (<Button mr={"3.5rem"} variant='filled'
+
+                                style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}
+                            >DOWNLOAD CERTIFICATE</Button>) :
+                                (<Button onClick={handleNextLesson} mr={"3.5rem"} variant='filled' style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}
+                                >NEXT LESSON</Button>)}
+
+                        </Flex>) : (null)}
+                    </Flex>
+                </Card>
+                <Card pl={"2.2rem"} radius={0} style={{ backgroundColor: "rgba(0, 156, 23, 1)" }}>
+                    <Flex align={"center"}>
+                        <Text c={"#FFFFFF"}>Yayy! You've Passed!</Text>
+                    </Flex>
+                </Card>
+
+            </div >
+        </AppShell>
     </>
     )
 }
 
 export function QuizScoreRed() {
+    const mediumScreen = useMediaQuery("(min-width: 1200px)");
+    const largeScreen = useMediaQuery("(min-width: 1440px)");
+    const extraLargeScreen = useMediaQuery("(min-width: 1770px)");
+
     const navigate = useNavigate()
     const course = useParams()
     const lessonId = useParams()
@@ -217,6 +221,23 @@ export function QuizScoreRed() {
 
     return (
         <>
+            <AppShell footer={<Footer>
+                {mediumScreen ? (null) : (
+                    <Group position='apart' spacing={0} style={{ display: "flex", flexWrap: "nowrap" }} >
+
+                        <Button h={"4rem"} w={"50%"} variant='outline' radius={0}
+                            onClick={() => setSlowTransitionOpened(true)}
+                            style={{ borderBlockColor: "white", color: "black" }}
+
+                        > RE-TAKE QUIZ</Button>
+
+
+
+                        <Button onClick={() => navigate(`/courseplayer/${course.courseid}/${lessonId.lessonid}`)} radius={0} h={"4rem"} w={"50%"} variant='filled' style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }} >WATCH LESSON AGAIN</Button>
+
+                    </Group>
+                )}
+            </Footer>}></AppShell>
             <Center>
                 <Modal centered opened={slowTransitionOpened}
                     onClose={() => setSlowTransitionOpened(false)} title="Are you sure?!">
@@ -251,7 +272,7 @@ export function QuizScoreRed() {
                             <Text c={"#FFFFFF"} fw={600} key={lessonId.lessonid}>Quiz 1.{lessonName}</Text>
 
                         </Group>
-                        <Flex>
+                        {mediumScreen ? (<Flex>
                             <Button onClick={() => {
 
                                 setSlowTransitionOpened(true)
@@ -260,7 +281,7 @@ export function QuizScoreRed() {
                             <Link to={`/courseplayer/${course.courseid}/${lessonId.lessonid}`}>
                                 <Button mr={"3.5rem"} variant='filled' style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }} >WATCH LESSON AGAIN</Button>
                             </Link>
-                        </Flex>
+                        </Flex>) : (null)}
                     </Flex>
                 </Card>
                 <Card pl={"2rem"} radius={0} style={{ backgroundColor: "rgba(227, 64, 64, 1)" }}>
