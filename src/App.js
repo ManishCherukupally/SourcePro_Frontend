@@ -19,6 +19,7 @@ import QuizPage from "./pages/QuizPage";
 import MycoursesPage from "./pages/MycoursesPage";
 import ForgotPassword from "./pages/ForgotPswdPage";
 import MobileHead from "./components/dashboard Header/MobileHead";
+import CourseMobileComp from "./components/CourseComp/CourseMobileComp";
 
 
 
@@ -35,7 +36,7 @@ function App() {
           <Route path="/header" Component={Head} />
           <Route path="/courseplayer" Component={CoursePage} /> */}
 
-          <Route path="/mobileHead" Component={MobileHead} />
+          <Route path="/mobilevideo" Component={CourseMobileComp} />
           <Route path="/" Component={LoginPage} />
           <Route path="/forgot-password" Component={ForgotPassword} />
           <Route path="/set-new-password" Component={SetnewPawsdPage} />
