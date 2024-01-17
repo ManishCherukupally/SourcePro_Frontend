@@ -362,7 +362,7 @@ const QuizComponent = () => {
                 <Text>Do you really want to exit the quiz?</Text>
                 <Space h={15} />
                 <Flex justify={"end"} gap={"2%"}>
-                    <Button variant='filled' onClick={() => navigate(`/home/${course.courseid}/${lessonId.lessonid}`)}>Yes</Button>
+                    <Button style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }} variant='filled' onClick={() => navigate(`/courseplayer/${course.courseid}/${lessonId.lessonid}`)}>Yes</Button>
                     <Button variant='outline' onClick={close}>No</Button>
                 </Flex>
             </Modal>

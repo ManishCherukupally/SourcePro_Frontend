@@ -12,7 +12,7 @@ import client from '../../API/api'
 
 
 const ForgetPasswordCard = (props) => {
-    // const [err, setErr] = useState("")
+    const [err, setErr] = useState("")
     // const [email, setEmail] = useState("")
     const navigate = useNavigate()
     const form = useForm(
@@ -40,10 +40,15 @@ const ForgetPasswordCard = (props) => {
                     window.location.href = "/set-new-password"
                 }
 
-                // else {
+                else {
+                    const errorMessage = resp.data.status === "Please_provide_valid_email"
+                        ? "Invalid.Please enter your Email."
+                        : resp.data.error; // Use a more specific error message if available
+                    form.setErrors({
+                        email: errorMessage,
+                    });
 
-                //   setErr("Please provide valid email ID")
-                // }
+                }
                 console.log(resp)
             });
             // console.log(response.data)

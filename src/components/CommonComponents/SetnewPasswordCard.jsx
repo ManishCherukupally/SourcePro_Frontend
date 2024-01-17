@@ -36,17 +36,6 @@ const SetnewPasswordCard = (props) => {
                 withCredentials: true,
 
             }).then((resp) => {
-                // if (resp.data.status === 'Invalid_OTP') {
-
-                //     setOtpError(true)
-                //     console.log(otpError)
-                // }
-                // else if (resp.data.status === 'Invaid_email_id') {
-                //     setemailError("Please provide correct email ID")
-                // }
-                // 
-
-
                 if (resp.data.status === 'Successfull') {
                     removeToken(['encsrftok']);
 
@@ -54,9 +43,32 @@ const SetnewPasswordCard = (props) => {
                     window.location.href = "/";
                 }
 
-                // else if (resp.data.status === 'current_password_cannot_be_set_as_new_password') {
-                //     setSamePaswdError("Current password cannot be set as new password")
-                // }
+                else if (resp.data.status === 'Invalid_OTP') {
+
+                    const errorMessage = resp.data.status === "Invalid_OTP"
+                        ? 'Wrong OTP.Please check the OTP & enter again'
+                        : resp.data.error; // Use a more specific error message if available
+                    form.setErrors({
+                        otp: errorMessage,
+                    });
+                }
+                else if (resp.data.status === 'Invaid_email_id') {
+                    const errorMessage = resp.data.status === "Invalid_email_id"
+                        ? "Invalid.Please enter your Email."
+                        : resp.data.error; // Use a more specific error message if available
+                    form.setErrors({
+                        email: errorMessage,
+                    });
+                }
+
+                else if (resp.data.status === 'current_password_cannot_be_set_as_new_password') {
+                    const errorMessage = resp.data.status === "current_password_cannot_be_set_as_new_password"
+                        ? "Current password cannot be set as new password."
+                        : resp.data.error; // Use a more specific error message if available
+                    form.setErrors({
+                        password: errorMessage,
+                    });
+                }
             });
             // console.log(email)
             // console.log(otp)

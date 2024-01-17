@@ -3,7 +3,7 @@ import { Accordion, ActionIcon, BackgroundImage, Box, Button, Card, Center, Cont
 
 import Head from '../dashboard Header/Head'
 
-import { BiRadioCircle, BiSolidLike } from 'react-icons/bi'
+import { BiArrowBack, BiRadioCircle, BiSolidLike } from 'react-icons/bi'
 import { BsCheckCircle } from 'react-icons/bs';
 import { AiFillLock, AiOutlineLock } from 'react-icons/ai'
 import { MdDocumentScanner, MdDownload, MdPerson } from 'react-icons/md'
@@ -478,6 +478,9 @@ const CourseMobileComp = () => {
       </Container>
       <Card>
         <Group>
+          <div>
+            <ActionIcon size={"sm"} onClick={() => navigate(-1)}>< BiArrowBack /></ActionIcon>
+          </div>
           <Text fz={18} color="#3A3A3A" fw={"600"} >{homeData.
 
             course_name}</Text>
@@ -700,55 +703,55 @@ const CourseMobileComp = () => {
                               </Flex>
                             </div>) :
                             (
-                              <div onClick={() => {
-                                navigate(`/home/${course.courseid}/${item.lesson_id}`)
-                                handleButtonClick()
-                              }}>
 
+                              <Flex p={"1rem"} align={"center"} gap={15} >
+                                {
 
+                                  item.lesson_status === "completed" ?
+                                    (<ActionIcon variant='tranperant' ><BsCheckCircle color='green' size={20} /></ActionIcon>) :
+                                    (<ActionIcon variant='tranperant' ><BiRadioCircle color='#5F5F5F' size={20} /></ActionIcon>)
+                                }
 
+                                <Flex direction={"column"}>
+                                  <div onClick={() => {
+                                    handleButtonClick();
+                                    navigate(`/courseplayer/${course.courseid}/${item.lesson_id}`)
+                                  }} key={item.
 
-                                <Flex p={"1rem"} align={"center"} gap={15} >
-                                  {
-
-                                    item.lesson_status === "completed" ?
-                                      (<ActionIcon variant='tranperant' ><BsCheckCircle color='green' size={20} /></ActionIcon>) :
-                                      (<ActionIcon variant='tranperant' ><BiRadioCircle color='#5F5F5F' size={20} /></ActionIcon>)
-                                  }
-
-                                  <Flex direction={"column"}>
-                                    <Text  >{index + 1}. {item.
+                                    lesson_id}>
+                                    <Text c={"dark"}>{index + 1}. {item.
 
                                       lesson_name}</Text>
-                                    <Space h={8} />
-                                    <Flex gap={10} >
+                                  </div>
+                                  <Space h={8} />
+                                  <Flex gap={10} >
 
-                                      <Text fz={"xs"}>{Math.floor(totalMinutesCalculated)}m </Text>
-                                      {
+                                    <Text fz={"xs"}>{Math.floor(totalMinutesCalculated)}m </Text>
+                                    {
 
-                                        item.quiz_attempt_status === true ?
+                                      item.quiz_attempt_status === true ?
 
-                                          (<Flex gap={120}>
-                                            <Flex gap={5}>
-                                              <Text fz={"xs"} >Score :</Text>
-                                              <Text fz={"xs"} c={item.quiz_score > 60 ? "green" : "red"} >{item.
+                                        (<Flex gap={120}>
+                                          <Flex gap={5}>
+                                            <Text fz={"xs"} >Score :</Text>
+                                            <Text fz={"xs"} c={item.quiz_score > 60 ? "green" : "red"} >{item.
 
-                                                quiz_score}%</Text>
-                                            </Flex>
-                                            <Link to={`/quiz/${course.courseid}/${item.lesson_id}`} style={{ textDecoration: "none", color: "rgba(0, 117, 225, 1)", fontSize: 12 }}>
-                                              RE-TAKE QUIZ
-                                            </Link>
-                                          </Flex>) : (null)
-
-
-                                      }
+                                              quiz_score}%</Text>
+                                          </Flex>
+                                          <UnstyledButton onClick={() => navigate(`/quiz/${course.courseid}/${item.lesson_id}`)} style={{ color: "rgba(0, 117, 225, 1)", fontSize: 12 }}>
+                                            <Text fw={600}> RE-TAKE QUIZ </Text>
+                                          </UnstyledButton>
+                                        </Flex>) : (null)
 
 
-                                    </Flex>
+                                    }
+
+
                                   </Flex>
                                 </Flex>
+                              </Flex>
 
-                              </div>
+
                             )
 
 
@@ -781,10 +784,7 @@ const CourseMobileComp = () => {
 
                     question}</Accordion.Control>
                   <Accordion.Panel>
-                    {item.
-
-
-                      answer}
+                    <Text fw={400}>{item.answer}</Text>
                   </Accordion.Panel>
                 </Accordion.Item>
               ))) : (

@@ -80,7 +80,7 @@ const MobileHead = () => {
                         //         window.location.pathname === '/trainingsubcriptions' ? '3px solid #F09A3E' : "",
                         // }}
                         >
-                            <Menu withArrow shadow="md"
+                            <Menu position='top' withArrow shadow="md"
                                 width={200}
                                 styles={{
                                     dropdown: {

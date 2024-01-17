@@ -744,51 +744,55 @@ const CourseHomeComp = () => {
                                                                 (
                                                                     <div onClick={handleButtonClick}>
 
-                                                                        <Link to={`/home/${course.courseid}/${item.lesson_id}`}
-                                                                            style={{ textDecoration: "none" }} key={item.
 
-                                                                                lesson_id}>
 
-                                                                            <Flex p={"1rem"} align={"center"} gap={15} >
-                                                                                {
+                                                                        <Flex p={"1rem"} align={"center"} gap={15} >
+                                                                            {
 
-                                                                                    item.lesson_status === "completed" ?
-                                                                                        (<ActionIcon variant='tranperant' ><BsCheckCircle color='green' size={20} /></ActionIcon>) :
-                                                                                        (<ActionIcon variant='tranperant' ><BiRadioCircle color='#5F5F5F' size={20} /></ActionIcon>)
-                                                                                }
+                                                                                item.lesson_status === "completed" ?
+                                                                                    (<ActionIcon variant='tranperant' ><BsCheckCircle color='green' size={20} /></ActionIcon>) :
+                                                                                    (<ActionIcon variant='tranperant' ><BiRadioCircle color='#5F5F5F' size={20} /></ActionIcon>)
+                                                                            }
 
-                                                                                <Flex direction={"column"}>
-                                                                                    <Text color='#FFFFFF' >{index + 1}. {item.
+                                                                            <Flex direction={"column"}>
+                                                                                <div onClick={() => {
+                                                                                    handleButtonClick();
+                                                                                    navigate(`/courseplayer/${course.courseid}/${item.lesson_id}`)
+                                                                                }} key={item.
+
+                                                                                    lesson_id}>
+                                                                                    <Text c={"#FFFFFF"}>{index + 1}. {item.
 
                                                                                         lesson_name}</Text>
-                                                                                    <Space h={8} />
-                                                                                    <Flex gap={10} >
+                                                                                </div>
+                                                                                <Space h={8} />
+                                                                                <Flex gap={10} >
 
-                                                                                        <Text color='#FFFFFF' fz={"xs"}>{Math.floor(totalMinutesCalculated)}m </Text>
-                                                                                        {
+                                                                                    <Text color='#FFFFFF' fz={"xs"}>{Math.floor(totalMinutesCalculated)}m </Text>
+                                                                                    {
 
-                                                                                            item.quiz_attempt_status === true ?
+                                                                                        item.quiz_attempt_status === true ?
 
-                                                                                                (<Flex gap={120}>
-                                                                                                    <Flex gap={5}>
-                                                                                                        <Text fz={"xs"} c={"white"}>Score :</Text>
-                                                                                                        <Text fz={"xs"} c={"rgba(0, 156, 23, 1)"}>{item.
+                                                                                            (<Flex gap={120}>
+                                                                                                <Flex gap={5}>
+                                                                                                    <Text fz={"xs"} c={"white"}>Score :</Text>
+                                                                                                    <Text fz={"xs"} c={"rgba(0, 156, 23, 1)"}>{item.
 
-                                                                                                            quiz_score}%</Text>
-                                                                                                    </Flex>
-                                                                                                    <Link to={`/quiz/${course.courseid}/${item.lesson_id}`} style={{ textDecoration: "none", color: "rgba(0, 117, 225, 1)", fontSize: 12 }}>
-                                                                                                        RE-TAKE QUIZ
-                                                                                                    </Link>
-                                                                                                </Flex>) : (null)
-
-
-                                                                                        }
+                                                                                                        quiz_score}%</Text>
+                                                                                                </Flex>
+                                                                                                <UnstyledButton onClick={() => navigate(`/quiz/${course.courseid}/${item.lesson_id}`)} style={{ color: "rgba(0, 117, 225, 1)", fontSize: 12 }}>
+                                                                                                    <Text fw={600}> RE-TAKE QUIZ </Text>
+                                                                                                </UnstyledButton>
+                                                                                            </Flex>) : (null)
 
 
-                                                                                    </Flex>
+                                                                                    }
+
+
                                                                                 </Flex>
                                                                             </Flex>
-                                                                        </Link>
+                                                                        </Flex>
+
                                                                     </div>
                                                                 )
 
