@@ -122,7 +122,7 @@ export function QuizScoreGreen() {
             )}
         </Footer>}>
             <Center>
-                <Modal opened={slowTransitionOpened}
+                <Modal style={{ display: "flex", justifyContent: "center" }} opened={slowTransitionOpened}
                     onClose={() => setSlowTransitionOpened(false)} title="Are you sure?!">
                     <Text>Do you really want to RE-TAKE the quiz?</Text>
                     <Space h={15} />
@@ -135,7 +135,7 @@ export function QuizScoreGreen() {
             </Center>
 
             <Center>
-                <Modal centered opened={opened} onClose={close} title="Are you sure?!">
+                <Modal style={{ display: "flex", justifyContent: "center" }} opened={opened} onClose={close} title="Are you sure?!">
                     <Text>Do you really want to exit the quiz?</Text>
                     <Space h={15} />
                     <Flex justify={"end"} gap={"2%"}>
@@ -239,7 +239,7 @@ export function QuizScoreRed() {
                 )}
             </Footer>}></AppShell>
             <Center>
-                <Modal centered opened={slowTransitionOpened}
+                <Modal style={{ display: "flex", justifyContent: "center" }} opened={slowTransitionOpened}
                     onClose={() => setSlowTransitionOpened(false)} title="Are you sure?!">
                     <Text>Do you really want to RE-TAKE the quiz?</Text>
                     <Space h={15} />
@@ -251,7 +251,7 @@ export function QuizScoreRed() {
                 </Modal>
             </Center>
             <Center>
-                <Modal centered opened={opened} onClose={close} title="Are you sure?!">
+                <Modal style={{ display: "flex", justifyContent: "center" }} opened={opened} onClose={close} title="Are you sure?!">
                     <Text>Do you really want to exit the quiz?</Text>
                     <Space h={15} />
                     <Flex justify={"end"} gap={"2%"}>
