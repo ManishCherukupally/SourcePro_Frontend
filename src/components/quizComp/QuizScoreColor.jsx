@@ -28,9 +28,13 @@ export function QuizScoreGreen() {
     const [opened, { open, close }] = useDisclosure(false);
     // console.log("LData" + lessonData)
     const [lessonName, setLessonName] = useState("");
+    const [quizscore, setquizscore] = useState(null)
     const [slowTransitionOpened, setSlowTransitionOpened] = useState(false);
     const [status, setStatus] = useState(false)
+    const [certificateModal, setCertificateModal] = useState(false)
+    const [certificateName, setCertifcatename] = useState("")
     var lesson;
+
     useEffect(() => {
         client.get("usr_course_page_lesson/",
             {
@@ -43,6 +47,7 @@ export function QuizScoreGreen() {
             .then((resp) => {
 
                 lesson = resp.data["all_lessons"].map(item => item.lesson_name)
+                setquizscore(resp.data["all_lessons"].map(item => item.quiz_score))
                 setLessonName(lesson.toString())
             })
 
@@ -97,8 +102,36 @@ export function QuizScoreGreen() {
                 setStatus(true)
             }
         })
-    })
 
+        client.get("download_certificate/", {
+            params: {
+                course_id: course.courseid
+            }
+        }, [course.courseid])
+            .then(resp => setCertifcatename(resp.data.name))
+    })
+    const targetRef = useRef()
+    // const { toPDF, tragetRef } = usePDF({ filename: "Certificate.pdf" });
+    // const [showCertificate, setShowCertificate] = useState(false);
+
+
+
+    const options = {
+
+        // default is 'A4'
+        method: 'save',
+        resolution: Resolution.NORMAL,
+        page: {
+
+            orientation: 'landscape',
+        },
+        overrides: {
+            // see https://artskydj.github.io/jsPDF/docs/jsPDF.html for more options
+            word: {
+                compress: true
+            }
+        }
+    }
 
     return (<>
         <AppShell footer={<Footer>
@@ -112,7 +145,7 @@ export function QuizScoreGreen() {
                     > RE-TAKE QUIZ</Button>
 
 
-                    {status ? (<Button radius={0} h={"4rem"} w={"50%"} variant='filled'
+                    {status ? (<Button radius={0} h={"4rem"} w={"50%"} variant='filled' onClick={() => setCertificateModal(true)}
 
                         style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}
                     >DOWNLOAD CERTIFICATE</Button>) :
@@ -147,6 +180,29 @@ export function QuizScoreGreen() {
             </Center>
             <div>
 
+                <Center>
+                    <Modal fullScreen opened={certificateModal} onClose={() => setCertificateModal(false)} title="Preview" withCloseButton={mediumScreen ? true : false}>
+                        <Container size={"lg"} style={{ width: '1140px', height: '810px' }}>
+                            <div ref={targetRef} style={{ width: '1140px', height: '810px' }}>
+                                <Image className='bg' w={'99.8%'} h={'auto'} src={certificate} alt='Certificate' />
+                                <Center>
+                                    <Text className='certificatename'>
+                                        {certificateName}
+                                    </Text>
+                                </Center>
+                                {/* Add other relevant information as needed */}
+                            </div>
+
+                            <Flex justify={mediumScreen ? "end" : "start"} gap={"2%"}>
+
+                                <Button onClick={() => generatePDF(targetRef, options, { filename: 'Certificate.pdf' })}
+                                    style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}>Download Certificate</Button >
+                                {mediumScreen ? null : <Button variant='outline' color='dark' onClick={() => setCertificateModal(false)}>No</Button>}
+                            </Flex>
+                        </Container>
+                    </Modal>
+                </Center>
+
                 <Card pl={"2rem"} radius={0} h={"4rem"} style={{ backgroundColor: "#262626" }}>
                     <Flex justify={"space-between"} align={"center"} gap={"1rem"}>
                         <Group>
@@ -165,7 +221,7 @@ export function QuizScoreGreen() {
                             > RE-TAKE QUIZ</Button>
                             {/* </Link> */}
 
-                            {status ? (<Button mr={"3.5rem"} variant='filled'
+                            {status ? (<Button mr={"3.5rem"} variant='filled' onClick={() => setCertificateModal(true)}
 
                                 style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}
                             >DOWNLOAD CERTIFICATE</Button>) :
@@ -177,7 +233,7 @@ export function QuizScoreGreen() {
                 </Card>
                 <Card pl={"2.2rem"} radius={0} style={{ backgroundColor: "rgba(0, 156, 23, 1)" }}>
                     <Flex align={"center"}>
-                        <Text c={"#FFFFFF"}>Yayy! You've Passed!</Text>
+                        <Text c={"#FFFFFF"}>Yayy! You've scored {Math.floor(quizscore)} %</Text>
                     </Flex>
                 </Card>
 
@@ -218,6 +274,8 @@ export function QuizScoreRed() {
 
 
     }, [])
+
+
 
     return (
         <>
@@ -262,6 +320,8 @@ export function QuizScoreRed() {
                     </Flex>
                 </Modal>
             </Center>
+
+
 
             <div>
                 <Card pl={"2rem"} radius={0} h={"4rem"} style={{ backgroundColor: "#262626" }}>

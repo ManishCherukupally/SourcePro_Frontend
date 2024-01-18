@@ -26,24 +26,19 @@ const SetnewPasswordCard = (props) => {
     // const values = {
 
     // }
-    const handleSetPassword = async (values) => {
+    const handleSetPassword = (values) => {
         console.log("clicked")
         try {
-            await client.post('set_password/', {
+            client.post('set_password/', {
                 email: values.email,
                 otp: values.otp,
                 password: values.password,
                 withCredentials: true,
 
             }).then((resp) => {
-                if (resp.data.status === 'Successfull') {
-                    removeToken(['encsrftok']);
 
-                    // Optionally, redirect user to login page
-                    window.location.href = "/";
-                }
 
-                else if (resp.data.status === 'Invalid_OTP') {
+                if (resp.data.status === 'Invalid_OTP') {
 
                     const errorMessage = resp.data.status === "Invalid_OTP"
                         ? 'Wrong OTP.Please check the OTP & enter again'
@@ -52,7 +47,7 @@ const SetnewPasswordCard = (props) => {
                         otp: errorMessage,
                     });
                 }
-                else if (resp.data.status === 'Invaid_email_id') {
+                if (resp.data.status === 'Invaid_email_id') {
                     const errorMessage = resp.data.status === "Invalid_email_id"
                         ? "Invalid.Please enter your Email."
                         : resp.data.error; // Use a more specific error message if available
@@ -61,13 +56,20 @@ const SetnewPasswordCard = (props) => {
                     });
                 }
 
-                else if (resp.data.status === 'current_password_cannot_be_set_as_new_password') {
+                if (resp.data.status === 'current_password_cannot_be_set_as_new_password') {
                     const errorMessage = resp.data.status === "current_password_cannot_be_set_as_new_password"
                         ? "Current password cannot be set as new password."
                         : resp.data.error; // Use a more specific error message if available
                     form.setErrors({
                         password: errorMessage,
                     });
+                }
+
+                if (resp.data.status === 'Successfull') {
+                    removeToken(['encsrftok']);
+
+                    // Optionally, redirect user to login page
+                    window.location.href = "/";
                 }
             });
             // console.log(email)
@@ -134,7 +136,7 @@ const SetnewPasswordCard = (props) => {
                         src={"https://www.sourceprotraining.com/wp-content/uploads/2021/09/logo.png"} />
                 </Center>
                 <>
-                    <form onSubmit={form.onSubmit((values) => handleSetPassword(values))} >
+                    <form onSubmit={form.onSubmit(handleSetPassword)} >
                         <Stack>
                             <Flex align={"center"}>
                                 <Link to={"/forgot-password"}>
