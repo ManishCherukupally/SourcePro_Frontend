@@ -364,6 +364,9 @@ const CourseHomeComp = () => {
     const handleButtonClick = () => {
         // Trigger a re-render by setting the state to false and then back to true
         console.log("button Clicked")
+
+
+
         setShouldRerender(false);
         setTimeout(() => {
             setShouldRerender(true);
@@ -425,7 +428,16 @@ const CourseHomeComp = () => {
                                                     </Link>
 
                                                     <Button variant='outline' style={{ color: "rgba(255, 255, 255, 1)", borderColor: "rgba(255, 255, 255, 1)" }}
-                                                        onClick={handleButtonClick}>WATCH AGAIN</Button>
+                                                        onClick={() => {
+                                                            client.put("usr_course_page_lesson/", {
+
+                                                                minutes_completed: "00:00:00",
+                                                                course_id: course.courseid,
+                                                                lesson_id: lessonId.lessonid,
+
+                                                            })
+                                                            handleButtonClick()
+                                                        }}>WATCH AGAIN</Button>
 
                                                 </Group>
 

@@ -47,7 +47,7 @@ const SetnewPasswordCard = (props) => {
                         otp: errorMessage,
                     });
                 }
-                if (resp.data.status === 'Invaid_email_id') {
+                if (resp.data.status === 'Invalid_email_id') {
                     const errorMessage = resp.data.status === "Invalid_email_id"
                         ? "Invalid.Please enter your Email."
                         : resp.data.error; // Use a more specific error message if available
