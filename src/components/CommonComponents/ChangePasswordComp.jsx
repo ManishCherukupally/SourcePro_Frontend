@@ -45,26 +45,38 @@ const ChangePasswordComp = () => {
 
     );
 
-    const handlechangePassword = async () => {
+    const handlechangePassword = () => {
         console.log("clicked changepaswd")
-        try {
-            const response = await client.put('change_password/', form.values);
 
-            if (response.data.status === 'successfull') {
-                setLoader(true);
-                setSuccess('Successfully!');
-                removeToken(['encsrftok']);
-                setTimeout(() => {
-                    window.location.href = '/';
-                }, 500)
-                // Redirect to login page
-            } else {
-                // Display any specific errors from the API response here
-                console.error('Password change failed:', response.data.status);
-            }
-        } catch (err) {
-            console.error('Error changing password:', err);
-        }
+        client.put('change_password/', form.values)
+            .then((resp) => {
+                console.log(resp.data.status)
+                if (resp.data.status === 'successfull') {
+                    setLoader(true);
+                    setSuccess('Successfull!');
+                    removeToken(['encsrftok']);
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 500)
+                    // Redirect to login page
+                }
+                if (resp.data.status === "you_have_entered_wrong_password") {
+                    const errormessage = resp.data.status === "you_have_entered_wrong_password"
+                        ? "Current password is incorrect"
+                        : resp.data.error; // Use a more specific error message if available
+                    form.setErrors({
+                        current_password: errormessage,
+                    });
+                }
+
+                else {
+                    // Display any specific errors from the API resp here
+                    console.error('Password change failed:', resp.data.status);
+                }
+            })
+
+
+
     }
     return (
         <div>

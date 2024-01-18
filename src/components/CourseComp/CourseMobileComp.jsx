@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { Accordion, ActionIcon, BackgroundImage, Box, Button, Card, Center, Container, CopyButton, Divider, Flex, Grid, Group, Overlay, Radio, Space, Spoiler, Stack, Tabs, Text, Tooltip, UnstyledButton } from '@mantine/core'
+import { Accordion, ActionIcon, BackgroundImage, Box, Button, Card, Center, Container, CopyButton, Divider, Flex, Grid, Group, Image, Modal, Overlay, Radio, Space, Spoiler, Stack, Tabs, Text, Tooltip, UnstyledButton } from '@mantine/core'
 
 import Head from '../dashboard Header/Head'
 
@@ -13,11 +13,15 @@ import { courseidatom } from '../../Store/store'
 import { Link, json, useNavigate, useParams } from 'react-router-dom'
 import ReactPlayer from 'react-player'
 import client from '../../API/api';
+import certificate from '../../assets/certificate.png'
+import generatePDF, { Resolution } from 'react-to-pdf';
 import axios from 'axios';
-import { useClipboard } from '@mantine/hooks';
+import { useClipboard, useMediaQuery } from '@mantine/hooks';
 axios.defaults.withCredentials = true;
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'x-csrftoken'
+
+
 
 const CourseMobileComp = () => {
   const [copied, setCopied] = useState(false)
@@ -44,7 +48,9 @@ const CourseMobileComp = () => {
   const [like, setLike] = useState(false)
   const [likescount, setLikesCount] = useState(0)
   const [extractedTitle, setExtractedTitle] = useState('');
-
+  const [certificateModal, setCertificateModal] = useState(false)
+  const [certificateName, setCertifcatename] = useState("")
+  const [certificateStatus, setCertificateStatus] = useState(false)
 
   const navigate = useNavigate()
 
@@ -66,6 +72,9 @@ const CourseMobileComp = () => {
         setLikesCount(resp.data["course_data"].course_likes)
         setLike(resp.data["course_data"].like_status)
         setLearners(resp.data["course_data"].course_views)
+        if (resp.data["course_data"].course_status === "Completed") {
+          setCertificateStatus(true)
+        }
 
         // axios.get(data).then((response) => {
         //     // console.log(response.data)
@@ -95,6 +104,13 @@ const CourseMobileComp = () => {
       setFdata(faqData)
     })
       .catch((error) => console.log(error))
+
+    client.get("download_certificate/", {
+      params: {
+        course_id: course.courseid
+      }
+    }, [course.courseid])
+      .then(resp => setCertifcatename(resp.data.name))
   }, [course.courseid])
 
   // useEffect(() => {
@@ -387,8 +403,58 @@ const CourseMobileComp = () => {
   const clipboard = useClipboard({ timeout: 1000 });
   const [copiedIndex, setCopiedIndex] = useState(-1);
 
+  const mediumScreen = useMediaQuery("(min-width: 1200px)");
+  const largeScreen = useMediaQuery("(min-width: 1440px)");
+  const extraLargeScreen = useMediaQuery("(min-width: 1770px)");
+  const targetRef = useRef()
+  // const { toPDF, tragetRef } = usePDF({ filename: "Certificate.pdf" });
+  // const [showCertificate, setShowCertificate] = useState(false);
+
+
+
+  const options = {
+
+    // default is 'A4'
+    method: 'save',
+    resolution: Resolution.NORMAL,
+    page: {
+
+      orientation: 'landscape',
+    },
+    overrides: {
+      // see https://artskydj.github.io/jsPDF/docs/jsPDF.html for more options
+      word: {
+        compress: true
+      }
+    }
+  }
+
   return (
     <>
+      <Center>
+        <Modal fullScreen opened={certificateModal} onClose={() => setCertificateModal(false)} title="Preview" withCloseButton={mediumScreen ? true : false}>
+          <Container size={"lg"} style={{ width: '1140px', height: '810px' }}>
+            <div ref={targetRef} style={{ width: '1140px', height: '810px' }}>
+              <Image className='bg' w={'99.8%'} h={'auto'} src={certificate} alt='Certificate' />
+              <Center>
+                <Text className='certificatename'>
+                  {certificateName}
+                </Text>
+              </Center>
+              {/* Add other relevant information as needed */}
+            </div>
+
+            <Flex justify={mediumScreen ? "end" : "start"} gap={"2%"}>
+
+              <Button onClick={() => generatePDF(targetRef, options, { filename: 'Certificate.pdf' })}
+                style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}>Download Certificate</Button >
+              {mediumScreen ? null : <Button variant='outline' color='dark' onClick={() => setCertificateModal(false)}>No</Button>}
+            </Flex>
+          </Container>
+        </Modal>
+      </Center>
+
+
       <Container p={0} fluid >
         {
           showOverlay && (
@@ -479,7 +545,7 @@ const CourseMobileComp = () => {
       <Card>
         <Group>
           <div>
-            <ActionIcon size={"sm"} onClick={() => navigate(-1)}>< BiArrowBack /></ActionIcon>
+            <ActionIcon size={"sm"} onClick={() => navigate("/home")}>< BiArrowBack /></ActionIcon>
           </div>
           <Text fz={18} color="#3A3A3A" fw={"600"} >{homeData.
 
@@ -532,6 +598,14 @@ const CourseMobileComp = () => {
           </Tabs.Panel>
 
           <Tabs.Panel value='contents'>
+            {certificateStatus && (<>
+              <Card>
+                <UnstyledButton onClick={() => setCertificateModal(true)}><Text c={"rgba(0, 117, 225, 1)"} >DOWNLOAD CERTIFICATE</Text></UnstyledButton>
+
+              </Card>
+              <Divider />
+            </>)
+            }
             <Accordion defaultValue={"material"} chevronSize={25}>
               <Accordion.Item value='material'>
                 <Accordion.Control><Text fw={600}> Materials</Text></Accordion.Control>

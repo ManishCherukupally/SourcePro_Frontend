@@ -68,7 +68,7 @@ const ForgetPasswordCard = (props) => {
 
                 </Center>
                 <>
-                    <form onSubmit={form.onSubmit((values) => handleForgetPaswd(values))} >
+                    <form onSubmit={form.onSubmit(handleForgetPaswd)} >
 
                         <Flex align={"center"}>
                             <Link to={"/"}>
