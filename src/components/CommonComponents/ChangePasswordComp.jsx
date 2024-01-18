@@ -68,6 +68,14 @@ const ChangePasswordComp = () => {
                         current_password: errormessage,
                     });
                 }
+                if (resp.data.status === 'New_password_cannot_be_the_same_as_the_old_password') {
+                    const errorMessage = resp.data.status === "New_password_cannot_be_the_same_as_the_old_password"
+                        ? "Current password cannot be set as new password."
+                        : resp.data.error; // Use a more specific error message if available
+                    form.setErrors({
+                        confirm_new_password: errorMessage,
+                    });
+                }
 
                 else {
                     // Display any specific errors from the API resp here
