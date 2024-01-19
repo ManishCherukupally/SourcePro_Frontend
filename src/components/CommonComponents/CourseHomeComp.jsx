@@ -328,7 +328,7 @@ const CourseHomeComp = () => {
     const [showOverlay, setShowOverlay] = useState(false);
     const [fill, setFill] = useState("")
 
-    const [isPlaying, setIsPlaying] = React.useState(true);
+    const [isPlaying, setIsPlaying] = useState(true);
 
     const [shouldRerender, setShouldRerender] = useState(false);
 
@@ -392,7 +392,7 @@ const CourseHomeComp = () => {
     const handleButtonClick = () => {
         // Trigger a re-render by setting the state to false and then back to true
         console.log("button Clicked")
-
+        setIsPlaying(true)
         client.put("usr_course_page_lesson/", {
 
             minutes_completed: "00:00:00",
@@ -475,7 +475,7 @@ const CourseHomeComp = () => {
                                                 display: "flex",
                                                 flexDirection: "column",
                                                 alignItems: "center",
-                                                marginTop: "50%",
+                                                marginTop: "35%",
                                                 position: 'absolute',
                                                 zIndex: 10,
                                             }}>
