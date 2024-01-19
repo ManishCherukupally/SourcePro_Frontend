@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { Accordion, ActionIcon, BackgroundImage, Box, Button, Card, Center, Container, CopyButton, Divider, Flex, Grid, Group, Overlay, Radio, Space, Spoiler, Tabs, Text, Tooltip, UnstyledButton } from '@mantine/core'
+import { Accordion, ActionIcon, BackgroundImage, Box, Button, Card, Center, Container, CopyButton, Divider, Flex, Grid, Group, Image, Modal, Overlay, Radio, Space, Spoiler, Tabs, Text, Tooltip, UnstyledButton } from '@mantine/core'
 
 import Head from '../dashboard Header/Head'
 
@@ -15,6 +15,8 @@ import ReactPlayer from 'react-player'
 import client from '../../API/api';
 import axios from 'axios';
 import { useClipboard, useMediaQuery } from '@mantine/hooks';
+import certificate from '../../assets/certificate.png'
+import generatePDF, { Resolution } from 'react-to-pdf';
 axios.defaults.withCredentials = true;
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'x-csrftoken'
@@ -50,11 +52,35 @@ const CourseHomeComp = () => {
     const [like, setLike] = useState(false)
     const [likescount, setLikesCount] = useState(0)
     const [extractedTitle, setExtractedTitle] = useState('');
+    const [certificateModal, setCertificateModal] = useState(false)
+    const [certificateName, setCertifcatename] = useState("")
+    const [certificateStatus, setCertificateStatus] = useState(false)
 
 
     const navigate = useNavigate()
 
+    const targetRef = useRef()
+    // const { toPDF, tragetRef } = usePDF({ filename: "Certificate.pdf" });
+    // const [showCertificate, setShowCertificate] = useState(false);
 
+
+
+    const options = {
+
+        // default is 'A4'
+        method: 'save',
+        resolution: Resolution.NORMAL,
+        page: {
+
+            orientation: 'landscape',
+        },
+        overrides: {
+            // see https://artskydj.github.io/jsPDF/docs/jsPDF.html for more options
+            word: {
+                compress: true
+            }
+        }
+    }
 
 
     useEffect(() => {
@@ -72,7 +98,9 @@ const CourseHomeComp = () => {
                 setLikesCount(resp.data["course_data"].course_likes)
                 setLike(resp.data["course_data"].like_status)
                 setLearners(resp.data["course_data"].course_views)
-
+                if (resp.data["course_data"].course_status === "Completed") {
+                    setCertificateStatus(true)
+                }
                 // axios.get(data).then((response) => {
                 //     // console.log(response.data)
                 //     setTextContent(response.data);
@@ -365,15 +393,26 @@ const CourseHomeComp = () => {
         // Trigger a re-render by setting the state to false and then back to true
         console.log("button Clicked")
 
+        client.put("usr_course_page_lesson/", {
 
+            minutes_completed: "00:00:00",
+            course_id: course.courseid,
+            lesson_id: lessonId.lessonid,
 
-        setShouldRerender(false);
+        })
         setTimeout(() => {
-            setShouldRerender(true);
-        }, 1000)
-        setIsPlaying(true)
-        setShowOverlay(false)
-        setFill("blur(0px)")
+            window.location.reload()
+        }, 500)
+
+
+
+        // setShouldRerender(false);
+        // setTimeout(() => {
+        //     setShouldRerender(true);
+        // }, 1000)
+        // setIsPlaying(true)
+        // setShowOverlay(false)
+        // setFill("blur(0px)")
     };
 
 
@@ -400,6 +439,30 @@ const CourseHomeComp = () => {
 
     return (
         <>
+            <Center>
+                <Modal fullScreen opened={certificateModal} onClose={() => setCertificateModal(false)} title="Preview" withCloseButton={mediumScreen ? true : false}>
+                    <Container size={"lg"} style={{ width: '1140px', height: '810px' }}>
+                        <div ref={targetRef} style={{ width: '1140px', height: '810px' }}>
+                            <Image className='bg' w={'99.8%'} h={'auto'} src={certificate} alt='Certificate' />
+                            <Center>
+                                <Text className='certificatename'>
+                                    {certificateName}
+                                </Text>
+                            </Center>
+                            {/* Add other relevant information as needed */}
+                        </div>
+
+                        <Flex justify={mediumScreen ? "end" : "start"} gap={"2%"}>
+
+                            <Button onClick={() => generatePDF(targetRef, options, { filename: 'Certificate.pdf' })}
+                                style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}>Download Certificate</Button >
+                            {mediumScreen ? null : <Button variant='outline' color='dark' onClick={() => setCertificateModal(false)}>No</Button>}
+                        </Flex>
+                    </Container>
+                </Modal>
+            </Center>
+
+
             <Box>
                 <Box>
                     <Grid>
@@ -428,16 +491,7 @@ const CourseHomeComp = () => {
                                                     </Link>
 
                                                     <Button variant='outline' style={{ color: "rgba(255, 255, 255, 1)", borderColor: "rgba(255, 255, 255, 1)" }}
-                                                        onClick={() => {
-                                                            client.put("usr_course_page_lesson/", {
-
-                                                                minutes_completed: "00:00:00",
-                                                                course_id: course.courseid,
-                                                                lesson_id: lessonId.lessonid,
-
-                                                            })
-                                                            handleButtonClick()
-                                                        }}>WATCH AGAIN</Button>
+                                                        onClick={handleButtonClick}>WATCH AGAIN</Button>
 
                                                 </Group>
 
@@ -524,6 +578,13 @@ const CourseHomeComp = () => {
                                     </Tabs.List>
                                     <Tabs.Panel value='overview'>
                                         <Card style={{ paddingLeft: "1rem" }}>
+                                            {certificateStatus && (<>
+                                                <Card pl={0}>
+                                                    <UnstyledButton onClick={() => setCertificateModal(true)}><Text c={"rgba(0, 117, 225, 1)"} >DOWNLOAD CERTIFICATE</Text></UnstyledButton>
+
+                                                </Card>
+                                            </>)
+                                            }
                                             <Group>
                                                 <Text fz={18} color="#3A3A3A" fw={"600"} >{homeData.
 

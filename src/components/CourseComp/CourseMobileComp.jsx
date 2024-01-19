@@ -52,6 +52,7 @@ const CourseMobileComp = () => {
   const [certificateName, setCertifcatename] = useState("")
   const [certificateStatus, setCertificateStatus] = useState(false)
 
+
   const navigate = useNavigate()
 
 
@@ -374,13 +375,27 @@ const CourseMobileComp = () => {
   const handleButtonClick = () => {
     // Trigger a re-render by setting the state to false and then back to true
     console.log("button Clicked")
-    setShouldRerender(false);
+
+    client.put("usr_course_page_lesson/", {
+
+      minutes_completed: "00:00:00",
+      course_id: course.courseid,
+      lesson_id: lessonId.lessonid,
+
+    })
     setTimeout(() => {
-      setShouldRerender(true);
-    }, 1000)
-    setIsPlaying(true)
-    setShowOverlay(false)
-    setFill("blur(0px)")
+      window.location.reload()
+    }, 500)
+
+
+
+    // setShouldRerender(false);
+    // setTimeout(() => {
+    //     setShouldRerender(true);
+    // }, 1000)
+    // setIsPlaying(true)
+    // setShowOverlay(false)
+    // setFill("blur(0px)")
   };
 
 

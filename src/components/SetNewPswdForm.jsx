@@ -13,7 +13,7 @@ import { useMediaQuery } from '@mantine/hooks'
 // axios.defaults.xsrfCookieName = 'csrftoken'
 // axios.defaults.xsrfHeaderName = 'x-csrftoken'
 const SetNewPswdForm = () => {
-    const mediumScreen = useMediaQuery("(min-width: 900)");
+    const mediumScreen = useMediaQuery("(min-width: 900px)");
     const largeScreen = useMediaQuery("(min-width: 1440px)");
     const extraLargeScreen = useMediaQuery("(min-width: 1770px)");
 
