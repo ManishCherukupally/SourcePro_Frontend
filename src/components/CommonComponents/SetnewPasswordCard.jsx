@@ -21,7 +21,25 @@ const SetnewPasswordCard = (props) => {
     const [token, setToken, removeToken] = useCookies(['encsrftok']);
 
 
+    const form = useForm(
+        {
+            initialValues: {
+                email: "",
+                otp: undefined,
 
+                password: "",
+
+            },
+            validate: {
+                email: isEmail('Invalid.Please enter your Email'),
+                otp: (value) => (value === undefined ? 'Wrong OTP.Please check the OTP & enter again' : null),
+
+                // email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid.Please enter your Email'),
+                password: (value) => (value === "" ? "Password cannot be empty" : null),
+
+            }
+        }
+    )
 
     // const values = {
 
@@ -91,6 +109,14 @@ const SetnewPasswordCard = (props) => {
 
             }).then((resp) => {
                 console.log(resp.data)
+                if (resp.data.status === "Please_provide_valid_email") {
+                    const errorMessage = resp.data.status === "Please_provide_valid_email"
+                        ? "Invalid.Please enter your Email."
+                        : resp.data.error; // Use a more specific error message if available
+                    form.setErrors({
+                        email: errorMessage,
+                    });
+                }
                 // if (resp.data.status === 'Please_provide_valid_email') {
 
                 //     setemailError("Please provide correct email ID")
@@ -105,25 +131,7 @@ const SetnewPasswordCard = (props) => {
             console.error('Error:', error);
         }
     };
-    const form = useForm(
-        {
-            initialValues: {
-                email: "",
-                otp: undefined,
 
-                password: "",
-
-            },
-            validate: {
-                email: isEmail('Invalid.Please enter your Email'),
-                otp: (value) => (value === undefined ? 'Wrong OTP.Please check the OTP & enter again' : null),
-
-                // email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid.Please enter your Email'),
-                password: (value) => (value === "" ? "Password cannot be empty" : null),
-
-            }
-        }
-    )
     const { values, errors, handleChange } = form;
     const { email } = values;
     return (
@@ -161,7 +169,7 @@ const SetnewPasswordCard = (props) => {
                                     label="Enter OTP code"
                                     {...form.getInputProps("otp")}
                                     rightSection={
-                                        <UnstyledButton type='submit' style={{ paddingRight: "2em" }} onClick={handleresend}>
+                                        <UnstyledButton style={{ paddingRight: "2em" }} onClick={handleresend}>
                                             <Text color={"blue"} fz={"xs"} fw={600} >RESEND</Text>
                                         </UnstyledButton>
                                     }
