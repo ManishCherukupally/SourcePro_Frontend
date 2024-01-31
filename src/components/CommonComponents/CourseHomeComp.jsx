@@ -16,6 +16,11 @@ import client from '../../API/api';
 import axios from 'axios';
 import { useClipboard, useMediaQuery } from '@mantine/hooks';
 import certificate from '../../assets/certificate.png'
+import {
+    exportComponentAsJPEG,
+    exportComponentAsPDF,
+    exportComponentAsPNG
+} from "react-component-export-image";
 import generatePDF, { Resolution } from 'react-to-pdf';
 axios.defaults.withCredentials = true;
 axios.defaults.xsrfCookieName = 'csrftoken'
@@ -439,28 +444,19 @@ const CourseHomeComp = () => {
 
     return (
         <>
-            <Center>
-                <Modal fullScreen opened={certificateModal} onClose={() => setCertificateModal(false)} title="Preview" withCloseButton={mediumScreen ? true : false}>
-                    <Container size={"lg"} style={{ width: '1140px', height: '810px' }}>
-                        <div ref={targetRef} style={{ width: '1140px', height: '810px' }}>
-                            <Image className='bg' w={'99.8%'} h={'auto'} src={certificate} alt='Certificate' />
-                            <Center>
-                                <Text className='certificatename'>
-                                    {certificateName}
-                                </Text>
-                            </Center>
-                            {/* Add other relevant information as needed */}
-                        </div>
+            <Modal style={{ display: "flex", justifyContent: "center" }} size={mediumScreen ? "70%" : "100%"} opened={certificateModal} onClose={() => setCertificateModal(false)} title="Preview" withCloseButton>
+                <Container>
+                    <div ref={targetRef} style={{ width: "inherit", height: 'inherit' }}>
+                        <Image className='bg' h={'auto'} src={certificate} alt='Certificate' />
+                        <Center>
+                            <Text className='certificatename'>
+                                {certificateName}
+                            </Text>
+                        </Center>
+                    </div>
 
-                        <Flex justify={mediumScreen ? "end" : "start"} gap={"2%"}>
-
-                            <Button onClick={() => generatePDF(targetRef, options, { filename: 'Certificate.pdf' })}
-                                style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}>Download Certificate</Button >
-                            {mediumScreen ? null : <Button variant='outline' color='dark' onClick={() => setCertificateModal(false)}>No</Button>}
-                        </Flex>
-                    </Container>
-                </Modal>
-            </Center>
+                </Container>
+            </Modal>
 
 
             <Box>
@@ -580,7 +576,12 @@ const CourseHomeComp = () => {
                                         <Card style={{ paddingLeft: "1rem" }}>
                                             {certificateStatus && (<>
                                                 <Card pl={0}>
-                                                    <UnstyledButton onClick={() => setCertificateModal(true)}><Text c={"rgba(0, 117, 225, 1)"} >DOWNLOAD CERTIFICATE</Text></UnstyledButton>
+                                                    <UnstyledButton onClick={() => {
+                                                        setCertificateModal(true)
+                                                        setTimeout(() => {
+                                                            exportComponentAsPNG(targetRef)
+                                                        }, 500)
+                                                    }}><Text c={"rgba(0, 117, 225, 1)"} >DOWNLOAD CERTIFICATE</Text></UnstyledButton>
 
                                                 </Card>
                                             </>)

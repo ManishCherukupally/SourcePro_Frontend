@@ -247,7 +247,7 @@
 
 .name {
     font-size: 100px;
-    font-family: Brush Script MT;
+    font-family: Staatliches;
     position: absolute;
     top: 370px;
     /* Adjust based on your image template */
@@ -271,20 +271,35 @@
 
 .certificatename {
     font-size: 80px;
-    font-family: Brush Script MT;
+    font-family: Staatliches;
     position: absolute;
-    top: 50%;
+    top: 49%;
+    font-weight: 200;
 }
 
-@media (max-width: 768px) {
+@media (min-width : 320px) and (max-width: 425px) {
     .certificatename {
-        font-family: Brush Script MT;
-        font-size: 60px;
-        top: 38%;
+        font-family: 'Staatliches', sans-serif;
+        font-size: 20px;
+        top: 50%;
+        font-weight: 400;
     }
 }
+
+@media(min-width :768px) and (max-width : 1024px) {
+    .certificatename {
+        font-size: 60px;
+        top: 45%;
+    }
+}
+
+
 
 .bg {
     background-repeat: no-repeat;
     background-size: contain;
+}
+
+.certificateDiv {
+    visibility: hidden;
 }
