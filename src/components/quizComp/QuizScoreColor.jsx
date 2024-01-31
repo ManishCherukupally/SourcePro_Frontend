@@ -13,6 +13,13 @@ import generatePDF, { Resolution } from 'react-to-pdf'
 // axios.defaults.xsrfHeaderName = 'x-csrftoken'
 import certificate from '../../assets/certificate.png'
 
+import {
+    exportComponentAsJPEG,
+    exportComponentAsPDF,
+    exportComponentAsPNG
+} from "react-component-export-image";
+import Certificate from '../Certificate'
+
 
 export function QuizScoreGreen() {
     const mediumScreen = useMediaQuery("(min-width: 1200px)");
@@ -103,6 +110,9 @@ export function QuizScoreGreen() {
             }
         })
 
+    })
+
+    useEffect(() => {
         client.get("download_certificate/", {
             params: {
                 course_id: course.courseid
@@ -133,6 +143,16 @@ export function QuizScoreGreen() {
         }
     }
 
+    useEffect(() => {
+        client.get("download_certificate/", {
+            params: {
+                course_id: course.courseid
+            }
+        }, [course.courseid])
+            .then(resp => setCertifcatename(resp.data.name))
+    }, [course.courseid])
+
+    const [preview, setPreview] = useState(false)
     return (<>
         <AppShell footer={<Footer>
             {mediumScreen ? (null) : (
@@ -143,14 +163,26 @@ export function QuizScoreGreen() {
                         style={{ borderBlockColor: "white", color: "black" }}
 
                     > RE-TAKE QUIZ</Button>
-
-
-                    {status ? (<Button radius={0} h={"4rem"} w={"50%"} variant='filled' onClick={() => setCertificateModal(true)}
-
-                        style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}
+                    <Button radius={0} h={"4rem"} w={"50%"}
+                        onClick={() => {
+                            setCertificateModal(true)
+                            setTimeout(() => {
+                                exportComponentAsPNG(targetRef)
+                            }, 500)
+                        }}
+                        variant='filled' style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}
+                    >DOWNLOAD CERTIFICATE</Button>
+                    {/* {status ? (<Button radius={0} h={"4rem"} w={"50%"}
+                        onClick={() => {
+                            setCertificateModal(true)
+                            setTimeout(() => {
+                                exportComponentAsPNG(targetRef)
+                            }, 500)
+                        }}
+                        variant='filled' style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}
                     >DOWNLOAD CERTIFICATE</Button>) :
                         (<Button radius={0} h={"4rem"} w={"50%"} onClick={handleNextLesson} variant='filled' style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}
-                        >NEXT LESSON</Button>)}
+                        >NEXT LESSON</Button>)} */}
                 </Group>
             )}
         </Footer>}>
@@ -180,28 +212,20 @@ export function QuizScoreGreen() {
             </Center>
             <div>
 
-                <Center>
-                    <Modal fullScreen opened={certificateModal} onClose={() => setCertificateModal(false)} title="Preview" withCloseButton={mediumScreen ? true : false}>
-                        <Container size={"lg"} style={{ width: '1140px', height: '810px' }}>
-                            <div ref={targetRef} style={{ width: '1140px', height: '810px' }}>
-                                <Image className='bg' w={'99.8%'} h={'auto'} src={certificate} alt='Certificate' />
-                                <Center>
-                                    <Text className='certificatename'>
-                                        {certificateName}
-                                    </Text>
-                                </Center>
-                                {/* Add other relevant information as needed */}
-                            </div>
 
-                            <Flex justify={mediumScreen ? "end" : "start"} gap={"2%"}>
+                <Modal style={{ display: "flex", justifyContent: "center" }} size={mediumScreen ? "70%" : "100%"} opened={certificateModal} onClose={() => setCertificateModal(false)} title="Preview" withCloseButton>
+                    <Container>
+                        <div ref={targetRef} style={{ width: "inherit", height: 'inherit' }}>
+                            <Image className='bg' h={'auto'} src={certificate} alt='Certificate' />
+                            <Center>
+                                <Text className='certificatename'>
+                                    {certificateName}
+                                </Text>
+                            </Center>
+                        </div>
 
-                                <Button onClick={() => generatePDF(targetRef, options, { filename: 'Certificate.pdf' })}
-                                    style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}>Download Certificate</Button >
-                                {mediumScreen ? null : <Button variant='outline' color='dark' onClick={() => setCertificateModal(false)}>No</Button>}
-                            </Flex>
-                        </Container>
-                    </Modal>
-                </Center>
+                    </Container>
+                </Modal>
 
                 <Card pl={"2rem"} radius={0} h={"4rem"} style={{ backgroundColor: "#262626" }}>
                     <Flex justify={"space-between"} align={"center"} gap={"1rem"}>
@@ -220,13 +244,21 @@ export function QuizScoreGreen() {
                                 style={{ color: "rgba(255, 255, 255, 1)", borderColor: "rgba(255, 255, 255, 1)" }}
                             > RE-TAKE QUIZ</Button>
                             {/* </Link> */}
+                            <Button mr={"3.5rem"} variant='filled' onClick={() => {
+                                setCertificateModal(true)
+                                setTimeout(() => {
+                                    exportComponentAsPNG(targetRef)
+                                }, 500)
+                            }}
 
-                            {status ? (<Button mr={"3.5rem"} variant='filled' onClick={() => setCertificateModal(true)}
+                                style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}
+                            >DOWNLOAD CERTIFICATE</Button>
+                            {/* {status ? (<Button mr={"3.5rem"} variant='filled' onClick={() => setCertificateModal(true)}
 
                                 style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}
                             >DOWNLOAD CERTIFICATE</Button>) :
                                 (<Button onClick={handleNextLesson} mr={"3.5rem"} variant='filled' style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}
-                                >NEXT LESSON</Button>)}
+                                >NEXT LESSON</Button>)} */}
 
                         </Flex>) : (null)}
                     </Flex>
@@ -244,7 +276,7 @@ export function QuizScoreGreen() {
 }
 
 export function QuizScoreRed() {
-    const mediumScreen = useMediaQuery("(min-width: 1200px)");
+    const mediumScreen = useMediaQuery("(min-width: 1000px)");
     const largeScreen = useMediaQuery("(min-width: 1440px)");
     const extraLargeScreen = useMediaQuery("(min-width: 1770px)");
 

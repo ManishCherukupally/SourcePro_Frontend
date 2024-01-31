@@ -1,79 +1,47 @@
+import React, { useEffect, useState } from 'react'
+import { Center, Container, Image, Text } from "@mantine/core";
+import client from '../API/api';
+import { useParams } from 'react-router-dom';
+import certificate from '../assets/certificate.png'
 
-import React, { useRef } from 'react'
-import certificate from './assests/certificate.png'
-import jsPDF from 'jspdf';
 
-import { Container, Grid, Group, Image, Text, Button } from '@mantine/core';
-import "./Css.css"
-import generatePDF, { Margin, Resolution, usePDF } from 'react-to-pdf';
 const Certificate = () => {
-    const targetRef = useRef()
-    // const { toPDF, tragetRef } = usePDF({ filename: "Certificate.pdf" });
-    const name = "Manish.C"
+    const [certificateName, setCertifcatename] = useState("")
 
-    const options = {
-
-        // default is 'A4'
-        format: 'certificate',
-        method: 'open',
-        resolution: Resolution.NORMAL,
-        page: {
-
-            orientation: 'landscape',
-        },
-        overrides: {
-            // see https://artskydj.github.io/jsPDF/docs/jsPDF.html for more options
-            pdf: {
-                compress: true
+    const course = useParams()
+    useEffect(() => {
+        client.get("download_certificate/", {
+            params: {
+                course_id: course.courseid
             }
-        }
-    }
-    // const handleDownload = () => {
-    //     const doc = new jsPDF({
-    //         orientation: "landscape",
-    //         unit: "in",
-
-    //     });
-    //     doc.html(document.querySelector('.certificate-container'), {
-    //         callback: (doc) => {
-    //             doc.save('certificate.pdf');
-    //         },
-    //     });
-    // };
-    // const form = useForm({
-    //     initialValues: {
-    //         name: "manish",
-
-    //     },
-
-    //     transformValues: (values) => ({
-    //         name: `${values.name}`,
-
-    //     }),
-    // })
-    // const clipboard = useClipboard({ timeout: 1000 });
-    // const word = ["im manish", "ram", "sai"]
-    // const [copiedIndex, setCopiedIndex] = useState(-1);
+        }, [course.courseid])
+            .then(resp => setCertifcatename(resp.data.name))
+    })
     return (
-        <>
-
-            <Container sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div>
 
 
-                <div ref={targetRef} >
-                    <Image className='bg' w={"99.1%"} h={"auto"} src={certificate} alt="Certificate" />
-                    <Group position="absolute" >
-                        <Text style={{ left: name.length > 8 ? ("510px") : ("600px") }} className='name'>{name}</Text>
-
-                        {/* Add other relevant information as needed */}
-                    </Group>
-                </div>
 
 
-            </Container>
 
-            {/* <Button onClick={() => generatePDF(targetRef, options, { filename: 'Certificate.pdf' })}>Download Certificate</Button> */}
-        </>
+            <Image className='bg' h={'auto'} src={certificate} alt='Certificate' />
+            <Center>
+                <Text className='certificatename'>
+                    {certificateName}
+                </Text>
+            </Center>
+            {/* Add other relevant information as needed */}
+
+
+            {/* <Flex justify={mediumScreen ? "end" : "start"} gap={"2%"}>
+
+    <Button onClick={() => generatePDF(targetRef, options, { filename: 'Certificate.pdf' })}
+        style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}>Download Certificate</Button >
+    {mediumScreen ? null : <Button variant='outline' color='dark' onClick={() => setCertificateModal(false)}>No</Button>}
+</Flex> */}
+
+
+        </div>
     )
 }
 
