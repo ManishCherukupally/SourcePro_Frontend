@@ -440,8 +440,16 @@ const CourseHomeComp = () => {
     const clipboard = useClipboard({ timeout: 1000 });
     const [copiedIndex, setCopiedIndex] = useState(-1);
 
+    useEffect(() => {
+        client.get("download_certificate/", {
+            params: {
+                course_id: course.courseid
+            }
+        }, [course.courseid])
+            .then(resp => setCertifcatename(resp.data.name))
+    }, [course.courseid])
 
-
+    console.log(certificateName)
     return (
         <>
             <Modal style={{ display: "flex", justifyContent: "center" }} size={mediumScreen ? "70%" : "100%"} opened={certificateModal} onClose={() => setCertificateModal(false)} title="Preview" withCloseButton>
@@ -580,7 +588,7 @@ const CourseHomeComp = () => {
                                                         setCertificateModal(true)
                                                         setTimeout(() => {
                                                             exportComponentAsPNG(targetRef)
-                                                        }, 500)
+                                                        }, 1000)
                                                     }}><Text c={"rgba(0, 117, 225, 1)"} >DOWNLOAD CERTIFICATE</Text></UnstyledButton>
 
                                                 </Card>

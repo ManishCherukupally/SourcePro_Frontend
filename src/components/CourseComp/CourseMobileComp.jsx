@@ -599,7 +599,7 @@ const CourseMobileComp = () => {
                     setCertificateModal(true)
                     setTimeout(() => {
                       exportComponentAsPNG(targetRef)
-                    }, 500)
+                    }, 1000)
                   }}><Text c={"rgba(0, 117, 225, 1)"} >DOWNLOAD CERTIFICATE</Text></UnstyledButton>
 
               </Card>
