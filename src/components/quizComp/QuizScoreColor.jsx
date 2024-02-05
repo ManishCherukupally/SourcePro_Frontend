@@ -163,7 +163,7 @@ export function QuizScoreGreen() {
                         style={{ borderBlockColor: "white", color: "black" }}
 
                     > RE-TAKE QUIZ</Button>
-                    <Button radius={0} h={"4rem"} w={"50%"}
+                    {/* <Button radius={0} h={"4rem"} w={"50%"}
                         onClick={() => {
                             setCertificateModal(true)
                             setTimeout(() => {
@@ -171,8 +171,8 @@ export function QuizScoreGreen() {
                             }, 500)
                         }}
                         variant='filled' style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}
-                    >DOWNLOAD CERTIFICATE</Button>
-                    {/* {status ? (<Button radius={0} h={"4rem"} w={"50%"}
+                    >DOWNLOAD CERTIFICATE</Button> */}
+                    {status ? (<Button radius={0} h={"4rem"} w={"50%"}
                         onClick={() => {
                             setCertificateModal(true)
                             setTimeout(() => {
@@ -182,7 +182,7 @@ export function QuizScoreGreen() {
                         variant='filled' style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}
                     >DOWNLOAD CERTIFICATE</Button>) :
                         (<Button radius={0} h={"4rem"} w={"50%"} onClick={handleNextLesson} variant='filled' style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}
-                        >NEXT LESSON</Button>)} */}
+                        >NEXT LESSON</Button>)}
                 </Group>
             )}
         </Footer>}>
