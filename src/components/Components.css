@@ -277,7 +277,7 @@
     font-weight: 200;
 }
 
-@media (min-width : 320px) and (max-width: 425px) {
+@media (min-width : 320px) and (max-width: 426px) {
     .certificatename {
         font-family: 'Staatliches', sans-serif;
         font-size: 20px;
