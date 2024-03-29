@@ -48,7 +48,7 @@ const CourseHomeComp = () => {
     const [lessonData, setLessonData] = useState([])
 
     const [lessonName, setLessonName] = useState("")
-
+    // var lessonName
     const [learners, setLearners] = useState(0)
     const course = useParams()
     const lessonId = useParams()
@@ -60,6 +60,8 @@ const CourseHomeComp = () => {
     const [certificateModal, setCertificateModal] = useState(false)
     const [certificateName, setCertifcatename] = useState("")
     const [certificateStatus, setCertificateStatus] = useState(false)
+    const [totalMinutesCalculated, settotalMinutesCalculated] = useState()
+    // const [PlaySeconds, setPlaySeconds] = useState(0)
 
 
     const navigate = useNavigate()
@@ -150,7 +152,7 @@ const CourseHomeComp = () => {
     //         .catch((error) => console.log(error))
     // }, [course.courseid])
 
-    const [totalMinutesCalculated, settotalMinutesCalculated] = useState("")
+
     useEffect(() => {
 
 
@@ -166,29 +168,39 @@ const CourseHomeComp = () => {
             .then((resp) => {
                 // console.log(JSON.stringify(resp.data["all_lessons"].materials))
                 const data = (resp.data["all_lessons"])
-                console.log(data)
+                // console.log(data)
                 setLessonData(data)
 
-                var time = resp.data.all_lessons.map((item) => item.lesson_duration)
-                const [hours, minutes, seconds] = time.toString().split(":");
-                var minutestime = Number(hours) * 60 + Number(minutes) + Number(seconds) / 60
+                // var time = resp.data.all_lessons.map((item) => item.lesson_duration)
+
+                // data.map(item => console.log(item.lesson_duration))
+                // console.log(time)
+                // const [hours, minutes, seconds] = time.toString().split(":");
+                // var minutestime = Number(hours) * 60 + Number(minutes) + Number(seconds) / 60
                 // Calculate total minutes
-                settotalMinutesCalculated(minutestime)
+                // settotalMinutesCalculated(minutestime)
 
-                const playTime = resp.data.all_lessons.map((item) => item.minutes_completed)
-                console.log(playTime.toString())
-                const timeArray = playTime.toString().split(':').map(Number);
-                console.log(timeArray)
-                const playseconds = timeArray[0] * 3600 + timeArray[1] * 60 + timeArray[2];
-                console.log(playseconds)
-                window.localStorage.setItem("playSeconds", playseconds)
+                // const playTime = resp.data.all_lessons.map((item) => item.minutes_completed)
+                data.filter(item => { if (Object.entries(item).length > 6) window.localStorage.setItem('playseconds', (handlePLayseconds(item.minutes_completed))) })
+                // console.log(playTime)
 
 
-                setLessonName(resp.data["all_lessons"].lesson_name)
+
+                // setLessonName(resp.data["all_lessons"].lesson_name)
+                // console.log(typeof (lessonId.lessonid))
+                // setTimeout(() => {
+                //     lessonData.filter(item => { if (item.lesson_id === parseInt(lessonId.lessonid)) return console.log(item.lesson_name) })
+
+                // }, 1000)
+
+                data.filter(item => { if (Object.entries(item).length > 6) return setLessonName(item.lesson_name) })
                 // setClipboardContent(resp.data.all_lessons.clipboards)
                 const clipData = resp.data.all_lessons.map(item => item.clipboards)
-                console.log(clipData.toString())
-                const url = clipData.toString()
+                // console.log(clipData)
+                var url
+                url = clipData.filter((item) => { if (item !== undefined || null) return (item) })
+                // const url = clipData.toString()
+                console.log(url)
 
                 axios.get(url)
                     .then((resp) => {
@@ -246,6 +258,15 @@ const CourseHomeComp = () => {
 
     }, [course.courseid, lessonId.lessonid])
 
+    const handlePLayseconds = (value) => {
+        // console.log(value)
+        const timeArray = value.split(':').map(Number);
+        // console.log(timeArray)
+        const playseconds = timeArray[0] * 3600 + timeArray[1] * 60 + timeArray[2];
+        console.log(playseconds)
+        return playseconds
+
+    }
     // useEffect(() => {
     //     const handleClipBoard = () => {
     //         axios.get(clipboardContent)
@@ -379,7 +400,6 @@ const CourseHomeComp = () => {
     const handlePause = () => {
         console.log("paused")
 
-        // window.localStorage.setItem("playSeconds", playseconds)
         try {
             client.put("usr_course_page_lesson/", {
 
@@ -422,7 +442,7 @@ const CourseHomeComp = () => {
 
 
     const seekToTime = () => {
-        const seconds = window.localStorage.getItem("playSeconds")
+        const seconds = parseInt(window.localStorage.getItem('playseconds'))
         console.log(seconds)
         if (playerRef.current) {
             playerRef.current.seekTo(seconds, 'seconds');
@@ -450,6 +470,13 @@ const CourseHomeComp = () => {
     }, [course.courseid])
 
     console.log(certificateName)
+
+    const handleduration = (value) => {
+        const [hours, minutes, seconds] = value.toString().split(":");
+        var minutestime = Number(hours) * 60 + Number(minutes) + Number(seconds) / 60
+
+        return Math.floor(minutestime)
+    }
     return (
         <>
             <Modal style={{ display: "flex", justifyContent: "center" }} size={mediumScreen ? "70%" : "100%"} opened={certificateModal} onClose={() => setCertificateModal(false)} title="Preview" withCloseButton>
@@ -599,7 +626,7 @@ const CourseHomeComp = () => {
 
                                                     course_name}</Text>
                                                 <Text fz={18}> . </Text>
-                                                <Text fz={14} color="#3A3A3A" fw={"600"} >{lessonData.map(item => item.lesson_name)}</Text>
+                                                <Text fz={14} color="#3A3A3A" fw={"600"} >{lessonName}</Text>
                                             </Group>
                                             <Space h={5} />
 
@@ -826,8 +853,6 @@ const CourseHomeComp = () => {
                                                                 (
                                                                     <div onClick={handleButtonClick}>
 
-
-
                                                                         <Flex p={"1rem"} align={"center"} gap={15} >
                                                                             {
 
@@ -850,7 +875,7 @@ const CourseHomeComp = () => {
                                                                                 <Space h={8} />
                                                                                 <Flex gap={10} >
 
-                                                                                    <Text color='#FFFFFF' fz={"xs"}>{Math.floor(totalMinutesCalculated)}m </Text>
+                                                                                    <Text color='#FFFFFF' fz={"xs"}>{handleduration(item.lesson_duration)}m </Text>
                                                                                     {
 
                                                                                         item.quiz_attempt_status === true ?

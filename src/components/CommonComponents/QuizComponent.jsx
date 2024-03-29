@@ -183,9 +183,9 @@ const QuizComponent = () => {
                 }
             })
             .then((resp) => {
-
-                lesson = resp.data["all_lessons"].map(item => item.lesson_name)
-                setLessonName(lesson.toString())
+                const data = (resp.data["all_lessons"])
+                // lesson = resp.data["all_lessons"].map(item => item.lesson_name)
+                data.filter(item => { if (Object.entries(item).length > 6) return setLessonName(item.lesson_name) })
             })
 
 
