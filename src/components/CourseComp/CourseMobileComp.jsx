@@ -132,7 +132,7 @@ const CourseMobileComp = () => {
   //         .catch((error) => console.log(error))
   // }, [course.courseid])
 
-  const [totalMinutesCalculated, settotalMinutesCalculated] = useState("")
+  // const [totalMinutesCalculated, settotalMinutesCalculated] = useState("")
   useEffect(() => {
 
 
@@ -148,29 +148,43 @@ const CourseMobileComp = () => {
       .then((resp) => {
         // console.log(JSON.stringify(resp.data["all_lessons"].materials))
         const data = (resp.data["all_lessons"])
-        console.log(data)
+        // console.log(data)
         setLessonData(data)
 
-        var time = resp.data.all_lessons.map((item) => item.lesson_duration)
+        // var time = resp.data.all_lessons.map((item) => item.lesson_duration)
+
+        // data.map(item => console.log(item.lesson_duration))
+        // console.log(time)
         const [hours, minutes, seconds] = time.toString().split(":");
         var minutestime = Number(hours) * 60 + Number(minutes) + Number(seconds) / 60
         // Calculate total minutes
-        settotalMinutesCalculated(minutestime)
+        // settotalMinutesCalculated(minutestime)
 
-        const playTime = resp.data.all_lessons.map((item) => item.minutes_completed)
-        console.log(playTime.toString())
+        // const playTime = resp.data.all_lessons.map((item) => item.minutes_completed)
+        const playTime = data.filter(item => { if (Object.entries(item).length > 6) return (item.minutes_completed) })
+        // console.log(playTime)
         const timeArray = playTime.toString().split(':').map(Number);
-        console.log(timeArray)
+        // console.log(timeArray)
         const playseconds = timeArray[0] * 3600 + timeArray[1] * 60 + timeArray[2];
-        console.log(playseconds)
+        // console.log(playseconds)
         window.localStorage.setItem("playSeconds", playseconds)
 
 
-        setLessonName(resp.data["all_lessons"].lesson_name)
+        // setLessonName(resp.data["all_lessons"].lesson_name)
+        // console.log(typeof (lessonId.lessonid))
+        // setTimeout(() => {
+        //     lessonData.filter(item => { if (item.lesson_id === parseInt(lessonId.lessonid)) return console.log(item.lesson_name) })
+
+        // }, 1000)
+
+        data.filter(item => { if (Object.entries(item).length > 6) return setLessonName(item.lesson_name) })
         // setClipboardContent(resp.data.all_lessons.clipboards)
         const clipData = resp.data.all_lessons.map(item => item.clipboards)
-        console.log(clipData.toString())
-        const url = clipData.toString()
+        // console.log(clipData)
+        var url
+        url = clipData.filter((item) => { if (item !== undefined || null) return (item) })
+        // const url = clipData.toString()
+        console.log(url)
 
         axios.get(url)
           .then((resp) => {
@@ -429,7 +443,12 @@ const CourseMobileComp = () => {
   // const { toPDF, tragetRef } = usePDF({ filename: "Certificate.pdf" });
   // const [showCertificate, setShowCertificate] = useState(false);
 
+  const handleduration = (value) => {
+    const [hours, minutes, seconds] = value.toString().split(":");
+    var minutestime = Number(hours) * 60 + Number(minutes) + Number(seconds) / 60
 
+    return Math.floor(minutestime)
+  }
 
   return (
     <>
@@ -545,7 +564,7 @@ const CourseMobileComp = () => {
 
             course_name}</Text>
           <Text fz={18}> . </Text>
-          <Text fz={14} color="#3A3A3A" fw={"600"} >{lessonData.map(item => item.lesson_name)}</Text>
+          <Text fz={14} color="#3A3A3A" fw={"600"} >{lessonName}</Text>
         </Group>
       </Card>
       <div>
@@ -800,7 +819,7 @@ const CourseMobileComp = () => {
                                   <Space h={8} />
                                   <Flex gap={10} >
 
-                                    <Text fz={"xs"}>{Math.floor(totalMinutesCalculated)}m </Text>
+                                    <Text fz={"xs"}>{handleduration(item.lesson_duration)}m </Text>
                                     {
 
                                       item.quiz_attempt_status === true ?

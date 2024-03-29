@@ -52,14 +52,15 @@ export function QuizScoreGreen() {
                 }
             })
             .then((resp) => {
-
-                lesson = resp.data["all_lessons"].map(item => item.lesson_name)
-                setquizscore(resp.data["all_lessons"].map(item => item.quiz_score))
-                setLessonName(lesson.toString())
+                const data = (resp.data["all_lessons"])
+                // lesson = resp.data["all_lessons"].map(item => item.lesson_name)
+                // setquizscore(resp.data["all_lessons"].map(item => item.quiz_score))
+                data.filter(item => { if (Object.entries(item).length > 6) return setLessonName(item.lesson_name) })
+                data.filter(item => { if (Object.entries(item).length > 6) return setquizscore(item.quiz_score) })
             })
 
 
-    }, [])
+    }, [course.courseid, lessonId.lessonid])
 
     console.log(lessonName)
     // const { pathname } = useLocation();
@@ -88,9 +89,12 @@ export function QuizScoreGreen() {
             }
         })
             .then((resp) => {
-                setLessonData(resp.data)
+                // setLessonData(resp.data)
+                const nextLessonCourseId = resp.data.course_id
+                const nextLessonId = resp.data.next_lesson_id
+                console.log(nextLessonCourseId)
                 if (resp.data.course_id && resp.data.next_lesson_id) {
-                    navigate(`/courseplayer/${nextLessonData.course_id}/${nextLessonData.next_lesson_id}`)
+                    navigate(`/courseplayer/${nextLessonCourseId}/${nextLessonId}`)
 
                 }
                 else {
@@ -105,8 +109,13 @@ export function QuizScoreGreen() {
                 course_id: course.courseid
             }
         }).then(resp => {
+            console.log(resp.data.course_data.course_status)
+
             if (resp.data.course_data.course_status === "Completed") {
                 setStatus(true)
+            }
+            else {
+                setStatus(false)
             }
         })
 
@@ -180,6 +189,7 @@ export function QuizScoreGreen() {
                             }, 500)
                         }}
                         variant='filled' style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}>DOWNLOAD CERTIFICATE</Button>) :
+
                         (<Button radius={0} h={"4rem"} w={"50%"} onClick={handleNextLesson} variant='filled' style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}
                         >NEXT LESSON</Button>)}
                 </Group>
@@ -232,7 +242,7 @@ export function QuizScoreGreen() {
                             <ActionIcon onClick={open}
                                 variant='transparent'><BiArrowBack color='#FFFFFF' size={25} /></ActionIcon>
 
-                            <Text c={"#FFFFFF"} fw={600} key={lessonData.lesson_id} >Quiz 1. {lessonName}</Text>
+                            <Text c={"#FFFFFF"} fw={600} >Quiz 1. {lessonName}</Text>
 
                         </Group>
                         {mediumScreen ? (<Flex>
