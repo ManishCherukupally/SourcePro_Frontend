@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { Accordion, ActionIcon, BackgroundImage, Box, Button, Card, Center, Container, CopyButton, Divider, Flex, Grid, Group, Image, Modal, Overlay, Radio, Space, Spoiler, Tabs, Text, Tooltip, UnstyledButton } from '@mantine/core'
 
-import Head from '../dashboard Header/Head'
 
 import { BiRadioCircle, BiSolidLike } from 'react-icons/bi'
 import { BsCheckCircle } from 'react-icons/bs';
