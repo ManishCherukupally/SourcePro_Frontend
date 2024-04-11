@@ -107,8 +107,10 @@ const QuizComponent = () => {
     const [selectedOptions, setSelectedOptions] = useState({});
     const [selectedQuestions, setSelectedQuestions] = useState([]);
     const [questionwithoption, setQuestionwithoption] = useAtom(qwitho)
+    console.log(questionwithoption)
     // @ts-ignore
     const questionsStore = useAtom(qwitho)[0]
+    console.log(questionsStore)
     const [quizHeadgreen, setQuizHeadGreen] = useState(false);
     const [quizHeadRed, setQuizHeadRed] = useState(false);
     const [submit, setSubmit] = useState(true)
