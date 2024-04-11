@@ -253,7 +253,7 @@ export function QuizScoreGreen() {
                                 style={{ color: "rgba(255, 255, 255, 1)", borderColor: "rgba(255, 255, 255, 1)" }}
                             > RE-TAKE QUIZ</Button>
                             {/* </Link> */}
-                            <Button mr={"3.5rem"} variant='filled' onClick={() => {
+                            {/* <Button mr={"3.5rem"} variant='filled' onClick={() => {
                                 setCertificateModal(true)
                                 setTimeout(() => {
                                     exportComponentAsPNG(targetRef)
@@ -261,13 +261,13 @@ export function QuizScoreGreen() {
                             }}
 
                                 style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}
-                            >DOWNLOAD CERTIFICATE</Button>
-                            {/* {status ? (<Button mr={"3.5rem"} variant='filled' onClick={() => setCertificateModal(true)}
+                            >DOWNLOAD CERTIFICATE</Button> */}
+                            {status ? (<Button mr={"3.5rem"} variant='filled' onClick={() => setCertificateModal(true)}
 
                                 style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}
                             >DOWNLOAD CERTIFICATE</Button>) :
                                 (<Button onClick={handleNextLesson} mr={"3.5rem"} variant='filled' style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}
-                                >NEXT LESSON</Button>)} */}
+                                >NEXT LESSON</Button>)}
 
                         </Flex>) : (null)}
                     </Flex>
@@ -309,8 +309,10 @@ export function QuizScoreRed() {
             })
             .then((resp) => {
 
-                lesson = resp.data["all_lessons"].map(item => item.lesson_name)
-                setLessonName(lesson.toString())
+                // lesson = resp.data["all_lessons"].map(item => item.lesson_name)
+                // setLessonName(lesson.toString())
+                resp.data["all_lessons"].filter(item => { if (Object.entries(item).length > 6) return setLessonName(item.lesson_name) })
+                // console.log(lesson)
             })
 
 

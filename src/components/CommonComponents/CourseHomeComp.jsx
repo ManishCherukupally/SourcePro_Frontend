@@ -420,7 +420,7 @@ const CourseHomeComp = () => {
         setIsPlaying(true)
         client.put("usr_course_page_lesson/", {
 
-            minutes_completed: "00:00:00",
+            minutes_completed: time,
             course_id: course.courseid,
             lesson_id: lessonId.lessonid,
 

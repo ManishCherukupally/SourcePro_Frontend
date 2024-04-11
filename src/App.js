@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 import LoginPage from './pages/LoginPage'
-import { Switch } from "@mantine/core";
+import { Space, Switch } from "@mantine/core";
 import SetnewPawsdPage from "./pages/SetnewPawsdPage";
 import HomePage from "./pages/HomePage";
 import Head from "./components/dashboard Header/Head";
@@ -20,14 +20,17 @@ import MycoursesPage from "./pages/MycoursesPage";
 import ForgotPassword from "./pages/ForgotPswdPage";
 import MobileHead from "./components/dashboard Header/MobileHead";
 import CourseMobileComp from "./components/CourseComp/CourseMobileComp";
-
+import Test from './test'
 
 
 function App() {
+
   // var isLoggedIn = window.localStorage.getItem("encsrftok")
   return (
-    <div className="App">
 
+    <div className="App">
+      {/* <Test />
+      <Space h={'10rem'} /> */}
       <Router>
 
         <Routes>
