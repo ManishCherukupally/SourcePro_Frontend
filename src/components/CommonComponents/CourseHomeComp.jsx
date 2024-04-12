@@ -385,7 +385,7 @@ const CourseHomeComp = () => {
     //     };
     // }, []);
 
-    var time;
+    let time;
     const [play, setPlay] = useState(0);
     console.log(play)
     var date = new Date(play * 1000);
@@ -417,13 +417,13 @@ const CourseHomeComp = () => {
         // Trigger a re-render by setting the state to false and then back to true
         console.log("button Clicked")
         setIsPlaying(true)
-        client.put("usr_course_page_lesson/", {
+        // client.put("usr_course_page_lesson/", {
 
-            minutes_completed: time,
-            course_id: course.courseid,
-            lesson_id: lessonId.lessonid,
+        //     minutes_completed: time,
+        //     course_id: course.courseid,
+        //     lesson_id: lessonId.lessonid,
 
-        })
+        // })
         setTimeout(() => {
             window.location.reload()
         }, 500)
@@ -879,7 +879,7 @@ const CourseHomeComp = () => {
 
                                                                                         item.quiz_attempt_status === true ?
 
-                                                                                            (<Flex gap={120}>
+                                                                                            (<Flex gap={100}>
                                                                                                 <Flex gap={5}>
                                                                                                     <Text fz={"xs"} c={"white"}>Score :</Text>
                                                                                                     <Text fz={"xs"} c={"rgba(0, 156, 23, 1)"}>{item.
