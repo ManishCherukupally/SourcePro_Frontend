@@ -42,7 +42,7 @@ const TrainingSubscriptions = () => {
                 <Divider />
 
                 <Space h={15} />
-                <Container pl={'lg'} size={"lg"}>
+                <Container pl={mediumScreen ? "1rem" : "1.3rem"} size={"xl"}>
                     <>
                         {subscriptions.map(data => (
                             <div key={data?.
