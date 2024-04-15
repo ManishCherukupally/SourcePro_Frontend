@@ -30,8 +30,8 @@ const TrainingSubscriptions = () => {
     }, [])
     return (
         <div>
-            <Container size={"xl"} p={0} style={{ margin: "1rem", marginLeft: mediumScreen ? "4rem" : "0rem" }}>
-                <Card pt={0} pl={mediumScreen ? "1rem" : 0}>
+            <Container size={"xl"} style={{ margin: "1rem", marginLeft: mediumScreen ? "4rem" : "0rem" }}>
+                <Card pl={mediumScreen ? "1rem" : 0}>
                     <Group>
                         {mediumScreen ? (null) : (<div>
                             <ActionIcon size={"sm"} onClick={() => navigate(-1)}>< BiArrowBack /></ActionIcon>
@@ -42,7 +42,7 @@ const TrainingSubscriptions = () => {
                 <Divider />
 
                 <Space h={15} />
-                <Container ml={mediumScreen ? 0 : "lg"} pl={mediumScreen ? 0 : "lg"} size={"lg"}>
+                <Container pl={'lg'} size={"lg"}>
                     <>
                         {subscriptions.map(data => (
                             <div key={data?.

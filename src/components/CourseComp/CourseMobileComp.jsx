@@ -425,7 +425,7 @@ const CourseMobileComp = () => {
       lesson_id: lessonId.lessonid,
 
     })
-
+    setIsPlaying(false)
     setTimeout(() => {
       window.location.reload()
     }, 200)

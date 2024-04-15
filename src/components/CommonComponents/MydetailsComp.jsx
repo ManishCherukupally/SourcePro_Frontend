@@ -40,8 +40,8 @@ const MydetailsComp = () => {
 
     return (
         <div>
-            <Container p={0} size={"xl"} style={{ margin: "1rem", marginLeft: mediumScreen ? "4rem" : "0rem" }}>
-                <Card pt={0} pl={mediumScreen ? "1rem" : 0} >
+            <Container size={"xl"} style={{ margin: "1rem", marginLeft: mediumScreen ? "4rem" : "0rem" }}>
+                <Card pl={mediumScreen ? "1rem" : 0} >
                     <Group align={"center"} position={mediumScreen ? "apart" : "left"}>
                         {mediumScreen ? (null) : (<div>
                             <ActionIcon size={"sm"} onClick={() => navigate(-1)}>< BiArrowBack /></ActionIcon>
