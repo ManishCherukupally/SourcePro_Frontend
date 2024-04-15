@@ -417,7 +417,17 @@ const CourseHomeComp = () => {
     }
 
     const handleWatchAgain = () => {
-        window.localStorage.setItem('playseconds', 0)
+        client.put("usr_course_page_lesson/", {
+
+            minutes_completed: "00:00:00",
+            course_id: course.courseid,
+            lesson_id: lessonId.lessonid,
+
+        })
+
+        setTimeout(() => {
+            window.location.reload()
+        }, 200)
     }
 
     const handleButtonClick = () => {
