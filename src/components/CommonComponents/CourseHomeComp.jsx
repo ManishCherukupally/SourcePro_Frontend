@@ -574,7 +574,7 @@ const CourseHomeComp = () => {
                                 {shouldRerender &&
 
 
-                                    <ReactPlayer ref={playerRef}
+                                    <ReactPlayer ref={playerRef} loop={false}
                                         style={{ pointerEvents: showOverlay && 'none', filter: fill }}
                                         height={"100%"} width={"100%"}
                                         controls
