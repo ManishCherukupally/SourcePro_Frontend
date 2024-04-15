@@ -33,7 +33,7 @@ const CourseHomeComp = () => {
 
 
     const [copied, setCopied] = useState(false)
-    const playerRef = useRef(null);
+
     const [isActive, setIsActive] = useState(false);
 
     const [textContent, setTextContent] = useState('');
@@ -47,6 +47,7 @@ const CourseHomeComp = () => {
     const [lessonData, setLessonData] = useState([])
 
     const [lessonName, setLessonName] = useState("")
+    const [currentLessonId, setCurrentLessonID] = useState(null)
     // var lessonName
     const [learners, setLearners] = useState(0)
     const course = useParams()
@@ -60,8 +61,8 @@ const CourseHomeComp = () => {
     const [certificateName, setCertifcatename] = useState("")
     const [certificateStatus, setCertificateStatus] = useState(false)
     const [totalMinutesCalculated, settotalMinutesCalculated] = useState()
-    // const [PlaySeconds, setPlaySeconds] = useState(0)
-
+    const [lessonMinutesCompleted, setLessonMinutesCompleted] = useState("")
+    const [url, setUrl] = useState("")
 
     const navigate = useNavigate()
 
@@ -69,7 +70,7 @@ const CourseHomeComp = () => {
     // const { toPDF, tragetRef } = usePDF({ filename: "Certificate.pdf" });
     // const [showCertificate, setShowCertificate] = useState(false);
 
-
+    const playerRef = useRef([]);
 
     const options = {
 
@@ -180,10 +181,10 @@ const CourseHomeComp = () => {
                 // settotalMinutesCalculated(minutestime)
 
                 // const playTime = resp.data.all_lessons.map((item) => item.minutes_completed)
-                data.filter(item => { if (Object.entries(item).length > 6) window.localStorage.setItem('playseconds', (handlePLayseconds(item.minutes_completed))) })
+                data.filter(item => { if (Object.entries(item).length > 6) return setLessonMinutesCompleted(item.minutes_completed) })
                 // console.log(playTime)
-
-
+                data.filter(item => { if (Object.entries(item).length > 6) return setCurrentLessonID(item.lesson_id) })
+                data.filter(item => { if (Object.entries(item).length > 6) return setUrl(item.lesson_url) })
 
                 // setLessonName(resp.data["all_lessons"].lesson_name)
                 // console.log(typeof (lessonId.lessonid))
@@ -255,17 +256,18 @@ const CourseHomeComp = () => {
             .catch((error) => console.log(error))
         // }
 
-    }, [course.courseid, lessonId.lessonid])
+    }, [course.courseid, lessonId.lessonid, currentLessonId])
 
-    const handlePLayseconds = (value) => {
+    const handlePLayseconds = () => {
         // console.log(value)
-        const timeArray = value.split(':').map(Number);
+        const timeArray = lessonMinutesCompleted.split(':').map(Number);
         // console.log(timeArray)
         const playseconds = timeArray[0] * 3600 + timeArray[1] * 60 + timeArray[2];
         console.log(playseconds)
-        return playseconds
+        window.localStorage.setItem('playseconds', playseconds)
 
     }
+    handlePLayseconds()
     // useEffect(() => {
     //     const handleClipBoard = () => {
     //         axios.get(clipboardContent)
@@ -355,12 +357,12 @@ const CourseHomeComp = () => {
 
     const [isPlaying, setIsPlaying] = useState(true);
 
-    const [shouldRerender, setShouldRerender] = useState(false);
+    const [shouldRerender, setShouldRerender] = useState(true);
 
-    useEffect(() => {
-        // Set the initial state of the component
-        setShouldRerender(true);
-    }, [course.courseid, lessonId.lessonid]);
+    // useEffect(() => {
+    //     // Set the initial state of the component
+    //     setShouldRerender(true);
+    // }, [course.courseid, lessonId.lessonid]);
 
 
     // useEffect(() => {
@@ -413,10 +415,28 @@ const CourseHomeComp = () => {
         }
 
     }
+
     const handleButtonClick = () => {
+        client.get("usr_course_page_lesson/", {
+            params: {
+                course_id: course.courseid,
+                lesson_id: lessonId.lessonid,
+            }
+        }).then((resp) => {
+            const data = (resp.data["all_lessons"])
+            // console.log(data)
+            setLessonData(data)
+            // data.filter(item => { if (Object.entries(item).length > 6) return setUrl(item.lesson_url) })
+
+
+        })
+
+
         // Trigger a re-render by setting the state to false and then back to true
         console.log("button Clicked")
         setIsPlaying(true)
+        // setUrl(less)
+
         // client.put("usr_course_page_lesson/", {
 
         //     minutes_completed: time,
@@ -426,7 +446,7 @@ const CourseHomeComp = () => {
         // })
         setTimeout(() => {
             window.location.reload()
-        }, 500)
+        }, 200)
 
 
 
@@ -440,13 +460,20 @@ const CourseHomeComp = () => {
     };
 
 
-    const seekToTime = () => {
-        const seconds = parseInt(window.localStorage.getItem('playseconds'))
-        console.log(seconds)
-        if (playerRef.current) {
-            playerRef.current.seekTo(seconds, 'seconds');
-        }
-    };
+
+
+    // const seekToTime = (val) => {
+    //     const seconds = parseInt(window.localStorage.getItem('playseconds'))
+    //     console.log(seconds)
+    //     for (let index = 0; index < val + 1; index++) {
+    //         playerRef.current.seekTo(seconds, 'seconds');
+
+    //     }
+    //     // if (playerRef.current) {
+    //     //     playerRef.current.seekTo(seconds, 'seconds');
+    //     // }
+    // };
+
 
     // function copyPageUrl(value) {
     //     try {
@@ -532,56 +559,98 @@ const CourseHomeComp = () => {
 
                                 {shouldRerender &&
 
-                                    lessonData.map((item) => (
-                                        <ReactPlayer ref={playerRef}
-                                            style={{ pointerEvents: showOverlay && 'none', filter: fill }}
-                                            key={item.lesson_id} height={"100%"} width={"100%"}
-                                            controls
-                                            playing={isPlaying}
-                                            onStart={seekToTime}
 
-                                            onPause={handlePause}
+                                    <ReactPlayer ref={playerRef}
+                                        style={{ pointerEvents: showOverlay && 'none', filter: fill }}
+                                        height={"100%"} width={"100%"}
+                                        controls
+                                        playing={isPlaying}
+                                        onStart={() => playerRef.current.seekTo(parseInt(window.localStorage.getItem('playseconds')), 'seconds')}
+                                        // onStart={() => playerRef.current.seekTo(300, 'seconds')}
 
-                                            onProgress={(progress) => {
-                                                const integerValue = Math.floor(progress.playedSeconds);
-                                                console.log(integerValue)
-                                                setPlay(integerValue);
-                                            }}
+                                        onPause={handlePause}
 
-                                            // seekTo={seekToTime}
+                                        onProgress={(progress) => {
+                                            const integerValue = Math.floor(progress.playedSeconds);
+                                            console.log(integerValue)
+                                            setPlay(integerValue);
+                                        }}
 
-                                            url={item.lesson_url}
+                                        // seekTo={seekToTime}
 
-                                            onEnded={() => {
-                                                setShowOverlay(true)
-                                                setFill("blur(1px)")
-                                                setIsPlaying(false)
-                                            }}
+                                        url={url}
 
-                                            config={{
+                                        onEnded={() => {
+                                            setShowOverlay(true)
+                                            setFill("blur(1px)")
+                                            setIsPlaying(false)
+                                        }}
 
-                                                file: {
-                                                    attributes: {
-                                                        controlsList: 'nodownload',
-                                                        onContextMenu: (/** @type {{ preventDefault: () => any; }} */ e) => e.preventDefault(),
+                                        config={{
 
-                                                    }
-                                                    // tracks: [
-                                                    //     {
-                                                    //         label: "",
-                                                    //         kind: "subtitles",
-                                                    //        
-                                                    //         src: "media/Back_to_Basics.mp4.en.vtt/",
-                                                    //         srcLang: "en",
-                                                    //         default: true,
-                                                    //     }
-                                                    // ]
+                                            file: {
+                                                attributes: {
+                                                    controlsList: 'nodownload',
+                                                    onContextMenu: (/** @type {{ preventDefault: () => any; }} */ e) => e.preventDefault(),
 
                                                 }
-                                            }}
 
-                                        />
-                                    ))
+                                            }
+                                        }}
+
+                                    />
+
+
+                                    //     lessonData.map((item, index) => (
+                                    //         <ReactPlayer ref={playerRef}
+                                    //             style={{ pointerEvents: showOverlay && 'none', filter: fill }}
+                                    //             key={item.lesson_id} height={"100%"} width={"100%"}
+                                    //             controls
+                                    //             playing={isPlaying}
+                                    //             onStart={() => playerRef.current.seekTo(parseInt(window.localStorage.getItem('playseconds')), 'seconds')}
+
+                                    //             onPause={handlePause}
+
+                                    //             onProgress={(progress) => {
+                                    //                 const integerValue = Math.floor(progress.playedSeconds);
+                                    //                 console.log(integerValue)
+                                    //                 setPlay(integerValue);
+                                    //             }}
+
+                                    //             // seekTo={seekToTime}
+
+                                    //             url={item.lesson_url}
+
+                                    //             onEnded={() => {
+                                    //                 setShowOverlay(true)
+                                    //                 setFill("blur(1px)")
+                                    //                 setIsPlaying(false)
+                                    //             }}
+
+                                    //             config={{
+
+                                    //                 file: {
+                                    //                     attributes: {
+                                    //                         controlsList: 'nodownload',
+                                    //                         onContextMenu: (/** @type {{ preventDefault: () => any; }} */ e) => e.preventDefault(),
+
+                                    //                     }
+                                    //                     // tracks: [
+                                    //                     //     {
+                                    //                     //         label: "",
+                                    //                     //         kind: "subtitles",
+                                    //                     //        
+                                    //                     //         src: "media/Back_to_Basics.mp4.en.vtt/",
+                                    //                     //         srcLang: "en",
+                                    //                     //         default: true,
+                                    //                     //     }
+                                    //                     // ]
+
+                                    //                 }
+                                    //             }}
+
+                                    //         />
+                                    //     ))
                                 }
                             </Container>
                             <Space h={7} />
@@ -850,7 +919,9 @@ const CourseHomeComp = () => {
                                                                     </Flex>
                                                                 </div>) :
                                                                 (
-                                                                    <div onClick={handleButtonClick}>
+                                                                    <div
+                                                                    // onClick={() => handleButtonClick(item.lesson_url)}
+                                                                    >
 
                                                                         <Flex p={"1rem"} align={"center"} gap={15} >
                                                                             {
@@ -861,12 +932,16 @@ const CourseHomeComp = () => {
                                                                             }
 
                                                                             <Flex direction={"column"}>
-                                                                                <div onClick={() => {
-                                                                                    handleButtonClick();
-                                                                                    navigate(`/courseplayer/${course.courseid}/${item.lesson_id}`)
-                                                                                }} key={item.
+                                                                                <div
 
-                                                                                    lesson_id}>
+                                                                                    onClick={() => {
+
+                                                                                        handleButtonClick();
+                                                                                        navigate(`/courseplayer/${course.courseid}/${item.lesson_id}`)
+                                                                                    }}
+                                                                                    key={item.
+
+                                                                                        lesson_id}>
                                                                                     <Text c={"#FFFFFF"}>{index + 1}. {item.
 
                                                                                         lesson_name}</Text>

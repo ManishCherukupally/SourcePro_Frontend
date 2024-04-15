@@ -21,6 +21,7 @@ import {
 } from "react-component-export-image";
 import axios from 'axios';
 import { useClipboard, useMediaQuery } from '@mantine/hooks';
+import { Resolution } from 'react-to-pdf';
 axios.defaults.withCredentials = true;
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'x-csrftoken'
@@ -28,8 +29,12 @@ axios.defaults.xsrfHeaderName = 'x-csrftoken'
 
 
 const CourseMobileComp = () => {
+  const mediumScreen = useMediaQuery("(min-width: 1200px)");
+  const largeScreen = useMediaQuery("(min-width: 1440px)");
+  const extraLargeScreen = useMediaQuery("(min-width: 1770px)");
+
   const [copied, setCopied] = useState(false)
-  const playerRef = useRef(null);
+
   const [isActive, setIsActive] = useState(false);
 
   const [textContent, setTextContent] = useState('');
@@ -43,7 +48,8 @@ const CourseMobileComp = () => {
   const [lessonData, setLessonData] = useState([])
 
   const [lessonName, setLessonName] = useState("")
-
+  const [currentLessonId, setCurrentLessonID] = useState(null)
+  // var lessonName
   const [learners, setLearners] = useState(0)
   const course = useParams()
   const lessonId = useParams()
@@ -55,11 +61,34 @@ const CourseMobileComp = () => {
   const [certificateModal, setCertificateModal] = useState(false)
   const [certificateName, setCertifcatename] = useState("")
   const [certificateStatus, setCertificateStatus] = useState(false)
-
+  const [totalMinutesCalculated, settotalMinutesCalculated] = useState()
+  const [lessonMinutesCompleted, setLessonMinutesCompleted] = useState("")
+  const [url, setUrl] = useState("")
 
   const navigate = useNavigate()
 
+  const targetRef = useRef()
+  // const { toPDF, tragetRef } = usePDF({ filename: "Certificate.pdf" });
+  // const [showCertificate, setShowCertificate] = useState(false);
 
+  const playerRef = useRef([]);
+
+  const options = {
+
+    // default is 'A4'
+    method: 'save',
+    resolution: Resolution.NORMAL,
+    page: {
+
+      orientation: 'landscape',
+    },
+    overrides: {
+      // see https://artskydj.github.io/jsPDF/docs/jsPDF.html for more options
+      word: {
+        compress: true
+      }
+    }
+  }
 
 
   useEffect(() => {
@@ -80,7 +109,6 @@ const CourseMobileComp = () => {
         if (resp.data["course_data"].course_status === "Completed") {
           setCertificateStatus(true)
         }
-
         // axios.get(data).then((response) => {
         //     // console.log(response.data)
         //     setTextContent(response.data);
@@ -109,13 +137,6 @@ const CourseMobileComp = () => {
       setFdata(faqData)
     })
       .catch((error) => console.log(error))
-
-    client.get("download_certificate/", {
-      params: {
-        course_id: course.courseid
-      }
-    }, [course.courseid])
-      .then(resp => setCertifcatename(resp.data.name))
   }, [course.courseid])
 
   // useEffect(() => {
@@ -132,7 +153,7 @@ const CourseMobileComp = () => {
   //         .catch((error) => console.log(error))
   // }, [course.courseid])
 
-  // const [totalMinutesCalculated, settotalMinutesCalculated] = useState("")
+
   useEffect(() => {
 
 
@@ -155,20 +176,16 @@ const CourseMobileComp = () => {
 
         // data.map(item => console.log(item.lesson_duration))
         // console.log(time)
-        const [hours, minutes, seconds] = time.toString().split(":");
-        var minutestime = Number(hours) * 60 + Number(minutes) + Number(seconds) / 60
+        // const [hours, minutes, seconds] = time.toString().split(":");
+        // var minutestime = Number(hours) * 60 + Number(minutes) + Number(seconds) / 60
         // Calculate total minutes
         // settotalMinutesCalculated(minutestime)
 
         // const playTime = resp.data.all_lessons.map((item) => item.minutes_completed)
-        const playTime = data.filter(item => { if (Object.entries(item).length > 6) return (item.minutes_completed) })
+        data.filter(item => { if (Object.entries(item).length > 6) return setLessonMinutesCompleted(item.minutes_completed) })
         // console.log(playTime)
-        const timeArray = playTime.toString().split(':').map(Number);
-        // console.log(timeArray)
-        const playseconds = timeArray[0] * 3600 + timeArray[1] * 60 + timeArray[2];
-        // console.log(playseconds)
-        window.localStorage.setItem("playSeconds", playseconds)
-
+        data.filter(item => { if (Object.entries(item).length > 6) return setCurrentLessonID(item.lesson_id) })
+        data.filter(item => { if (Object.entries(item).length > 6) return setUrl(item.lesson_url) })
 
         // setLessonName(resp.data["all_lessons"].lesson_name)
         // console.log(typeof (lessonId.lessonid))
@@ -240,8 +257,18 @@ const CourseMobileComp = () => {
       .catch((error) => console.log(error))
     // }
 
-  }, [course.courseid, lessonId.lessonid])
+  }, [course.courseid, lessonId.lessonid, currentLessonId])
 
+  const handlePLayseconds = () => {
+    // console.log(value)
+    const timeArray = lessonMinutesCompleted.split(':').map(Number);
+    // console.log(timeArray)
+    const playseconds = timeArray[0] * 3600 + timeArray[1] * 60 + timeArray[2];
+    console.log(playseconds)
+    window.localStorage.setItem('playseconds', playseconds)
+
+  }
+  handlePLayseconds()
   // useEffect(() => {
   //     const handleClipBoard = () => {
   //         axios.get(clipboardContent)
@@ -329,14 +356,14 @@ const CourseMobileComp = () => {
   const [showOverlay, setShowOverlay] = useState(false);
   const [fill, setFill] = useState("")
 
-  const [isPlaying, setIsPlaying] = React.useState(true);
+  const [isPlaying, setIsPlaying] = useState(true);
 
-  const [shouldRerender, setShouldRerender] = useState(false);
+  const [shouldRerender, setShouldRerender] = useState(true);
 
-  useEffect(() => {
-    // Set the initial state of the component
-    setShouldRerender(true);
-  }, [course.courseid, lessonId.lessonid]);
+  // useEffect(() => {
+  //     // Set the initial state of the component
+  //     setShouldRerender(true);
+  // }, [course.courseid, lessonId.lessonid]);
 
 
   // useEffect(() => {
@@ -361,7 +388,7 @@ const CourseMobileComp = () => {
   //     };
   // }, []);
 
-  var time;
+  let time;
   const [play, setPlay] = useState(0);
   console.log(play)
   var date = new Date(play * 1000);
@@ -375,7 +402,6 @@ const CourseMobileComp = () => {
   const handlePause = () => {
     console.log("paused")
 
-    // window.localStorage.setItem("playSeconds", playseconds)
     try {
       client.put("usr_course_page_lesson/", {
 
@@ -390,20 +416,38 @@ const CourseMobileComp = () => {
     }
 
   }
+
   const handleButtonClick = () => {
+    client.get("usr_course_page_lesson/", {
+      params: {
+        course_id: course.courseid,
+        lesson_id: lessonId.lessonid,
+      }
+    }).then((resp) => {
+      const data = (resp.data["all_lessons"])
+      // console.log(data)
+      setLessonData(data)
+      // data.filter(item => { if (Object.entries(item).length > 6) return setUrl(item.lesson_url) })
+
+
+    })
+
+
     // Trigger a re-render by setting the state to false and then back to true
     console.log("button Clicked")
+    setIsPlaying(true)
+    // setUrl(less)
 
     // client.put("usr_course_page_lesson/", {
 
-    //   minutes_completed: "00:00:00",
-    //   course_id: course.courseid,
-    //   lesson_id: lessonId.lessonid,
+    //     minutes_completed: time,
+    //     course_id: course.courseid,
+    //     lesson_id: lessonId.lessonid,
 
     // })
     setTimeout(() => {
       window.location.reload()
-    }, 500)
+    }, 200)
 
 
 
@@ -417,13 +461,20 @@ const CourseMobileComp = () => {
   };
 
 
-  const seekToTime = () => {
-    const seconds = window.localStorage.getItem("playSeconds")
-    console.log(seconds)
-    if (playerRef.current) {
-      playerRef.current.seekTo(seconds, 'seconds');
-    }
-  };
+
+
+  // const seekToTime = (val) => {
+  //     const seconds = parseInt(window.localStorage.getItem('playseconds'))
+  //     console.log(seconds)
+  //     for (let index = 0; index < val + 1; index++) {
+  //         playerRef.current.seekTo(seconds, 'seconds');
+
+  //     }
+  //     // if (playerRef.current) {
+  //     //     playerRef.current.seekTo(seconds, 'seconds');
+  //     // }
+  // };
+
 
   // function copyPageUrl(value) {
   //     try {
@@ -436,12 +487,16 @@ const CourseMobileComp = () => {
   const clipboard = useClipboard({ timeout: 1000 });
   const [copiedIndex, setCopiedIndex] = useState(-1);
 
-  const mediumScreen = useMediaQuery("(min-width: 1200px)");
-  const largeScreen = useMediaQuery("(min-width: 1440px)");
-  const extraLargeScreen = useMediaQuery("(min-width: 1770px)");
-  const targetRef = useRef()
-  // const { toPDF, tragetRef } = usePDF({ filename: "Certificate.pdf" });
-  // const [showCertificate, setShowCertificate] = useState(false);
+  useEffect(() => {
+    client.get("download_certificate/", {
+      params: {
+        course_id: course.courseid
+      }
+    }, [course.courseid])
+      .then(resp => setCertifcatename(resp.data.name))
+  }, [course.courseid])
+
+  console.log(certificateName)
 
   const handleduration = (value) => {
     const [hours, minutes, seconds] = value.toString().split(":");
@@ -503,56 +558,46 @@ const CourseMobileComp = () => {
 
         {shouldRerender &&
 
-          lessonData.map((item) => (
-            <ReactPlayer ref={playerRef}
-              style={{ pointerEvents: showOverlay && 'none', filter: fill }}
-              key={item.lesson_id} height={"100%"} width={"100%"}
-              controls
-              playing={isPlaying}
-              onStart={seekToTime}
 
-              onPause={handlePause}
+          <ReactPlayer ref={playerRef}
+            style={{ pointerEvents: showOverlay && 'none', filter: fill }}
+            height={"100%"} width={"100%"}
+            controls
+            playing={isPlaying}
+            onStart={() => playerRef.current.seekTo(parseInt(window.localStorage.getItem('playseconds')), 'seconds')}
+            // onStart={() => playerRef.current.seekTo(300, 'seconds')}
 
-              onProgress={(progress) => {
-                const integerValue = Math.floor(progress.playedSeconds);
-                console.log(integerValue)
-                setPlay(integerValue);
-              }}
+            onPause={handlePause}
 
-              // seekTo={seekToTime}
+            onProgress={(progress) => {
+              const integerValue = Math.floor(progress.playedSeconds);
+              console.log(integerValue)
+              setPlay(integerValue);
+            }}
 
-              url={item.lesson_url}
+            // seekTo={seekToTime}
 
-              onEnded={() => {
-                setShowOverlay(true)
-                setFill("blur(1px)")
-                setIsPlaying(false)
-              }}
+            url={url}
 
-              config={{
+            onEnded={() => {
+              setShowOverlay(true)
+              setFill("blur(1px)")
+              setIsPlaying(false)
+            }}
 
-                file: {
-                  attributes: {
-                    controlsList: 'nodownload',
-                    onContextMenu: (/** @type {{ preventDefault: () => any; }} */ e) => e.preventDefault(),
+            config={{
 
-                  }
-                  // tracks: [
-                  //     {
-                  //         label: "",
-                  //         kind: "subtitles",
-                  //        
-                  //         src: "media/Back_to_Basics.mp4.en.vtt/",
-                  //         srcLang: "en",
-                  //         default: true,
-                  //     }
-                  // ]
+              file: {
+                attributes: {
+                  controlsList: 'nodownload',
+                  onContextMenu: (/** @type {{ preventDefault: () => any; }} */ e) => e.preventDefault(),
 
                 }
-              }}
 
-            />
-          ))
+              }
+            }}
+
+          />
         }
       </Container>
       <Card>
