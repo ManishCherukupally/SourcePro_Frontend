@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { ActionIcon, AppShell, Box, Card, CardSection, Container, Divider, Flex, Grid, Group, Image, Paper, Progress, ScrollArea, SimpleGrid, Space, Tabs, Text, TextInput, Textarea } from '@mantine/core'
+import { ActionIcon, AppShell, Box, Card, CardSection, Container, Divider, Flex, Grid, Group, Image, Paper, Progress, ScrollArea, SimpleGrid, Skeleton, Space, Tabs, Text, TextInput, Textarea } from '@mantine/core'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useAtom } from 'jotai'
 import { Carousel } from '@mantine/carousel'
@@ -29,7 +29,7 @@ const useStyles = createStyles(() => ({
 
 
 const HomeComp = () => {
-    const mediumScreen = useMediaQuery("(min-width: 1200px)");
+    const mediumScreen = useMediaQuery("(min-width: 1100px)");
     const largeScreen = useMediaQuery("(min-width: 1440px)");
     const extraLargeScreen = useMediaQuery("(min-width: 1770px)");
     const { classes } = useStyles();
@@ -38,6 +38,7 @@ const HomeComp = () => {
     const [continueLearning, setContinueLearning] = useState([])
     const [newCourses, setNewCourses] = useState([])
     const [allCourses, setAllCourses] = useState([])
+    const [skeletonview, setSkeletonView] = useState(true);
     // const [courseid, setCourseid] = useAtom(courseidatom)
     // console.log(courseid)
     // const [lessonId, setLessonId] = useAtom(lessonidatom)
@@ -49,7 +50,7 @@ const HomeComp = () => {
         })
             .then((resp) => {
 
-
+                setSkeletonView(resp.data && ((l) => !l))
                 const continueapidata = resp.data["Continue_Learning"]
                 setContinueLearning(continueapidata)
                 // setLessonId(continueapidata.last_viewed_lesson_id)
@@ -77,19 +78,22 @@ const HomeComp = () => {
             <Container mt={mediumScreen ? "4rem" : "2rem"} size={"xl"}>
                 <Text fz={20} fw={500}>Continue Learning</Text>
                 <Space h={10} />
-                <Carousel
+                <Carousel slideSize="0%"
                     classNames={classes}
                     align={"start"}
                     slidesToScroll={mediumScreen ? 4 : 1}
-                    slideGap={19}
+                    slideGap={mediumScreen && 19}
                     draggable
 
                 >
                     {continueLearning.map((card) => (
                         <>
+
                             <Carousel.Slide>
-                                <div >
+
+                                <Skeleton visible={!skeletonview}>
                                     <Card onClick={() => navigate(`/courseplayer/${card.course_id}/${card.last_viewed_lesson_id}`)} className="coursecard" shadow='sm' w={277} p={0} withBorder radius={"md"}>
+
                                         <Card h={120} w={277} p={0} radius={0} >
                                             <Image style={{ position: "relative" }}
                                                 src={card.thumbnail}
@@ -100,23 +104,22 @@ const HomeComp = () => {
                                         </Card >
 
                                         <Progress bg={"rgba(131, 94, 54, 1)"} h={6} color='yellow' radius={0}
-                                            // @ts-ignore
+
                                             value={card.percentage_completed} />
                                         <Card pt={6} h={67} radius={0} style={{ backgroundColor: "#ECECEC" }}>
-                                            <Text fs={"Open Sans"} fz={16} fw={500}>{card.
-                                                // @ts-ignore
-                                                course_name}</Text>
+                                            <Text fs={"Open Sans"} fz={16} fw={500}>{card.course_name}</Text>
                                             <Text fs={"Open Sans"} fz="sm" color="dimmed">
-                                                {card.
-                                                    // @ts-ignore
-                                                    minutes_left} mins left
+                                                {card.minutes_left} mins left
                                             </Text>
 
                                         </Card>
-                                    </Card>
 
-                                </div>
+                                    </Card>
+                                </Skeleton>
+
+
                             </Carousel.Slide>
+
                         </>
                     ))
                     }
@@ -130,7 +133,7 @@ const HomeComp = () => {
                     classNames={classes}
                     align={"start"}
                     slidesToScroll={mediumScreen ? 4 : 1}
-                    slideGap={19}
+                    slideGap={mediumScreen && 19}
                     draggable
 
 
@@ -139,26 +142,28 @@ const HomeComp = () => {
                         return (
                             <Carousel.Slide>
                                 <Card shadow='sm' w={277} p={0} withBorder radius={"md"}>
-                                    <Card h={120} p={0} radius={0} >
-                                        <Image
-                                            src={card.thumbnail}
+                                    <Skeleton visible={!skeletonview}>
+                                        <Card h={120} p={0} radius={0} >
+                                            <Image
+                                                src={card.thumbnail}
 
-                                            height={130}
+                                                height={130}
 
-                                        />
-                                    </Card >
+                                            />
+                                        </Card >
 
 
-                                    <Card pt={6} h={67} radius={0} style={{ backgroundColor: "#ECECEC" }}>
-                                        <Text fs={"Open Sans"} fz={16} fw={500}>{card.
-                                            // @ts-ignore
-                                            course_name}</Text>
-                                        <Text fs={"Open Sans"} fz="sm" color="dimmed">
-                                            {card.
+                                        <Card pt={6} h={67} radius={0} style={{ backgroundColor: "#ECECEC" }}>
+                                            <Text fs={"Open Sans"} fz={16} fw={500}>{card.
                                                 // @ts-ignore
-                                                total_duration} mins
-                                        </Text>
-                                    </Card>
+                                                course_name}</Text>
+                                            <Text fs={"Open Sans"} fz="sm" color="dimmed">
+                                                {card.
+                                                    // @ts-ignore
+                                                    total_duration} mins
+                                            </Text>
+                                        </Card>
+                                    </Skeleton>
                                 </Card>
                             </Carousel.Slide>
                         )
@@ -171,7 +176,7 @@ const HomeComp = () => {
                     classNames={classes}
                     align={"start"}
                     slidesToScroll={mediumScreen ? 4 : 1}
-                    slideGap={19}
+                    slideGap={mediumScreen && 19}
                     draggable
 
 
@@ -181,27 +186,29 @@ const HomeComp = () => {
                             <>
                                 <Carousel.Slide>
                                     <Card shadow='sm' mb={"1rem"} w={277} p={0} withBorder radius={"md"}>
-                                        <Card h={120} p={0} radius={0} >
-                                            <Image
-                                                src={card.thumbnail}
-                                                height={130}
+                                        <Skeleton visible={!skeletonview}>
+                                            <Card h={120} p={0} radius={0} >
+                                                <Image
+                                                    src={card.thumbnail}
+                                                    height={130}
 
-                                            />
-                                        </Card>
+                                                />
+                                            </Card>
 
-                                        <Progress color='yellow' radius={0}
-                                            // @ts-ignore
-                                            value={card.percentage_completed} />
-                                        <Card pt={6} h={67} radius={0} style={{ backgroundColor: "#ECECEC" }}>
-                                            <Text fs={"Open Sans"} fz={16} fw={500}>{card.
+                                            <Progress color='yellow' radius={0}
                                                 // @ts-ignore
-                                                course_name}</Text>
-                                            <Text fs={"Open Sans"} fz="sm" color="dimmed">
-                                                {card.
+                                                value={card.percentage_completed} />
+                                            <Card pt={6} h={67} radius={0} style={{ backgroundColor: "#ECECEC" }}>
+                                                <Text fs={"Open Sans"} fz={16} fw={500}>{card.
                                                     // @ts-ignore
-                                                    total_duration} mins
-                                            </Text>
-                                        </Card>
+                                                    course_name}</Text>
+                                                <Text fs={"Open Sans"} fz="sm" color="dimmed">
+                                                    {card.
+                                                        // @ts-ignore
+                                                        total_duration} mins
+                                                </Text>
+                                            </Card>
+                                        </Skeleton>
                                     </Card>
                                 </Carousel.Slide>
 

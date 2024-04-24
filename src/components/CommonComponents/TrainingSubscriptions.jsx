@@ -1,4 +1,4 @@
-import { Card, Flex, Group, Paper, Image, ActionIcon, TextInput, Tabs, Grid, Divider, Container, Title, Space, Text, SimpleGrid } from '@mantine/core'
+import { Card, Flex, Group, Paper, Image, ActionIcon, TextInput, Tabs, Grid, Divider, Container, Title, Space, Text, SimpleGrid, Skeleton } from '@mantine/core'
 import React, { useEffect, useState } from 'react'
 import { AiFillHome } from 'react-icons/ai'
 import { BiArrowBack, BiSearch } from 'react-icons/bi'
@@ -14,12 +14,16 @@ const TrainingSubscriptions = () => {
     const largeScreen = useMediaQuery("(min-width: 1440px)");
     const extraLargeScreen = useMediaQuery("(min-width: 1770px)");
     const [subscriptions, setSubscriptions] = useState([]);
+    const [skeletonview, setSkeletonView] = useState(false);
+
 
     useEffect(() => {
         client.get("training_subscription/", {
             withCredentials: true,
         })
             .then(response => {
+                setSkeletonView(response.data && ((l) => !l))
+
                 console.log('Fetched data:', response.data["Training_Subscription"]);
                 setSubscriptions(response.data["Training_Subscription"])
             })
@@ -49,68 +53,69 @@ const TrainingSubscriptions = () => {
                                 // @ts-ignore
                                 Course_name}>
 
-
-                                <Text fw={600}>{data?.
-                                    // @ts-ignore
-                                    Course_name}</Text>
-                                <Space h={5} />
-                                <Card style={{ padding: 0 }}>
-                                    {
-                                        mediumScreen ? (
-                                            <>
-                                                <Flex align={"center"}>
-                                                    <Text c={"dimmed"} fw={500} fz={"sm"}>Date :</Text>
-                                                    <Space w={5} />
-                                                    <Text fw={500} fz={"sm"} >{new Date(data.subscription_date).toLocaleDateString('en-GB')}</Text>
-                                                </Flex>
-
-                                                <Space h={5} />
-                                                <Flex align={"center"}>
-                                                    <Text c={"dimmed"} fw={500} fz={"sm"}>Time :</Text>
-                                                    <Space w={5} />
-                                                    <Text fw={500} fz={"sm"}>{data?.
-                                                        // @ts-ignore
-                                                        subscription_time}</Text>
-                                                </Flex>
-                                            </>
-                                        ) : (
-                                            <Group position='apart'>
-                                                <Flex align={"center"}>
-                                                    <Text c={"dimmed"} fw={500} fz={"sm"}>Date :</Text>
-                                                    <Space w={5} />
-                                                    <Text fw={500} fz={"sm"} >{new Date(data.subscription_date).toLocaleDateString('en-GB')}</Text>
-                                                </Flex>
-
-                                                <Space h={5} />
-                                                <Flex align={"center"}>
-                                                    <Text c={"dimmed"} fw={500} fz={"sm"}>Time :</Text>
-                                                    <Space w={5} />
-                                                    <Text fw={500} fz={"sm"}>{data?.
-                                                        // @ts-ignore
-                                                        subscription_time}</Text>
-                                                </Flex>
-                                            </Group>
-                                        )
-                                    }
-
+                                <Skeleton visible={skeletonview}>
+                                    <Text fw={600}>{data?.
+                                        // @ts-ignore
+                                        Course_name}</Text>
                                     <Space h={5} />
-                                    <Flex align={"center"}>
-                                        <Text c={"dimmed"} fw={500} fz={"sm"}>Order ID :</Text>
-                                        <Space w={5} />
-                                        <Text fw={500} fz={"sm"}>{data?.
-                                            // @ts-ignore
-                                            order_id}</Text>
-                                    </Flex>
-                                    <Space h={5} />
-                                    <Flex align={"center"}>
-                                        <Text c={"dimmed"} fw={500} fz={"sm"}>Amount :</Text>
-                                        <Space w={5} />
-                                        <Text fw={500} fz={"sm"}>Rs {data?.
-                                            // @ts-ignore
-                                            amount}</Text>
+                                    <Card style={{ padding: 0 }}>
+                                        {
+                                            mediumScreen ? (
+                                                <>
+                                                    <Flex align={"center"}>
+                                                        <Text c={"dimmed"} fw={500} fz={"sm"}>Date :</Text>
+                                                        <Space w={5} />
+                                                        <Text fw={500} fz={"sm"} >{new Date(data.subscription_date).toLocaleDateString('en-GB')}</Text>
+                                                    </Flex>
 
-                                    </Flex>
-                                </Card>
+                                                    <Space h={5} />
+                                                    <Flex align={"center"}>
+                                                        <Text c={"dimmed"} fw={500} fz={"sm"}>Time :</Text>
+                                                        <Space w={5} />
+                                                        <Text fw={500} fz={"sm"}>{data?.
+                                                            // @ts-ignore
+                                                            subscription_time}</Text>
+                                                    </Flex>
+                                                </>
+                                            ) : (
+                                                <Group position='apart'>
+                                                    <Flex align={"center"}>
+                                                        <Text c={"dimmed"} fw={500} fz={"sm"}>Date :</Text>
+                                                        <Space w={5} />
+                                                        <Text fw={500} fz={"sm"} >{new Date(data.subscription_date).toLocaleDateString('en-GB')}</Text>
+                                                    </Flex>
+
+                                                    <Space h={5} />
+                                                    <Flex align={"center"}>
+                                                        <Text c={"dimmed"} fw={500} fz={"sm"}>Time :</Text>
+                                                        <Space w={5} />
+                                                        <Text fw={500} fz={"sm"}>{data?.
+                                                            // @ts-ignore
+                                                            subscription_time}</Text>
+                                                    </Flex>
+                                                </Group>
+                                            )
+                                        }
+
+                                        <Space h={5} />
+                                        <Flex align={"center"}>
+                                            <Text c={"dimmed"} fw={500} fz={"sm"}>Order ID :</Text>
+                                            <Space w={5} />
+                                            <Text fw={500} fz={"sm"}>{data?.
+                                                // @ts-ignore
+                                                order_id}</Text>
+                                        </Flex>
+                                        <Space h={5} />
+                                        <Flex align={"center"}>
+                                            <Text c={"dimmed"} fw={500} fz={"sm"}>Amount :</Text>
+                                            <Space w={5} />
+                                            <Text fw={500} fz={"sm"}>Rs {data?.
+                                                // @ts-ignore
+                                                amount}</Text>
+
+                                        </Flex>
+                                    </Card>
+                                </Skeleton>
                                 <Space h={15} />
                                 <Divider variant='dashed' />
                                 <Space h={15} />

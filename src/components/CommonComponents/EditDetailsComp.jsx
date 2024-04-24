@@ -30,8 +30,8 @@ const EditDetailsComp = () => {
             })
 
                 .then(res => {
-                    console.log(res.data)
-                    console.log(res.data.user_details.business_email)
+                    // console.log(res.data)
+                    // console.log(res.data.user_details.business_email)
                     // 
                     setGetData(res.data["user_details"]);
 
@@ -81,7 +81,7 @@ const EditDetailsComp = () => {
         try {
             const response = client.put("user_details/", form.getTransformedValues());
             navigate("/mydetails");
-            console.log("response from the server:", response.data);
+            // console.log("response from the server:", response.data);
 
         } catch (error) {
 

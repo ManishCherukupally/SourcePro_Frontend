@@ -39,8 +39,9 @@ function App() {
           <Route path="/header" Component={Head} />
           <Route path="/courseplayer" Component={CoursePage} /> */}
 
+          <Route path="/" element={window.localStorage.getItem("userStatus") !== undefined || null ? (<Navigate to={"/home"} />) : (<Navigate to={"/login"} />)} />
           <Route path="/mobilevideo" Component={CourseMobileComp} />
-          <Route path="/" Component={LoginPage} />
+          <Route path="/login" Component={LoginPage} />
           <Route path="/forgot-password" Component={ForgotPassword} />
           <Route path="/set-new-password" Component={SetnewPawsdPage} />
           <Route path="/home" exact Component={HomePage} />
@@ -51,9 +52,7 @@ function App() {
           <Route path="/mydetails/editdetails" Component={EditDetailsPage} />
           <Route path="/changepassword" Component={ChangePaswdPage} />
           <Route path="/trainingsubscriptions" Component={TransactionPage} />
-          <Route path="/mycourses"
-            // @ts-ignore
-            exact Component={MycoursesPage} />
+          <Route path="/mycourses" exact Component={MycoursesPage} />
           {/* <Route path="/mycourses/:courseid" Component={CoursePage} /> */}
           {/* <Route path="/:courseid/:lessonid" Component={CoursePage} /> */}
           {/* <Route path="/quiz" Component={Quiz_test} /> */}

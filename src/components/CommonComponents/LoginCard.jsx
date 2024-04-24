@@ -53,24 +53,25 @@ const LoginCard = (props) => {
     // const [cookies, setCookies] = useCookies();
 
     const handleLogin = async (values) => {
-
+        setLoader(true);
         try {
             await client.post('login/', {
                 email: values.email,
                 password: values.password,
             })
                 .then((resp) => {
-                    console.log(JSON.stringify(resp.data.status))
+                    // console.log(JSON.stringify(resp.data.status))
                     if (resp.data.status === "user_validated") {
                         window.localStorage.setItem("userStatus", resp.data.status)
-                        setLoader(true);
+
 
                         navigate("/home")
                     }
                     else {
+                        setLoader(false)
                         setErrorStatus(true)
                         const errorMessage = resp.data.status === "unauthorized_user" || "Invalid credentials"
-                            ? "Invalid credentials.Please check and enter again."
+                            ? "Invalid credentials. Please check and try again."
                             : resp.data.error; // Use a more specific error message if available
                         form.setErrors({
                             email: errorMessage,
