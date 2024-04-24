@@ -1,4 +1,4 @@
-import { ActionIcon, AppShell, Card, Divider, Flex, Grid, Paper, Tabs, TextInput, Image, Title, Container, Group, Text, Space, SimpleGrid, UnstyledButton } from '@mantine/core'
+import { ActionIcon, AppShell, Card, Divider, Flex, Grid, Paper, Tabs, TextInput, Image, Title, Container, Group, Text, Space, SimpleGrid, UnstyledButton, Skeleton } from '@mantine/core'
 import React, { useEffect, useState } from 'react'
 import { AiFillHome } from 'react-icons/ai'
 import { BiArrowBack, BiSearch } from 'react-icons/bi'
@@ -20,6 +20,8 @@ const MydetailsComp = () => {
     const navigate = useNavigate();
     const [data, setData] = useState([]);
     const [isEditing, setIsEditing] = useState(false);
+    const [skeletonview, setSkeletonView] = useState(false);
+
 
     useEffect(() => {
         client.get("user_details/", {
@@ -27,7 +29,9 @@ const MydetailsComp = () => {
         })
 
             .then(res => {
-                console.log(res.data)
+                setSkeletonView(res.data && ((l) => !l))
+
+                // console.log(res.data)
                 setData(res.data);
             })
 
@@ -66,60 +70,75 @@ const MydetailsComp = () => {
 
                 <Container ml={mediumScreen ? "0rem" : "1.3rem"}>
                     <SimpleGrid cols={mediumScreen ? 2 : 1}>
+
                         <Flex direction={"column"}>
                             <Text color='dimmed' fz={14} fw={600}>Name</Text>
-                            <Text fw={600} fz={18}>
-                                {data?.
-                                    // @ts-ignore
-                                    user_details?.name}
-                            </Text>
+                            <Skeleton visible={skeletonview}>
+                                <Text fw={600} fz={18}>
+                                    {data?.
+                                        // @ts-ignore
+                                        user_details?.name}
+                                </Text>
+                            </Skeleton>
                         </Flex>
 
                         <Flex direction={"column"}>
                             <Text color='dimmed' fz={14} fw={600}>Contact No.</Text>
-                            <Text fw={600} fz={18}>
-                                {data?.
-                                    // @ts-ignore
-                                    user_details?.contact_no}</Text>
+                            <Skeleton visible={skeletonview}>
+                                <Text fw={600} fz={18}>
+                                    {data?.
+                                        // @ts-ignore
+                                        user_details?.contact_no}</Text>
+                            </Skeleton>
                         </Flex>
 
                         <Flex direction={"column"}>
                             <Text color='dimmed' fz={14} fw={600}>Company</Text>
-                            <Text fw={600} fz={18}>
-                                {data?.
-                                    // @ts-ignore
-                                    user_details?.company}</Text>
+                            <Skeleton visible={skeletonview}>
+                                <Text fw={600} fz={18}>
+                                    {data?.
+                                        // @ts-ignore
+                                        user_details?.company}</Text>
+                            </Skeleton>
                         </Flex>
 
                         <Flex direction={"column"}>
                             <Text color='dimmed' fz={14} fw={600}>Email</Text>
-                            <Text fw={600} fz={18}>
-                                {data?.
-                                    // @ts-ignore
-                                    user_details?.business_email}</Text>
+                            <Skeleton visible={skeletonview}>
+                                <Text fw={600} fz={18}>
+                                    {data?.
+                                        // @ts-ignore
+                                        user_details?.business_email}</Text>
+                            </Skeleton>
                         </Flex>
 
                         <Flex direction={"column"}>
                             <Text color='dimmed' fz={14} fw={600}>Years of Experience</Text>
-                            <Text fw={600} fz={18}>
-                                {data?.
-                                    // @ts-ignore
-                                    user_details?.years_of_experience}</Text>
+                            <Skeleton visible={skeletonview}>
+                                <Text fw={600} fz={18}>
+                                    {data?.
+                                        // @ts-ignore
+                                        user_details?.years_of_experience}</Text>
+                            </Skeleton>
                         </Flex>
 
                         <Flex direction={"column"}>
                             <Text color='dimmed' fz={14} fw={600}>Job Position</Text>
-                            <Text fw={600} fz={18}>
-                                {data?.
-                                    // @ts-ignore
-                                    user_details?.job_position}</Text>
+                            <Skeleton visible={skeletonview}>
+                                <Text fw={600} fz={18}>
+                                    {data?.
+                                        // @ts-ignore
+                                        user_details?.job_position}</Text>
+                            </Skeleton>
                         </Flex>
 
                         <Flex direction={"column"}>
                             <Text color='dimmed' fz={14} fw={600}>Location</Text>
-                            <Text fw={600} fz={18}>{
-                                // @ts-ignore
-                                data?.user_details?.location}</Text>
+                            <Skeleton visible={skeletonview}>
+                                <Text fw={600} fz={18}>{
+                                    // @ts-ignore
+                                    data?.user_details?.location}</Text>
+                            </Skeleton>
                         </Flex>
                     </SimpleGrid>
 

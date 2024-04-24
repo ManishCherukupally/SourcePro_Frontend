@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import Head from '../dashboard Header/Head'
 import { atom, useAtom } from 'jotai';
 // @ts-ignore
-import { ActionIcon, AppShell, Box, Button, Card, Center, Checkbox, Container, Divider, Flex, Footer, Group, Loader, LoadingOverlay, Modal, Overlay, Radio, Space, Stack, Text, Title } from '@mantine/core'
+import { ActionIcon, AppShell, Box, Button, Card, Center, Checkbox, Container, Divider, Flex, Footer, Group, Loader, LoadingOverlay, Modal, Overlay, Radio, Skeleton, Space, Stack, Text, Title } from '@mantine/core'
 import { BiArrowBack } from 'react-icons/bi'
 import { QuizScoreGreen, QuizScoreRed } from '../quizComp/QuizScoreColor'
 import { quiz, qwitho, scoreatom, valquiz } from '../../Store/store'
@@ -125,6 +125,8 @@ const QuizComponent = () => {
     const [result, setResult] = useState(false)
     const course = useParams()
     const lessonId = useParams()
+    const [skeletonview, setSkeletonView] = useState(false);
+
     // console.log("color " + color)
 
     // console.log("passorfail " + passOrFail)
@@ -146,6 +148,7 @@ const QuizComponent = () => {
             }
         )
             .then((resp) => {
+                setSkeletonView(quizData && ((l) => !l))
                 const qData = resp.data.quiz
                 setQuizData(qData);
                 // @ts-ignore
@@ -185,6 +188,7 @@ const QuizComponent = () => {
                 }
             })
             .then((resp) => {
+
                 const data = (resp.data["all_lessons"])
                 // lesson = resp.data["all_lessons"].map(item => item.lesson_name)
                 data.filter(item => { if (Object.entries(item).length > 6) return setLessonName(item.lesson_name) })
@@ -410,71 +414,72 @@ const QuizComponent = () => {
                     {
 
                         quizData?.map((quiz, index) => (
+
                             <div key={quiz.
                                 // @ts-ignore
                                 quetion_id}>
-                                <Group>
-                                    <Text fw={600}>{index + 1} .</Text>
-                                    <Text fw={600}
-                                        onCopy={(e) => {
-                                            e.preventDefault();
-                                            navigator.clipboard.writeText('');
-                                        }}>{quiz.
-                                            // @ts-ignore
-                                            question}</Text>
-                                </Group>
-                                <Space h={15} />
-                                {quiz.
-                                    // @ts-ignore
-                                    question_type === "MCQ" ?
-                                    (
-
-                                        // <CheckboxGroup onChange={setValue} options={quiz.
-                                        //     // @ts-ignore
-                                        //     options} />
-                                        <Checkbox.Group
-                                            // @ts-ignore
-                                            name={quiz.
+                                <Skeleton visible={skeletonview}>
+                                    <Group>
+                                        <Text fw={600}>{index + 1} .</Text>
+                                        <Text fw={600}
+                                            onCopy={(e) => {
+                                                e.preventDefault();
+                                                navigator.clipboard.writeText('');
+                                            }}>{quiz.
                                                 // @ts-ignore
-                                                question_id} value={selectedOptions[quiz.question_id]} onChange={(value) => handleCheckOptionsSelected(quiz.question_id, value)}>
-                                            {Object.keys(quiz.
-                                                // @ts-ignore
-                                                options).map((optionKey) => (
-                                                    // @ts-ignore
-                                                    <Checkbox mb={12} radius="lg" fw={400} key={optionKey} value={optionKey} label={quiz.options[optionKey]}
-                                                    />
-                                                ))}
-                                            <Space h={10} />
-                                            <Divider />
-                                            <Space h={15} />
-                                        </Checkbox.Group>
-
-
-                                    )
-                                    : (
-                                        // {selectedOptions[quiz.question_id]}
+                                                question}</Text>
+                                    </Group>
+                                    <Space h={15} />
+                                    {quiz.
                                         // @ts-ignore
-                                        <Radio.Group name={quiz.question_id} value={selectedOptions[quiz.question_id]} onChange={(value) => handleOptionsSelected(quiz.question_id, value)}>
-                                            {Object.keys(quiz.
+                                        question_type === "MCQ" ?
+                                        (
+
+                                            // <CheckboxGroup onChange={setValue} options={quiz.
+                                            //     // @ts-ignore
+                                            //     options} />
+                                            <Checkbox.Group
                                                 // @ts-ignore
-                                                options).map((optionKey) => (
-
-                                                    <Radio key={optionKey} mb={12}
+                                                name={quiz.
+                                                    // @ts-ignore
+                                                    question_id} value={selectedOptions[quiz.question_id]} onChange={(value) => handleCheckOptionsSelected(quiz.question_id, value)}>
+                                                {Object.keys(quiz.
+                                                    // @ts-ignore
+                                                    options).map((optionKey) => (
                                                         // @ts-ignore
-                                                        value={optionKey}
-                                                        // @ts-ignore
-                                                        label={quiz.options[optionKey]}
-                                                    />
+                                                        <Checkbox mb={12} radius="lg" fw={400} key={optionKey} value={optionKey} label={quiz.options[optionKey]}
+                                                        />
+                                                    ))}
 
-                                                ))}
-                                            <Space h={10} />
-                                            <Divider />
-                                            <Space h={15} />
-                                        </Radio.Group>
-                                    )}
+                                            </Checkbox.Group>
 
+
+                                        )
+                                        : (
+                                            // {selectedOptions[quiz.question_id]}
+                                            // @ts-ignore
+                                            <Radio.Group name={quiz.question_id} value={selectedOptions[quiz.question_id]} onChange={(value) => handleOptionsSelected(quiz.question_id, value)}>
+                                                {Object.keys(quiz.
+                                                    // @ts-ignore
+                                                    options).map((optionKey) => (
+
+                                                        <Radio key={optionKey} mb={12}
+                                                            // @ts-ignore
+                                                            value={optionKey}
+                                                            // @ts-ignore
+                                                            label={quiz.options[optionKey]}
+                                                        />
+
+                                                    ))}
+
+                                            </Radio.Group>
+                                        )}
+
+                                </Skeleton>
+                                <Space h={10} />
+                                <Divider />
+                                <Space h={15} />
                             </div>
-
                         ))}
 
                 </>

@@ -29,8 +29,9 @@ const Quiz_test = () => {
             {
                 mediumScreen ? (
                     <>
-                        <Head />
-                        <QuizComponent />
+                        <AppShell header={<Head />}>
+                            <QuizComponent />
+                        </AppShell>
                     </>
                 ) : (
                     <>

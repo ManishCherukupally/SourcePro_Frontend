@@ -19,6 +19,8 @@ const SetnewPasswordCard = (props) => {
     // const [otpError, setOtpError] = useState(false)
     // const [samePaswdError, setSamePaswdError] = useState("")
     const [token, setToken, removeToken] = useCookies(['encsrftok']);
+    const [loader, setLoader] = useState(false)
+
 
 
     const form = useForm(
@@ -45,6 +47,7 @@ const SetnewPasswordCard = (props) => {
 
     // }
     const handleSetPassword = (values) => {
+        setLoader(true)
         console.log("clicked")
         try {
             client.post('set_password/', {
@@ -194,7 +197,7 @@ const SetnewPasswordCard = (props) => {
                 } */}
                             </div>
 
-                            <Button style={{ backgroundColor: "rgba(240, 154, 62, 1)" }} type="submit" radius={"md"}>Done</Button>
+                            <Button loading={loader} style={{ backgroundColor: "rgba(240, 154, 62, 1)" }} type="submit" radius={"md"}>Done</Button>
                         </Stack>
 
                     </form>

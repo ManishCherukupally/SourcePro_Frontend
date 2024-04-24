@@ -1,5 +1,8 @@
-import { useMediaQuery } from "@mantine/hooks";
 import React from "react";
+import { useMediaQuery } from "@mantine/hooks";
+import { AppShell } from '@mantine/core';
+
+
 import Head from "../dashboard Header/Head";
 import CourseHomeComp from "../CommonComponents/CourseHomeComp";
 import CourseMobileComp from "./CourseMobileComp";
@@ -11,8 +14,9 @@ const Course_home = () => {
         <>
             {
                 mediumScreen ? (<>
-                    <Head />
-                    <CourseHomeComp />
+                    <AppShell header={<Head />}>
+                        <CourseHomeComp />
+                    </AppShell>
                 </>) : (
                     <CourseMobileComp />
                 )

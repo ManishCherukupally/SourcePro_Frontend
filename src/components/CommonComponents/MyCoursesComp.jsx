@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Image, Card, CardSection, Container, Divider, Group, Tabs, Text, Title, Flex, Stack, Space, ActionIcon, Progress, Center } from '@mantine/core';
+import { Box, Image, Card, CardSection, Container, Divider, Group, Tabs, Text, Title, Flex, Stack, Space, ActionIcon, Progress, Center, Skeleton } from '@mantine/core';
 import Head from '../dashboard Header/Head';
-import { BsCheckCircle } from 'react-icons/bs';
+import { BsCheckCircle, BsDot } from 'react-icons/bs';
+
 import { Link, useNavigate } from 'react-router-dom';
 import { useAtom } from 'jotai';
 import { lessonidatom } from '../../Store/store';
@@ -16,7 +17,7 @@ import { useMediaQuery } from '@mantine/hooks';
  * @param {{ thumbnail: string | null | undefined; course_name: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; deactivation_days_left: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; author: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; date_of_subscription: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; }} data
  */
 
-function ProgressCard({ data }) {
+function ProgressCard({ data, skeleton }) {
     const mediumScreen = useMediaQuery("(min-width: 1200px)");
     const largeScreen = useMediaQuery("(min-width: 1440px)");
     const extraLargeScreen = useMediaQuery("(min-width: 1770px)");
@@ -30,49 +31,53 @@ function ProgressCard({ data }) {
             {
                 mediumScreen ? (
                     <>
-                        <Flex >
+                        <Skeleton visible={skeleton} >
+                            <Flex >
 
-                            <Card className='coursecard' onClick={() => { navigate(`/courseplayer/${data.course_id}/${data.last_viewed_lesson_id}`) }}>
-                                <CardSection>
-                                    <Image
-                                        radius={"md"}
-                                        width={200}
-                                        height={120}
+                                <Card className='coursecard' onClick={() => { navigate(`/courseplayer/${data.course_id}/${data.last_viewed_lesson_id}`) }}>
+                                    <CardSection>
+                                        <Image
+                                            radius={"md"}
+                                            width={200}
+                                            height={120}
 
-                                        src={data.thumbnail} />
-                                </CardSection>
-                            </Card>
+                                            src={data.thumbnail} />
+                                    </CardSection>
+                                </Card>
 
-                            <Space w={10} />
-                            <Flex direction={"column"}>
-                                <Text fz={16} fw={600}>{data.
+                                <Space w={10} />
+                                <Flex direction={"column"}>
 
-
-
-                                    course_name}</Text>
-                                <Flex gap={"0.2rem"} align={"end"}><Text fz={12} fw={600}>Deactivation:</Text>
-
-                                    <Text fz={15} fw={600} c={data.deactivation_days_left <= 5 ? "red" : "black"}>{data.
+                                    <Text fz={16} fw={600}>{data.
 
 
 
-                                        deactivation_days_left} {data.deactivation_days_left < 2 ? "day" : "days"}</Text><Text fz={12} fw={600}>left</Text>
-                                </Flex >
-                                <Text fz={12} fw={600}>By: {data.
+                                        course_name}</Text>
+                                    <Flex gap={"0.2rem"} align={"end"}><Text fz={12} fw={600}>Deactivation:</Text>
 
-                                    author} . {new Date(data.subscription_datetime).toLocaleDateString('en-GB')} </Text>
-                                <Space h={32} />
-                                <Group >
+                                        <Text fz={15} fw={600} c={data.deactivation_days_left <= 5 ? "red" : "black"}>{data.
 
-                                    <Progress w={150} color="yellow" radius={"xl"}
 
-                                        value={data.percentage_completed} />
 
-                                    <Text fz={12} fw={400}>{Math.floor(totalMinutesCalculated)}min left</Text>
-                                </Group>
+                                            deactivation_days_left} {data.deactivation_days_left < 2 ? "day" : "days"}</Text><Text fz={12} fw={600}>left</Text>
+                                    </Flex >
+                                    <Text fz={12} fw={600}>By: {data.
+
+                                        author} . {new Date(data.subscription_datetime).toLocaleDateString('en-GB')} </Text>
+                                    <Space h={32} />
+                                    <Group >
+
+                                        <Progress w={150} color="yellow" radius={"xl"}
+
+                                            value={data.percentage_completed} />
+
+                                        <Text fz={12} fw={400}>{Math.floor(totalMinutesCalculated)}min left</Text>
+                                    </Group>
+
+                                </Flex>
+
                             </Flex>
-
-                        </Flex>
+                        </Skeleton>
 
                         <Space h={15} />
                         <Divider />
@@ -80,40 +85,43 @@ function ProgressCard({ data }) {
                     </>
                 ) : (
                     <Center>
-                        <Card onClick={() => navigate(`/courseplayer/${data.course_id}/${data.last_viewed_lesson_id}`)}
-                            shadow='sm' p={0} withBorder radius={"md"}
-                            w={"90%"} >
-                            <Card.Section p={0} radius={0} >
-                                <Image style={{ position: "relative" }}
-                                    src={data.thumbnail}
+                        <Skeleton visible={skeleton} >
+                            <Card onClick={() => navigate(`/courseplayer/${data.course_id}/${data.last_viewed_lesson_id}`)}
+                                shadow='sm' p={0} withBorder radius={"md"}
+                            >
+                                <Card.Section p={0} radius={0} >
+                                    <Image style={{ position: "relative" }}
+                                        src={data.thumbnail}
 
-                                    height={200}
+                                        height={200}
 
-                                />
-                            </Card.Section >
+                                    />
+                                </Card.Section >
 
-                            <Progress bg={"rgba(131, 94, 54, 1)"} h={6} color='yellow' radius={0}
-                                // @ts-ignore
-                                value={data.percentage_completed} />
-                            <Card pt={6} radius={0} style={{ backgroundColor: "#ECECEC" }}>
-                                <Text fs={"Open Sans"} fz={16} fw={500}>{data.
+                                <Progress bg={"rgba(131, 94, 54, 1)"} h={6} color='yellow' radius={0}
                                     // @ts-ignore
-                                    course_name}</Text>
+                                    value={data.percentage_completed} />
+                                <Card radius={0} style={{ backgroundColor: "#ECECEC" }}>
+                                    <Text fs={"Open Sans"} fz={16} fw={500}>{data.
+                                        // @ts-ignore
+                                        course_name}</Text>
 
-                                <Flex gap={"0.2rem"} >
-                                    <Text fz={12} fw={600}>{Math.floor(totalMinutesCalculated)}min left</Text>
-                                    <Text fz={12} fw={600}>Deactivation:</Text>
-                                    <Text fz={15} fw={600} c={data.deactivation_days_left <= 5 ? "red" : "black"}>{data.deactivation_days_left} {data.deactivation_days_left < 2 ? "day" : "days"}</Text>
-                                    <Text fz={12} fw={600}>left</Text>
-                                </Flex >
-                                {/* <Text fs={"Open Sans"} fz="sm" color="dimmed">
+                                    <Flex gap={"0.2rem"} align={"baseline"} >
+                                        <Text fz={12} fw={600}>{Math.floor(totalMinutesCalculated)}min left</Text>
+                                        <Space w={10} />
+                                        <Text fz={12} fw={600}>Deactivation:</Text>
+                                        <Text fz={15} fw={600} c={data.deactivation_days_left <= 5 ? "red" : "black"}>{data.deactivation_days_left} {data.deactivation_days_left < 2 ? "day" : "days"}</Text>
+                                        <Text fz={12} fw={600}>left</Text>
+                                    </Flex >
+                                    {/* <Text fs={"Open Sans"} fz="sm" color="dimmed">
                         {card.
                             // @ts-ignore
                             minutes_left} mins left
                     </Text> */}
 
+                                </Card>
                             </Card>
-                        </Card>
+                        </Skeleton>
                     </Center>
                 )
             }
@@ -124,7 +132,7 @@ function ProgressCard({ data }) {
  * @param {{ thumbnail: string | null | undefined; course_name: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; deactivation_days_left: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; author: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; subscription_datetime: string | number | Date; }} data
  */
 // @ts-ignore
-function HistoryCard({ hdata }) {
+function HistoryCard({ hdata, skeleton }) {
     const mediumScreen = useMediaQuery("(min-width: 1200px)");
     const largeScreen = useMediaQuery("(min-width: 1440px)");
     const extraLargeScreen = useMediaQuery("(min-width: 1770px)");
@@ -139,9 +147,47 @@ function HistoryCard({ hdata }) {
                     <>
                         {
                             isDisabled ? (
-                                <div style={{ opacity: 0.4, pointerEvents: 'none' }}>
+                                <Skeleton visible={skeleton} >
+                                    <div style={{ opacity: 0.4, pointerEvents: 'none' }}>
+                                        <Flex >
+
+                                            <Card>
+                                                <CardSection>
+                                                    <Image
+                                                        radius={"md"}
+                                                        width={200}
+                                                        height={120}
+
+                                                        src={hdata.thumbnail} />
+                                                </CardSection>
+                                            </Card>
+                                            <Space w={10} />
+                                            <Flex direction={"column"}>
+                                                <Text fz={16} fw={600}>{hdata.
+
+
+                                                    course_name}</Text>
+                                                <Flex gap={"0.2rem"} align={"end"}><Text fz={12} fw={600}>Course has been deactivated</Text>
+
+                                                </Flex >
+                                                <Text fz={12} fw={600}>By: {hdata.author} . {new Date(hdata.subscription_datetime).toLocaleDateString('en-GB')} </Text>
+                                                <Space h={28} />
+                                                <div>
+                                                    <Flex align={"center"} >
+                                                        <ActionIcon color='green'><BsCheckCircle /></ActionIcon>
+                                                        <Text fz={12} c={'green'}>{hdata.course_status}</Text>
+                                                    </Flex>
+                                                </div>
+                                            </Flex>
+
+                                        </Flex>
+                                    </div>
+                                </Skeleton>
+                            ) : (
+                                <Skeleton visible={skeleton} >
                                     <Flex >
-                                        <Card>
+
+                                        <Card className='coursecard' onClick={() => { navigate(`/courseplayer/${hdata.course_id}/${hdata.last_viewed_lesson_id}`) }}>
                                             <CardSection>
                                                 <Image
                                                     radius={"md"}
@@ -151,16 +197,23 @@ function HistoryCard({ hdata }) {
                                                     src={hdata.thumbnail} />
                                             </CardSection>
                                         </Card>
+
                                         <Space w={10} />
                                         <Flex direction={"column"}>
                                             <Text fz={16} fw={600}>{hdata.
 
 
                                                 course_name}</Text>
-                                            <Flex gap={"0.2rem"} align={"end"}><Text fz={12} fw={600}>Course has been deactivated</Text>
+                                            <Flex gap={"0.2rem"} align={"end"}><Text fz={12} fw={600}>Deactivation:</Text>
+                                                <Text fz={15} fw={600} c={hdata.deactivation_days_left <= 5 ? "red" : "black"}>{hdata.
 
+
+
+                                                    deactivation_days_left} {hdata.deactivation_days_left < 2 ? "day" : "days"}</Text><Text fz={12} fw={600}>left</Text>
                                             </Flex >
-                                            <Text fz={12} fw={600}>By: {hdata.author} . {new Date(hdata.subscription_datetime).toLocaleDateString('en-GB')} </Text>
+                                            <Text fz={12} fw={600}>By: {hdata.
+
+                                                author} . {new Date(hdata.subscription_datetime).toLocaleDateString('en-UK')} </Text>
                                             <Space h={28} />
                                             <div>
                                                 <Flex align={"center"} >
@@ -171,47 +224,7 @@ function HistoryCard({ hdata }) {
                                         </Flex>
 
                                     </Flex>
-                                </div>
-                            ) : (
-                                <Flex >
-
-                                    <Card className='coursecard' onClick={() => { navigate(`/courseplayer/${hdata.course_id}/${hdata.last_viewed_lesson_id}`) }}>
-                                        <CardSection>
-                                            <Image
-                                                radius={"md"}
-                                                width={200}
-                                                height={120}
-
-                                                src={hdata.thumbnail} />
-                                        </CardSection>
-                                    </Card>
-
-                                    <Space w={10} />
-                                    <Flex direction={"column"}>
-                                        <Text fz={16} fw={600}>{hdata.
-
-
-                                            course_name}</Text>
-                                        <Flex gap={"0.2rem"} align={"end"}><Text fz={12} fw={600}>Deactivation:</Text>
-                                            <Text fz={15} fw={600} c={hdata.deactivation_days_left <= 5 ? "red" : "black"}>{hdata.
-
-
-
-                                                deactivation_days_left} {hdata.deactivation_days_left < 2 ? "day" : "days"}</Text><Text fz={12} fw={600}>left</Text>
-                                        </Flex >
-                                        <Text fz={12} fw={600}>By: {hdata.
-
-                                            author} . {new Date(hdata.subscription_datetime).toLocaleDateString('en-UK')} </Text>
-                                        <Space h={28} />
-                                        <div>
-                                            <Flex align={"center"} >
-                                                <ActionIcon color='green'><BsCheckCircle /></ActionIcon>
-                                                <Text fz={12} c={'green'}>{hdata.course_status}</Text>
-                                            </Flex>
-                                        </div>
-                                    </Flex>
-
-                                </Flex>
+                                </Skeleton>
                             )
                         }
 
@@ -234,21 +247,24 @@ function HistoryCard({ hdata }) {
                                     />
                                 </Card.Section >
 
-                                <Progress bg={"rgba(131, 94, 54, 1)"} h={4} color='yellow' radius={0}
+                                {/* <Progress bg={"rgba(131, 94, 54, 1)"} h={4} color='yellow' radius={0}
                                     // @ts-ignore
-                                    value={hdata.percentage_completed} />
-                                <Card pt={6} radius={0} style={{ backgroundColor: "#ECECEC" }}>
-                                    <Text fs={"Open Sans"} fz={16} fw={500}>{hdata.
+                                    value={hdata.percentage_completed} /> */}
+                                <Card radius={0} style={{ backgroundColor: "#ECECEC" }}>
+                                    <Text pl={6} fs={"Open Sans"} fz={16} fw={500}>{hdata.
                                         // @ts-ignore
                                         course_name}</Text>
 
-                                    <Group align='center'>
-                                        <Flex align={"center"} >
-                                            <ActionIcon color='green'><BsCheckCircle /></ActionIcon>
-                                            <Text fz={12} c={'green'}>{hdata.course_status}</Text>
-                                        </Flex>
-                                        <Flex gap={"0.2rem"} align={"end"}>
-                                            <Text fz={12} fw={600}>Deactivation:</Text>
+
+                                    <Flex align={"center"}  >
+                                        <Flex align={"center"} gap={10}>
+                                            <Flex align={"center"}>
+                                                <ActionIcon color='green'><BsCheckCircle /></ActionIcon>
+
+                                                <Text fz={12} c={'green'}>{hdata.course_status}</Text>
+                                            </Flex>
+                                            <ActionIcon size={18}><BsDot /></ActionIcon>
+                                            {hdata.deactivation_days_left !== 0 && <Text fz={12} fw={600}>Deactivation:</Text>}
                                             {
                                                 hdata.deactivation_days_left === 0 ?
                                                     (<Text fz={12} fw={400}>Course has been deactivated</Text>) : (
@@ -258,9 +274,24 @@ function HistoryCard({ hdata }) {
                                                         </>
                                                     )
                                             }
+                                        </Flex>
 
-                                        </Flex >
-                                    </Group>
+
+                                    </Flex>
+                                    {/* <Flex gap={"0.2rem"} align={"end"}> */}
+                                    {/* {hdata.deactivation_days_left !== 0 && <Text fz={12} fw={600}>Deactivation:</Text>}
+                                        {
+                                            hdata.deactivation_days_left === 0 ?
+                                                (<Text fz={12} fw={400}>Course has been deactivated</Text>) : (
+                                                    <>
+                                                        <Text fz={12} fw={700} c={hdata.deactivation_days_left <= 5 ? "red" : "black"}>{hdata.deactivation_days_left} {hdata.deactivation_days_left < 2 ? "day" : "days"}</Text>
+                                                        <Text fz={12} fw={400}>left</Text>
+                                                    </>
+                                                )
+                                        } */}
+
+                                    {/* </Flex > */}
+
                                     {/* <Text fs={"Open Sans"} fz="sm" color="dimmed">
                         {card.
                             // @ts-ignore
@@ -288,12 +319,12 @@ const MyCoursesComp = () => {
 
     const navigate = useNavigate();
     const [courseId, setCourseId] = useState(null)
-    console.log(courseId);
+    // console.log(courseId);
 
     const [inProgress, setInProgress] = useState([])
     const [history, setHistory] = useState([])
-    console.log(history)
-    const [courseStatus, setStatus] = useState(0);
+    // console.log(history)
+    const [skeletonview, setSkeletonView] = useState(false);
 
     const [isLoading, setLoading] = useState(true);
 
@@ -303,10 +334,11 @@ const MyCoursesComp = () => {
             withCredentials: true
         })
             .then(resp => {
-                console.log("Course Date-->", resp)
+                setSkeletonView(resp.data && ((l) => !l))
+                // console.log("Course Date-->", resp)
                 const progress = resp.data.In_Progress
                 setInProgress(progress)
-                console.log(JSON.stringify(progress))
+                // console.log(JSON.stringify(progress))
                 const history = resp.data.History
                 history.sort((/** @type {{ deactivation_days_left: number; }} */ a, /** @type {{ deactivation_days_left: number; }} */ b) => {
                     if (a.deactivation_days_left > b.deactivation_days_left) {
@@ -319,6 +351,7 @@ const MyCoursesComp = () => {
                         return 0
                     }
                 })
+
                 setHistory(history)
                 // const strD = (resp)
                 // console.log("api resp " + strD)
@@ -351,13 +384,13 @@ const MyCoursesComp = () => {
                         <Tabs.Panel value='Inprogress'>
 
                             <Container size={"lg"} style={{ marginTop: "2rem" }}>
-
+                                {/* <Skeleton visible={skeletonview}> */}
                                 {inProgress.map((card) => (
 
-                                    <ProgressCard key={card.course} data={card} />)
+                                    <ProgressCard key={card.course} data={card} skeleton={skeletonview} />)
 
                                 )}
-
+                                {/* </Skeleton> */}
                             </Container>
 
 
@@ -368,7 +401,7 @@ const MyCoursesComp = () => {
 
                                 {
                                     history.map((card) => (
-                                        <HistoryCard key={card.course} hdata={card} />
+                                        <HistoryCard key={card.course} hdata={card} skeleton={skeletonview} />
                                     ))
                                 }
 

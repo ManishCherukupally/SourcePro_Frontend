@@ -198,10 +198,15 @@
 
 .divider {
     color: #727272;
+    border-top-color: #727272;
 }
 
 .accbtn:hover {
     background-color: #3A3A3A;
+}
+
+.accordiancomp {
+    border-bottom: 0.0625rem solid #727272;
 }
 
 .clipgrp,
@@ -302,4 +307,14 @@
 
 .certificateDiv {
     visibility: hidden;
+}
+
+.selectedlesson {
+    cursor: pointer;
+    background-color: #262626;
+}
+
+.selectedlessonMobile {
+    cursor: pointer;
+    background-color: #EDEDED;
 }

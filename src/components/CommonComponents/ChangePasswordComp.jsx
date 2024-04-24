@@ -1,8 +1,8 @@
-import { AppShell, Card, Paper, Grid, Flex, TextInput, ActionIcon, Tabs, Divider, Image, Container, Title, Button, Group, Space, Stack, PasswordInput, Menu, Text, Modal } from '@mantine/core'
+import { AppShell, Card, Paper, Grid, Flex, TextInput, ActionIcon, Tabs, Divider, Image, Container, Title, Button, Group, Space, Stack, PasswordInput, Menu, Text, Modal, Skeleton } from '@mantine/core'
 import { matchesField, useForm } from '@mantine/form'
 import { useDisclosure, useMediaQuery } from '@mantine/hooks'
 import { useLocation, useNavigate } from 'react-router-dom'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { AiFillHome } from 'react-icons/ai'
 import { BiArrowBack, BiSearch } from 'react-icons/bi'
 import { FaBookOpen } from 'react-icons/fa'
@@ -21,7 +21,15 @@ const ChangePasswordComp = () => {
     const [token, setToken, removeToken] = useCookies(['encsrftok']);
     const [loader, setLoader] = useState(false)
     const [success, setSuccess] = useState("")
+    const [skeletonview, setSkeletonView] = useState(false);
 
+    useEffect(() => {
+        setSkeletonView(true)
+
+        setTimeout(() => {
+            setSkeletonView(false)
+        }, 1000);
+    }, [])
 
 
 
@@ -46,18 +54,18 @@ const ChangePasswordComp = () => {
     );
 
     const handlechangePassword = () => {
-        console.log("clicked changepaswd")
+        // console.log("clicked changepaswd")
 
         client.put('change_password/', form.values)
             .then((resp) => {
-                console.log(resp.data.status)
+                // console.log(resp.data.status)
                 if (resp.data.status === 'successfull') {
                     setLoader(true);
                     setSuccess('Successfull!');
                     removeToken(['encsrftok']);
                     setTimeout(() => {
                         window.location.href = '/';
-                    }, 500)
+                    }, 1200)
                     // Redirect to login page
                 }
                 if (resp.data.status === "you_have_entered_wrong_password") {
@@ -89,6 +97,7 @@ const ChangePasswordComp = () => {
     return (
         <div>
             <Container size={"xl"} style={{ margin: "1em", marginLeft: mediumScreen ? "4rem" : "0rem" }}>
+
                 <form onSubmit={form.onSubmit(handlechangePassword)}>
                     <Card pl={mediumScreen ? "1rem" : 0} >
                         <Group align={"center"} position={mediumScreen ? "apart" : "left"}>
@@ -113,39 +122,46 @@ const ChangePasswordComp = () => {
 
                         <Stack>
                             <div>
-                                <PasswordInput
-
-                                    className='password'
-                                    label="Enter current Password"
-                                    // @ts-ignore
-                                    {...form.getInputProps("current_password")}
-                                // onChange={(p) => setCurrentPassword(p.currentTarget.value)}
-                                // error={!!currentError}
-                                />
+                                <Skeleton visible={skeletonview}>
+                                    <PasswordInput
+                                        placeholder='Enter your current password'
+                                        className='password'
+                                        label="Enter current Password"
+                                        // @ts-ignore
+                                        {...form.getInputProps("current_password")}
+                                    // onChange={(p) => setCurrentPassword(p.currentTarget.value)}
+                                    // error={!!currentError}
+                                    />
+                                </Skeleton>
                                 {/* {
                   currentError && <Text c={"red"} fz={12}>{currentError}</Text>
                 } */}
                             </div>
-                            <PasswordInput
-                                className='password'
-                                label="New Password"
-                                // visible={visible}
-                                // onVisibilityChange={toggle}
-                                {...form.getInputProps("new_password")}
-                            // onChange={(p) => setNewPassword(p.currentTarget.value)}
-                            />
-                            <div>
+                            <Skeleton visible={skeletonview}>
                                 <PasswordInput
-
-
+                                    placeholder='Enter new password'
                                     className='password'
-                                    label="Confirm new password"
+                                    label="New Password"
                                     // visible={visible}
                                     // onVisibilityChange={toggle}
-                                    {...form.getInputProps("confirm_new_password")}
-                                // onChange={(p) => setConfirmPassword(p.currentTarget.value)}
-                                // error={!!confirmError}
+                                    {...form.getInputProps("new_password")}
+                                // onChange={(p) => setNewPassword(p.currentTarget.value)}
                                 />
+                            </Skeleton>
+                            <div>
+                                <Skeleton visible={skeletonview}>
+                                    <PasswordInput
+                                        placeholder='Enter new password again'
+
+                                        className='password'
+                                        label="Confirm new password"
+                                        // visible={visible}
+                                        // onVisibilityChange={toggle}
+                                        {...form.getInputProps("confirm_new_password")}
+                                    // onChange={(p) => setConfirmPassword(p.currentTarget.value)}
+                                    // error={!!confirmError}
+                                    />
+                                </Skeleton>
                                 {/* {
                   confirmError && <Text c={"red"} fz={12}>{confirmError}</Text>
                 } */}

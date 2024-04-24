@@ -1,8 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { Accordion, ActionIcon, BackgroundImage, Box, Button, Card, Center, Container, CopyButton, Divider, Flex, Grid, Group, Image, Modal, Overlay, Radio, Space, Spoiler, Tabs, Text, Tooltip, UnstyledButton } from '@mantine/core'
+import { Accordion, ActionIcon, BackgroundImage, Box, Button, Card, Center, Container, CopyButton, Divider, Flex, Grid, Group, Image, Loader, Modal, Overlay, Radio, Space, Spoiler, Tabs, Text, Tooltip, UnstyledButton } from '@mantine/core'
 
+import { BsDot, BsFillCircleFill } from "react-icons/bs";
+import { FaThumbsUp } from "react-icons/fa";
 
 import { BiRadioCircle, BiSolidLike } from 'react-icons/bi'
+import { IoChevronDown } from "react-icons/io5";
 import { BsCheckCircle } from 'react-icons/bs';
 import { AiFillLock, AiOutlineLock } from 'react-icons/ai'
 import { MdDocumentScanner, MdDownload } from 'react-icons/md'
@@ -38,7 +41,7 @@ const CourseHomeComp = () => {
 
     const [textContent, setTextContent] = useState('');
     const [clipboardContent, setClipboardContent] = useState("")
-    console.log(clipboardContent)
+    // console.log(clipboardContent)
     const [clipboards, setClipboards] = useState([])
     const [homeData, setHomeData] = useState({})
 
@@ -62,7 +65,11 @@ const CourseHomeComp = () => {
     const [certificateStatus, setCertificateStatus] = useState(false)
     const [totalMinutesCalculated, settotalMinutesCalculated] = useState()
     const [lessonMinutesCompleted, setLessonMinutesCompleted] = useState("")
+    const [currentPlayingId, setCurrentPLayingID] = useState(null)
     const [url, setUrl] = useState("")
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [loaderVisible, setLoaderVisible] = useState(true);
+
 
     const navigate = useNavigate()
 
@@ -117,7 +124,7 @@ const CourseHomeComp = () => {
 
 
             }))
-            .catch((error) => console.log(error))
+            .catch((error) => console.error(error))
 
     }, [course.courseid, lessonId.lesson_id, like])
 
@@ -135,8 +142,9 @@ const CourseHomeComp = () => {
             // console.log(faqData)
             setFdata(faqData)
         })
-            .catch((error) => console.log(error))
+            .catch((error) => console.error(error))
     }, [course.courseid])
+
 
     // useEffect(() => {
     //     client.get("learners_count/",
@@ -155,7 +163,7 @@ const CourseHomeComp = () => {
 
     useEffect(() => {
 
-
+        setIsPlaying(true)
         // if (lessonId.lessonid !== prevCrouselessonid || lessonId.lessonid === "") {
         client.get("usr_course_page_lesson/",
             {
@@ -166,6 +174,9 @@ const CourseHomeComp = () => {
                 }
             })
             .then((resp) => {
+
+                setLoaderVisible(url && ((l) => !l))
+
                 // console.log(JSON.stringify(resp.data["all_lessons"].materials))
                 const data = (resp.data["all_lessons"])
                 // console.log(data)
@@ -182,8 +193,9 @@ const CourseHomeComp = () => {
 
                 // const playTime = resp.data.all_lessons.map((item) => item.minutes_completed)
                 data.filter(item => { if (Object.entries(item).length > 6) return setLessonMinutesCompleted(item.minutes_completed) })
-                // console.log(playTime)
                 data.filter(item => { if (Object.entries(item).length > 6) return setCurrentLessonID(item.lesson_id) })
+                // console.log(playTime)
+                data.filter(item => { if (Object.entries(item).length > 6) return setCurrentPLayingID(item.lesson_id) })
                 data.filter(item => { if (Object.entries(item).length > 6) return setUrl(item.lesson_url) })
 
                 // setLessonName(resp.data["all_lessons"].lesson_name)
@@ -200,12 +212,12 @@ const CourseHomeComp = () => {
                 var url
                 url = clipData.filter((item) => { if (item !== undefined || null) return (item) })
                 // const url = clipData.toString()
-                console.log(url)
+                // console.log(url)
 
                 axios.get(url)
                     .then((resp) => {
                         const dataArray = resp.data.split("\n")
-                        console.log(dataArray)
+                        // console.log(dataArray)
                         setClipboards(dataArray)
 
                     })
@@ -263,7 +275,7 @@ const CourseHomeComp = () => {
         const timeArray = lessonMinutesCompleted.split(':').map(Number);
         // console.log(timeArray)
         const playseconds = timeArray[0] * 3600 + timeArray[1] * 60 + timeArray[2];
-        console.log(playseconds)
+        // console.log(playseconds)
         window.localStorage.setItem('playseconds', playseconds)
 
     }
@@ -283,7 +295,7 @@ const CourseHomeComp = () => {
     // console.log("clr" + iconColor)
 
     const handleIconClick = () => {
-        console.log("icon Clicked")
+        // console.log("icon Clicked")
         try {
             client.put("likes_count/", {
                 course_id: course.courseid
@@ -355,7 +367,7 @@ const CourseHomeComp = () => {
     const [showOverlay, setShowOverlay] = useState(false);
     const [fill, setFill] = useState("")
 
-    const [isPlaying, setIsPlaying] = useState(true);
+
 
     const [shouldRerender, setShouldRerender] = useState(true);
 
@@ -389,17 +401,17 @@ const CourseHomeComp = () => {
 
     let time;
     const [play, setPlay] = useState(0);
-    console.log(play)
+    // console.log(play)
     var date = new Date(play * 1000);
-    console.log(date)
+    // console.log(date)
     // Multiply by 1000 to convert seconds to milliseconds
     time = date.toISOString().slice(11, 19)
 
-    console.log(time)
+    // console.log(time)
     // const [last_lesson,setLast_Lesson] = useState(lessonId.lessonid)
 
     const handlePause = () => {
-        console.log("paused")
+        // console.log("paused")
 
         try {
             client.put("usr_course_page_lesson/", {
@@ -447,7 +459,7 @@ const CourseHomeComp = () => {
 
 
         // Trigger a re-render by setting the state to false and then back to true
-        console.log("button Clicked")
+        // console.log("button Clicked")
         setIsPlaying(true)
         // setUrl(less)
 
@@ -509,7 +521,7 @@ const CourseHomeComp = () => {
             .then(resp => setCertifcatename(resp.data.name))
     }, [course.courseid])
 
-    console.log(certificateName)
+    // console.log(certificateName)
 
     const handleduration = (value) => {
         const [hours, minutes, seconds] = value.toString().split(":");
@@ -533,301 +545,330 @@ const CourseHomeComp = () => {
                 </Container>
             </Modal>
 
+            {loaderVisible ? (
+                <Overlay blur={4}>
+                    <div
+                        style={{
+                            height: "90vh",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}
+                    ><Card w={320} h={240} style={{ display: "flex", alignContent: "center", justifyContent: "center" }}>
+                            <Center>
+                                {" "}
+                                <Flex direction={"column"} align={"center"}>
+                                    <Loader size={"md"}
+                                        color="rgba(240, 154, 62, 1)"
+                                        variant="dots" />
+                                    <Space h="md" />
+                                    <Text c={"#3A3A3A"} fz={14} fw={600}>Please wait...</Text>
+                                    <Text c={"#3A3A3A"} fz={14} fw={600}>Your course will be played shortly</Text>
+                                </Flex>
+                            </Center>
+                        </Card>
+                    </div>
+                </Overlay>
+            )
+                : (
+                    <Box>
+                        <Box>
+                            <Grid>
+                                <Grid.Col span={8}>
+                                    <Container p={0} fluid >
+                                        {
+                                            showOverlay && (
+                                                <Center>
+                                                    <div style={{
+                                                        display: "flex",
+                                                        flexDirection: "column",
+                                                        alignItems: "center",
+                                                        marginTop: "35%",
+                                                        position: 'absolute',
+                                                        zIndex: 10,
+                                                    }}>
 
-            <Box>
-                <Box>
-                    <Grid>
-                        <Grid.Col span={8}>
-                            <Container p={0} fluid >
-                                {
-                                    showOverlay && (
-                                        <Center>
-                                            <div style={{
-                                                display: "flex",
-                                                flexDirection: "column",
-                                                alignItems: "center",
-                                                marginTop: "35%",
-                                                position: 'absolute',
-                                                zIndex: 10,
-                                            }}>
+                                                        <Text fw={600} c={"white"} fz={22} >You have completed a lesson</Text>
+                                                        <Space h={15} />
+                                                        <Group>
 
-                                                <Text fw={600} c={"white"} fz={22} >You have completed a lesson</Text>
-                                                <Space h={15} />
-                                                <Group>
+                                                            <Link to={`/quiz/${course.courseid}/${lessonId.lessonid}`} >
+                                                                <Button style={{ backgroundColor: "rgba(240, 154, 62, 1)", }} >
+                                                                    TAKE QUIZ
+                                                                </Button>
+                                                            </Link>
 
-                                                    <Link to={`/quiz/${course.courseid}/${lessonId.lessonid}`} >
-                                                        <Button style={{ backgroundColor: "rgba(240, 154, 62, 1)", }} >
-                                                            TAKE QUIZ
-                                                        </Button>
-                                                    </Link>
+                                                            <Button variant='outline' style={{ color: "rgba(255, 255, 255, 1)", borderColor: "rgba(255, 255, 255, 1)" }}
+                                                                onClick={handleWatchAgain}>WATCH AGAIN</Button>
 
-                                                    <Button variant='outline' style={{ color: "rgba(255, 255, 255, 1)", borderColor: "rgba(255, 255, 255, 1)" }}
-                                                        onClick={handleWatchAgain}>WATCH AGAIN</Button>
+                                                        </Group>
 
-                                                </Group>
-
-                                            </div>
-                                        </Center>
-                                    )
-                                }
-
-                                {shouldRerender &&
-
-
-                                    <ReactPlayer ref={playerRef} loop={false}
-                                        style={{ pointerEvents: showOverlay && 'none', filter: fill }}
-                                        height={"100%"} width={"100%"}
-                                        controls
-                                        playing={isPlaying}
-                                        onStart={() => playerRef.current.seekTo(parseInt(window.localStorage.getItem('playseconds')), 'seconds')}
-                                        // onStart={() => playerRef.current.seekTo(300, 'seconds')}
-
-                                        onPause={handlePause}
-
-                                        onProgress={(progress) => {
-                                            const integerValue = Math.floor(progress.playedSeconds);
-                                            console.log(integerValue)
-                                            setPlay(integerValue);
-                                        }}
-
-                                        // seekTo={seekToTime}
-
-                                        url={url}
-
-                                        onEnded={() => {
-                                            setShowOverlay(true)
-                                            setFill("blur(1px)")
-                                            setIsPlaying(false)
-                                        }}
-
-                                        config={{
-
-                                            file: {
-                                                attributes: {
-                                                    controlsList: 'nodownload',
-                                                    onContextMenu: (/** @type {{ preventDefault: () => any; }} */ e) => e.preventDefault(),
-
-                                                }
-
-                                            }
-                                        }}
-
-                                    />
-
-
-                                    //     lessonData.map((item, index) => (
-                                    //         <ReactPlayer ref={playerRef}
-                                    //             style={{ pointerEvents: showOverlay && 'none', filter: fill }}
-                                    //             key={item.lesson_id} height={"100%"} width={"100%"}
-                                    //             controls
-                                    //             playing={isPlaying}
-                                    //             onStart={() => playerRef.current.seekTo(parseInt(window.localStorage.getItem('playseconds')), 'seconds')}
-
-                                    //             onPause={handlePause}
-
-                                    //             onProgress={(progress) => {
-                                    //                 const integerValue = Math.floor(progress.playedSeconds);
-                                    //                 console.log(integerValue)
-                                    //                 setPlay(integerValue);
-                                    //             }}
-
-                                    //             // seekTo={seekToTime}
-
-                                    //             url={item.lesson_url}
-
-                                    //             onEnded={() => {
-                                    //                 setShowOverlay(true)
-                                    //                 setFill("blur(1px)")
-                                    //                 setIsPlaying(false)
-                                    //             }}
-
-                                    //             config={{
-
-                                    //                 file: {
-                                    //                     attributes: {
-                                    //                         controlsList: 'nodownload',
-                                    //                         onContextMenu: (/** @type {{ preventDefault: () => any; }} */ e) => e.preventDefault(),
-
-                                    //                     }
-                                    //                     // tracks: [
-                                    //                     //     {
-                                    //                     //         label: "",
-                                    //                     //         kind: "subtitles",
-                                    //                     //        
-                                    //                     //         src: "media/Back_to_Basics.mp4.en.vtt/",
-                                    //                     //         srcLang: "en",
-                                    //                     //         default: true,
-                                    //                     //     }
-                                    //                     // ]
-
-                                    //                 }
-                                    //             }}
-
-                                    //         />
-                                    //     ))
-                                }
-                            </Container>
-                            <Space h={7} />
-                            <Box >
-                                <Tabs defaultValue={"overview"}>
-                                    <Tabs.List>
-                                        <Flex   >
-                                            <Group style={{ paddingLeft: 20 }}>
-                                                <Tabs.Tab value='overview'>Overview</Tabs.Tab>
-                                                <Tabs.Tab value='faq'>FAQ</Tabs.Tab>
-                                            </Group>
-                                            <Group spacing={20} pl={400}>
-                                                <Group spacing={5}>
-                                                    <ActionIcon onClick={handleIconClick}><BiSolidLike size={22} color={like === true ? "rgba(240, 154, 62, 1)" : "rgba(58, 58, 58, 1)"} /></ActionIcon>
-                                                    <Text fw={"600"} fz={14}>{likescount} </Text>
-                                                </Group>
-                                                <Group style={{ display: "flex", alignItems: "center" }} >
-                                                    <Text fz={18}> . </Text>
-                                                    <Text fw={"600"} fz={14}>{learners}</Text>
-                                                    <Text color='#626262' fz={14} fw={500}>learners</Text>
-                                                </Group>
-                                            </Group>
-                                        </Flex>
-                                    </Tabs.List>
-                                    <Tabs.Panel value='overview'>
-                                        <Card style={{ paddingLeft: "1rem" }}>
-                                            {certificateStatus && (<>
-                                                <Card pl={0}>
-                                                    <UnstyledButton onClick={() => {
-                                                        setCertificateModal(true)
-                                                        setTimeout(() => {
-                                                            exportComponentAsPNG(targetRef)
-                                                        }, 1000)
-                                                    }}><Text c={"rgba(0, 117, 225, 1)"} >DOWNLOAD CERTIFICATE</Text></UnstyledButton>
-
-                                                </Card>
-                                            </>)
-                                            }
-                                            <Group>
-                                                <Text fz={18} color="#3A3A3A" fw={"600"} >{homeData.
-
-                                                    course_name}</Text>
-                                                <Text fz={18}> . </Text>
-                                                <Text fz={14} color="#3A3A3A" fw={"600"} >{lessonName}</Text>
-                                            </Group>
-                                            <Space h={5} />
-
-                                            <Group style={{ display: "flex", alignItems: "center" }} >
-
-                                                <Text color='#626262' fz={14}>Released: {new Date(homeData.
-
-                                                    creation_date).toLocaleString("en-UK")}</Text>
-                                                <Text fz={18}> . </Text>
-                                                <Text color='#626262' fz={14} >Tutor :{" " + homeData.
-
-                                                    author}</Text>
-                                            </Group>
-                                            <Space h={15} />
-
-                                            <Text fz={15} color="#3A3A3A" fw={"600"} mt={4}>Course description</Text>
-                                            <Space h={10} />
-                                            <Spoiler maxHeight={20} showLabel="Show more" hideLabel="Hide" fz={14}>
-                                                {homeData.course_description}
-                                            </Spoiler>
-                                        </Card>
-                                    </Tabs.Panel>
-                                    <Tabs.Panel value='faq'>
-
-
-                                        <Accordion >
-                                            {fData ? (fData.map((item) => (
-                                                <Accordion.Item key={item.
-
-                                                    question}
-                                                    value={item.
-
-
-                                                        answer}>
-                                                    <Accordion.Control>{item.
-
-
-                                                        question}</Accordion.Control>
-                                                    <Accordion.Panel>
-                                                        {item.
-
-
-                                                            answer}
-                                                    </Accordion.Panel>
-                                                </Accordion.Item>
-                                            ))) : (
-                                                <Card>
-                                                    <Text>No FAQs for this course</Text>
-                                                </Card>
+                                                    </div>
+                                                </Center>
                                             )
-                                            }
+                                        }
 
-                                        </Accordion>
+                                        {shouldRerender &&
 
-                                    </Tabs.Panel>
-                                </Tabs>
-                            </Box>
-                        </Grid.Col>
 
-                        <Grid.Col span={4}>
-                            <Container fluid style={{ backgroundColor: "#3A3A3A" }}>
-                                <Text color="#FFFFFF" pb={10} p={20} fw={400} fz={22}>Contents</Text>
-                                <Divider className='divider' />
-                                <Accordion defaultValue={"material"} chevronSize={0}>
-                                    <Accordion.Item value='material'>
-                                        <Accordion.Control className='accbtn' ><Text color='#FFFFFF'>Materials</Text></Accordion.Control>
-                                        <Accordion.Panel  >
-                                            <Group className='matgrp'>
-                                                <div>
-                                                    {
+                                            <ReactPlayer ref={playerRef} loop={false}
+                                                style={{ pointerEvents: showOverlay && 'none', filter: fill }}
+                                                height={"100%"} width={"100%"}
+                                                controls
+                                                playing={isPlaying}
 
-                                                        lessonData.map((lesson, index) => {
-                                                            let extracted;
+                                                onStart={() => playerRef.current.seekTo(parseInt(window.localStorage.getItem('playseconds')), 'seconds')}
+                                                // onStart={() => playerRef.current.seekTo(300, 'seconds')}
 
-                                                            if (lesson.materials) {
-                                                                const materialUrl = lesson.materials[0];
-                                                                extracted = materialUrl.split('/').pop().replace(/_/g, ' ').replace(/\.[^/.]+$/, '');
-                                                                console.log(`Lesson ID ${lesson.lesson_id}: ${extracted}`);
-                                                            }
+                                                onPause={handlePause}
 
-                                                            return <Text color='#FFFFFF' key={lesson.lesson_id}>{extracted}</Text>;
-                                                        })
-                                                    }
+                                                onProgress={(progress) => {
+                                                    const integerValue = Math.floor(progress.playedSeconds);
+                                                    // console.log(integerValue)
+                                                    setPlay(integerValue);
+                                                }}
 
-                                                </div>
+                                                // seekTo={seekToTime}
 
-                                                <div>
-                                                    {
-                                                        lessonData.map((lesson) => {
+                                                url={url}
 
-                                                            const materialUrl = (lesson.materials && lesson.materials[0]);
-                                                            if (materialUrl)
-                                                                return (
-                                                                    <Tooltip label="View Document">
-                                                                        <ActionIcon variant='transparent' onClick={() => openNewTab(materialUrl)}>
-                                                                            <MdDocumentScanner color='grey' />
-                                                                        </ActionIcon>
-                                                                    </Tooltip>
-                                                                )
+                                                onEnded={() => {
+                                                    setShowOverlay(true)
+                                                    setFill("blur(1px)")
+                                                    setIsPlaying(false)
+                                                }}
+
+                                                config={{
+
+                                                    file: {
+                                                        attributes: {
+                                                            controlsList: 'nodownload',
+                                                            onContextMenu: (/** @type {{ preventDefault: () => any; }} */ e) => e.preventDefault(),
 
                                                         }
-                                                        )
+
                                                     }
-                                                </div>
+                                                }}
 
-                                            </Group>
-                                        </Accordion.Panel>
-                                    </Accordion.Item>
+                                            />
 
-                                    <Accordion.Item value='clipboard'>
-                                        <Accordion.Control className='accbtn' ><Text color='#FFFFFF'>Clipboard</Text></Accordion.Control>
 
-                                        <Spoiler maxHeight={100} showLabel="More clipboards" hideLabel="Show less">
-                                            {
-                                                clipboards.map((item, index) => (
+                                            //     lessonData.map((item, index) => (
+                                            //         <ReactPlayer ref={playerRef}
+                                            //             style={{ pointerEvents: showOverlay && 'none', filter: fill }}
+                                            //             key={item.lesson_id} height={"100%"} width={"100%"}
+                                            //             controls
+                                            //             playing={isPlaying}
+                                            //             onStart={() => playerRef.current.seekTo(parseInt(window.localStorage.getItem('playseconds')), 'seconds')}
+
+                                            //             onPause={handlePause}
+
+                                            //             onProgress={(progress) => {
+                                            //                 const integerValue = Math.floor(progress.playedSeconds);
+                                            //                 console.log(integerValue)
+                                            //                 setPlay(integerValue);
+                                            //             }}
+
+                                            //             // seekTo={seekToTime}
+
+                                            //             url={item.lesson_url}
+
+                                            //             onEnded={() => {
+                                            //                 setShowOverlay(true)
+                                            //                 setFill("blur(1px)")
+                                            //                 setIsPlaying(false)
+                                            //             }}
+
+                                            //             config={{
+
+                                            //                 file: {
+                                            //                     attributes: {
+                                            //                         controlsList: 'nodownload',
+                                            //                         onContextMenu: (/** @type {{ preventDefault: () => any; }} */ e) => e.preventDefault(),
+
+                                            //                     }
+                                            //                     // tracks: [
+                                            //                     //     {
+                                            //                     //         label: "",
+                                            //                     //         kind: "subtitles",
+                                            //                     //        
+                                            //                     //         src: "media/Back_to_Basics.mp4.en.vtt/",
+                                            //                     //         srcLang: "en",
+                                            //                     //         default: true,
+                                            //                     //     }
+                                            //                     // ]
+
+                                            //                 }
+                                            //             }}
+
+                                            //         />
+                                            //     ))
+                                        }
+                                    </Container>
+                                    <Space h={7} />
+                                    <Box >
+                                        <Tabs defaultValue={"overview"}>
+                                            <Tabs.List>
+                                                <Flex   >
+                                                    <Group style={{ paddingLeft: 20 }}>
+                                                        <Tabs.Tab value='overview'>Overview</Tabs.Tab>
+                                                        <Tabs.Tab value='faq'>FAQ</Tabs.Tab>
+                                                    </Group>
+                                                    <Group spacing={20} pl={400}>
+                                                        <Group spacing={5}>
+                                                            <ActionIcon onClick={handleIconClick}><FaThumbsUp size={20} color={like === true ? "rgba(240, 154, 62, 1)" : "rgba(58, 58, 58, 1)"} /></ActionIcon>
+                                                            <Text fw={"600"} fz={14}>{likescount} </Text>
+                                                        </Group>
+                                                        <Group style={{ display: "flex", alignItems: "center" }} >
+                                                            <Text fz={10} style={{ display: "flex", alignItems: "center" }}> <BsDot /> </Text>
+                                                            <Text fw={"600"} fz={14}>{learners}</Text>
+                                                            <Text color='#626262' fz={14} fw={500}>learners</Text>
+                                                        </Group>
+                                                    </Group>
+                                                </Flex>
+                                            </Tabs.List>
+                                            <Tabs.Panel value='overview'>
+                                                <Card style={{ paddingLeft: "1rem" }}>
+                                                    {certificateStatus && (<>
+                                                        <Card pl={0}>
+                                                            <UnstyledButton onClick={() => {
+                                                                setCertificateModal(true)
+                                                                setTimeout(() => {
+                                                                    exportComponentAsPNG(targetRef)
+                                                                }, 1000)
+                                                            }}><Text c={"rgba(0, 117, 225, 1)"} >DOWNLOAD CERTIFICATE</Text></UnstyledButton>
+
+                                                        </Card>
+                                                    </>)
+                                                    }
+                                                    <Group>
+                                                        <Text fz={18} color="#3A3A3A" fw={"600"} >{homeData.
+
+                                                            course_name}</Text>
+                                                        <Text fz={10} style={{ display: "flex", alignItems: "center" }}> <BsDot /> </Text>
+                                                        <Text fz={14} color="#3A3A3A" fw={"600"} >{lessonName}</Text>
+                                                    </Group>
+                                                    <Space h={5} />
+
+                                                    <Group style={{ display: "flex", alignItems: "center" }} >
+
+                                                        <Text color='#626262' fz={14}>Released: {new Date(homeData.
+
+                                                            creation_date).toLocaleString("en-UK")}</Text>
+                                                        <Text color="#3A3A3A" fz={10} style={{ display: "flex", alignItems: "center" }}> <BsDot /> </Text>
+                                                        <Text color='#626262' fz={14} >Tutor :{" " + homeData.
+
+                                                            author}</Text>
+                                                    </Group>
+                                                    <Space h={15} />
+
+                                                    <Text fz={15} color="#3A3A3A" fw={"600"} mt={4}>Course description</Text>
+                                                    <Space h={10} />
+                                                    <Spoiler maxHeight={20} showLabel="Show more" hideLabel="Hide" fz={14}>
+                                                        {homeData.course_description}
+                                                    </Spoiler>
+                                                </Card>
+                                            </Tabs.Panel>
+                                            <Tabs.Panel value='faq'>
+
+
+                                                <Accordion >
+                                                    {fData ? (fData.map((item) => (
+                                                        <Accordion.Item key={item.
+
+                                                            question}
+                                                            value={item.
+
+
+                                                                answer}>
+                                                            <Accordion.Control>{item.
+
+
+                                                                question}</Accordion.Control>
+                                                            <Accordion.Panel>
+                                                                {item.
+
+
+                                                                    answer}
+                                                            </Accordion.Panel>
+                                                        </Accordion.Item>
+                                                    ))) : (
+                                                        <Card>
+                                                            <Text>No FAQs for this course</Text>
+                                                        </Card>
+                                                    )
+                                                    }
+
+                                                </Accordion>
+
+                                            </Tabs.Panel>
+                                        </Tabs>
+                                    </Box>
+                                </Grid.Col>
+
+                                <Grid.Col span={4}>
+                                    <Container pl={0} pr={0} fluid style={{ backgroundColor: "#3A3A3A" }}>
+
+                                        <Text color="#FFFFFF" pb={10} p={20} fw={400} fz={22}>Contents</Text>
+                                        <Divider className='divider' style={{ borderTopColor: null }} />
+
+                                        <Card pt={0} pb={0} style={{ backgroundColor: "#3A3A3A" }} >
+                                            <Accordion defaultValue={"material"} chevron={<IoChevronDown color='#FFFFFF' />}>
+                                                <Accordion.Item className='accordiancomp' value='material'>
+                                                    <Accordion.Control className='accbtn' ><Text fz={16} color='#FFFFFF'>Materials</Text></Accordion.Control>
                                                     <Accordion.Panel  >
-                                                        <Flex className='clipgrp' >
+                                                        <Group className='matgrp'>
                                                             <div>
-                                                                {/* {
+                                                                {
+
+                                                                    lessonData.map((lesson, index) => {
+                                                                        let extracted;
+
+                                                                        if (lesson.materials) {
+                                                                            const materialUrl = lesson.materials[0];
+                                                                            extracted = materialUrl.split('/').pop().replace(/_/g, ' ').replace(/\.[^/.]+$/, '');
+                                                                            // console.log(`Lesson ID ${lesson.lesson_id}: ${extracted}`);
+                                                                        }
+
+                                                                        return <Text fz={14} color='#FFFFFF' key={lesson.lesson_id}>{extracted}</Text>;
+                                                                    })
+                                                                }
+
+                                                            </div>
+
+                                                            <div>
+                                                                {
+                                                                    lessonData.map((lesson) => {
+
+                                                                        const materialUrl = (lesson.materials && lesson.materials[0]);
+                                                                        if (materialUrl)
+                                                                            return (
+                                                                                <Tooltip label="View Document">
+                                                                                    <ActionIcon variant='transparent' onClick={() => openNewTab(materialUrl)}>
+                                                                                        <MdDocumentScanner size={22} color='grey' />
+                                                                                    </ActionIcon>
+                                                                                </Tooltip>
+                                                                            )
+
+                                                                    }
+                                                                    )
+                                                                }
+                                                            </div>
+
+                                                        </Group>
+                                                    </Accordion.Panel>
+                                                </Accordion.Item>
+
+                                                <Accordion.Item value='clipboard' className='accordiancomp'>
+                                                    <Accordion.Control className='accbtn' ><Text fz={16} color='#FFFFFF'>Clipboard</Text></Accordion.Control>
+
+                                                    <Spoiler maxHeight={100} showLabel="More clipboards" hideLabel="Show less">
+                                                        {
+                                                            clipboards.map((item, index) => (
+                                                                <Accordion.Panel  >
+                                                                    <Flex className='clipgrp' >
+                                                                        <div>
+                                                                            {/* {
                                                             lessonData.map((lesson) => {
                                                                 let extracted;
                                                                 if (lesson.clipboards) {
@@ -840,10 +881,10 @@ const CourseHomeComp = () => {
 
                                                             })
                                                         } */}
-                                                                <Text id='txt' color='#FFFFFF' key={index}>{item}</Text>
+                                                                            <Text fz={14} id='txt' color='#FFFFFF' key={index}>{item}</Text>
 
-                                                            </div>
-                                                            {/* <CopyButton
+                                                                        </div>
+                                                                        {/* <CopyButton
                                                                 value={item}
                                                                 timeout={2000}>
                                                                 {({ copied, copy }) => (
@@ -862,153 +903,157 @@ const CourseHomeComp = () => {
                                                                     </Tooltip>
                                                                 )}
                                                             </CopyButton> */}
-                                                            <div key={index}>
-                                                                <Tooltip label={copiedIndex === index ? 'Copied' : 'Copy to Clipboard'} withArrow>
-                                                                    <ActionIcon variant="transperant" onClick={() => {
-                                                                        setCopiedIndex(index)
-                                                                        setCopied(true);
-                                                                        var textToCopy = item
-                                                                        console.log(textToCopy)
-                                                                        const textArea = document.createElement('textarea');
-                                                                        textArea.value = textToCopy;
-                                                                        document.body.appendChild(textArea);
-                                                                        textArea.select();
+                                                                        <div key={index}>
+                                                                            <Tooltip label={copiedIndex === index ? 'Copied' : 'Copy to Clipboard'} withArrow>
+                                                                                <ActionIcon variant="transperant" onClick={() => {
+                                                                                    setCopiedIndex(index)
+                                                                                    setCopied(true);
+                                                                                    var textToCopy = item
+                                                                                    // console.log(textToCopy)
+                                                                                    const textArea = document.createElement('textarea');
+                                                                                    textArea.value = textToCopy;
+                                                                                    document.body.appendChild(textArea);
+                                                                                    textArea.select();
 
-                                                                        try {
-                                                                            const successful = document.execCommand('copy');
-                                                                            const message = successful ? 'Text copied to clipboard!' : 'Unable to copy text.';
-                                                                            setCopied(true);
-                                                                        } catch (err) {
-                                                                            console.error('Failed to copy: ', err);
-                                                                        }
-
-                                                                        document.body.removeChild(textArea);
-                                                                        setTimeout(() => {
-                                                                            setCopiedIndex(-1)
-                                                                            setCopied(false)
-                                                                        }, 2000)
-                                                                    }}>
-                                                                        {/* <TbCopy style={{ width: 16 }} color={'gray'} /> */}
-                                                                        {copiedIndex === index ? (
-                                                                            <TiTick style={{ width: 16 }} color={copiedIndex === index ? 'teal' : 'gray'} />
-                                                                        ) : (
-                                                                            <TbCopy style={{ width: 16 }} color={copiedIndex === index ? 'teal' : 'gray'} />
-                                                                        )}
-
-
-                                                                    </ActionIcon>
-                                                                </Tooltip>
-                                                            </div>
-                                                        </Flex>
-                                                    </Accordion.Panel>
-                                                ))
-                                            }
-
-                                        </Spoiler>
-
-                                    </Accordion.Item>
-                                </Accordion>
-
-                                <Container fluid >
-                                    {
-                                        lessonData.map((item, index) => (
-
-                                            <div key={item.
-
-                                                lesson_id}>
-                                                <Flex direction={"column"}>
-                                                    <Container pl={0} pr={0} w={"100%"} fluid  >
-
-                                                        {
-                                                            item.lesson_status === "locked" ?
-                                                                (<div style={{ pointerEvents: 'none' }}>
-                                                                    <Flex p={"1rem"} align={"center"} gap={15}>
-                                                                        <ActionIcon variant='transperant' ><AiFillLock color='#5F5F5F' size={20} /></ActionIcon>
-                                                                        <Flex direction={"column"}>
-                                                                            <Text color='#FFFFFF' >{index + 1}. {item.
-
-                                                                                lesson_name}</Text>
-
-                                                                        </Flex>
-                                                                    </Flex>
-                                                                </div>) :
-                                                                (
-                                                                    <div
-                                                                    // onClick={() => handleButtonClick(item.lesson_url)}
-                                                                    >
-
-                                                                        <Flex p={"1rem"} align={"center"} gap={15} >
-                                                                            {
-
-                                                                                item.lesson_status === "completed" ?
-                                                                                    (<ActionIcon variant='tranperant' ><BsCheckCircle color='green' size={20} /></ActionIcon>) :
-                                                                                    (<ActionIcon variant='tranperant' ><BiRadioCircle color='#5F5F5F' size={20} /></ActionIcon>)
-                                                                            }
-
-                                                                            <Flex direction={"column"}>
-                                                                                <div
-
-                                                                                    onClick={() => {
-
-                                                                                        handleButtonClick();
-                                                                                        navigate(`/courseplayer/${course.courseid}/${item.lesson_id}`)
-                                                                                    }}
-                                                                                    key={item.
-
-                                                                                        lesson_id}>
-                                                                                    <Text c={"#FFFFFF"}>{index + 1}. {item.
-
-                                                                                        lesson_name}</Text>
-                                                                                </div>
-                                                                                <Space h={8} />
-                                                                                <Flex gap={10} >
-
-                                                                                    <Text color='#FFFFFF' fz={"xs"}>{handleduration(item.lesson_duration)}m </Text>
-                                                                                    {
-
-                                                                                        item.quiz_attempt_status === true ?
-
-                                                                                            (<Flex gap={100}>
-                                                                                                <Flex gap={5}>
-                                                                                                    <Text fz={"xs"} c={"white"}>Score :</Text>
-                                                                                                    <Text fz={"xs"} c={"rgba(0, 156, 23, 1)"}>{item.
-
-                                                                                                        quiz_score}%</Text>
-                                                                                                </Flex>
-                                                                                                <UnstyledButton onClick={() => navigate(`/quiz/${course.courseid}/${item.lesson_id}`)} style={{ color: "rgba(0, 117, 225, 1)", fontSize: 12 }}>
-                                                                                                    <Text fw={600}> RE-TAKE QUIZ </Text>
-                                                                                                </UnstyledButton>
-                                                                                            </Flex>) : (null)
-
-
+                                                                                    try {
+                                                                                        const successful = document.execCommand('copy');
+                                                                                        const message = successful ? 'Text copied to clipboard!' : 'Unable to copy text.';
+                                                                                        setCopied(true);
+                                                                                    } catch (err) {
+                                                                                        console.error('Failed to copy: ', err);
                                                                                     }
 
+                                                                                    document.body.removeChild(textArea);
+                                                                                    setTimeout(() => {
+                                                                                        setCopiedIndex(-1)
+                                                                                        setCopied(false)
+                                                                                    }, 2000)
+                                                                                }}>
+                                                                                    {/* <TbCopy style={{ width: 16 }} color={'gray'} /> */}
+                                                                                    {copiedIndex === index ? (
+                                                                                        <TiTick size={22} color={copiedIndex === index ? 'teal' : 'gray'} />
+                                                                                    ) : (
+                                                                                        <TbCopy size={22} color={copiedIndex === index ? 'teal' : 'gray'} />
+                                                                                    )}
 
-                                                                                </Flex>
-                                                                            </Flex>
-                                                                        </Flex>
 
-                                                                    </div>
-                                                                )
-
-
+                                                                                </ActionIcon>
+                                                                            </Tooltip>
+                                                                        </div>
+                                                                    </Flex>
+                                                                </Accordion.Panel>
+                                                            ))
                                                         }
 
+                                                    </Spoiler>
 
-                                                    </Container>
+                                                </Accordion.Item>
+                                            </Accordion>
+                                        </Card>
+                                        <Container fluid pl={0} pr={0}>
+                                            {
+                                                lessonData.map((item, index) => (
+
+                                                    <div key={item.
+
+                                                        lesson_id}>
+                                                        <Flex direction={"column"}>
 
 
-                                                </Flex>
-                                                <Divider className='divider' />
-                                            </div>
-                                        ))
-                                    }
-                                </Container>
-                            </Container>
-                        </Grid.Col>
-                    </Grid>
-                </Box>
-            </Box >
+                                                            {
+                                                                item.lesson_status === "locked" ?
+                                                                    (<div style={{ pointerEvents: 'none' }} >
+                                                                        <Flex p={"1rem"} gap={15}>
+                                                                            <ActionIcon variant='transperant' ><AiFillLock color='#5F5F5F' size={20} /></ActionIcon>
+                                                                            <Flex direction={"column"}>
+                                                                                <Text color='#FFFFFF' >{index + 1}. {item.
+
+                                                                                    lesson_name}</Text>
+                                                                                <Space h={8} />
+                                                                                <Text color='#FFFFFF' fz={"xs"}>{handleduration(item.lesson_duration)}m </Text>
+                                                                            </Flex>
+                                                                        </Flex>
+                                                                    </div>) :
+                                                                    (
+
+                                                                        <div style={{ cursor: "pointer" }} className={currentPlayingId === item.lesson_id ? 'selectedlesson' : ''}
+                                                                        // onClick={() => handleButtonClick(item.lesson_url)}
+                                                                        >
+
+                                                                            <Flex p={"1rem"} gap={15} >
+                                                                                {
+
+                                                                                    item.lesson_status === "completed" ?
+                                                                                        (<ActionIcon variant='tranperant' ><BsCheckCircle color='green' size={20} /></ActionIcon>) :
+                                                                                        (<ActionIcon variant='tranperant' ><BsFillCircleFill color='#5F5F5F' size={12} /></ActionIcon>)
+                                                                                }
+
+                                                                                <Flex direction={"column"}>
+                                                                                    <div
+
+                                                                                        onClick={() => {
+
+                                                                                            handleButtonClick();
+                                                                                            navigate(`/courseplayer/${course.courseid}/${item.lesson_id}`)
+                                                                                        }}
+                                                                                        key={item.
+
+                                                                                            lesson_id}>
+                                                                                        <Text c={"#FFFFFF"}>{index + 1}. {item.
+
+                                                                                            lesson_name}</Text>
+                                                                                    </div>
+                                                                                    <Space h={8} />
+                                                                                    <Flex gap={10} >
+
+                                                                                        <Text color='#FFFFFF' fz={"xs"}>{handleduration(item.lesson_duration)}m </Text>
+                                                                                        {
+
+                                                                                            item.quiz_attempt_status === true ?
+
+                                                                                                (<Flex gap={100}>
+                                                                                                    <Flex gap={5}>
+                                                                                                        <Text fz={"xs"} c={"white"}>Score :</Text>
+                                                                                                        <Text fz={"xs"} c={item.quiz_score < 60 ? "red" : "rgba(0, 156, 23, 1)"}>{Math.floor(item.quiz_score)}%</Text>
+                                                                                                    </Flex>
+                                                                                                    <UnstyledButton onClick={() => navigate(`/quiz/${course.courseid}/${item.lesson_id}`)} style={{ color: "rgba(0, 117, 225, 1)", fontSize: 12 }}>
+                                                                                                        <Text fw={600}> RE-TAKE QUIZ </Text>
+                                                                                                    </UnstyledButton>
+                                                                                                </Flex>) : (null)
+
+
+                                                                                        }
+
+
+                                                                                    </Flex>
+                                                                                </Flex>
+                                                                            </Flex>
+
+                                                                        </div>
+
+                                                                    )
+
+
+                                                            }
+
+                                                            <Card pt={0} pb={0} style={{ backgroundColor: "#3A3A3A" }}>
+
+                                                                <Divider color='#727272' />
+                                                            </Card>
+
+                                                        </Flex>
+                                                    </div>
+                                                ))
+                                            }
+                                        </Container>
+                                    </Container>
+                                </Grid.Col>
+                            </Grid>
+                        </Box>
+                    </Box >
+                )}
+
+
         </>
     )
 }

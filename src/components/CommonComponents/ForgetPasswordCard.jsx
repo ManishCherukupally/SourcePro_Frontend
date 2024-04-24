@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Card, Center, Flex, Image, TextInput, Text, Stack, Space, Group, ActionIcon, Box, BackgroundImage, Button, PasswordInput, UnstyledButton, } from '@mantine/core'
+import { Card, Center, Flex, Image, TextInput, Text, Stack, Space, Group, ActionIcon, Box, BackgroundImage, Button, PasswordInput, UnstyledButton, Loader, } from '@mantine/core'
 import { isEmail, useForm } from '@mantine/form'
 
 import { Link, useNavigate } from 'react-router-dom'
@@ -15,6 +15,7 @@ const ForgetPasswordCard = (props) => {
     const [err, setErr] = useState("")
     // const [email, setEmail] = useState("")
     const navigate = useNavigate()
+    const [isLoading, setIsLoading] = useState(false);
     const form = useForm(
 
         {
@@ -29,18 +30,21 @@ const ForgetPasswordCard = (props) => {
 
 
     const handleForgetPaswd = async (values) => {
-        console.log("forgot paswd clicked")
+        setIsLoading(true)
+        // console.log("forgot paswd clicked")
         try {
             await client.post('otp/', {
                 email: values.email,
                 withCredentials: true,
 
             }).then((resp) => {
+
                 if (resp.data.status === 'OTP sent successfully') {
                     window.location.href = "/set-new-password"
                 }
 
                 else {
+                    setIsLoading(false)
                     const errorMessage = resp.data.status === "Please_provide_valid_email"
                         ? "Invalid.Please enter your Email."
                         : resp.data.error; // Use a more specific error message if available
@@ -49,7 +53,7 @@ const ForgetPasswordCard = (props) => {
                     });
 
                 }
-                console.log(resp)
+                // console.log(resp)
             });
             // console.log(response.data)
         }
@@ -99,9 +103,10 @@ const ForgetPasswordCard = (props) => {
 
                             {/* Onclick fuction here to get the otp */}
                             <div >
-                                <UnstyledButton type='submit' className='newpaswd' >
-                                    SET NEW PASSWORD
-                                </UnstyledButton>
+                                {isLoading ? (<div style={{ width: '136px', display: "flex", justifyContent: "center" }}> <Loader variant="dots" color="rgba(240, 154, 62, 1)" /></div>) :
+                                    (<UnstyledButton type='submit' className='newpaswd' >
+                                        SET NEW PASSWORD
+                                    </UnstyledButton>)}
                             </div>
                         </Group>
 
