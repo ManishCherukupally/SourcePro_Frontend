@@ -49,8 +49,13 @@ const HomeComp = () => {
             withCredentials: true
         })
             .then((resp) => {
+                setTimeout(() => {
+                    setSkeletonView(resp.data ? false : true)
+                    console.log(skeletonview)
 
-                setSkeletonView(resp.data && ((l) => !l))
+                }, 1000)
+
+                console.log(skeletonview)
                 const continueapidata = resp.data["Continue_Learning"]
                 setContinueLearning(continueapidata)
                 // setLessonId(continueapidata.last_viewed_lesson_id)
@@ -91,7 +96,7 @@ const HomeComp = () => {
 
                             <Carousel.Slide>
 
-                                <Skeleton visible={!skeletonview}>
+                                <Skeleton visible={skeletonview}>
                                     <Card onClick={() => navigate(`/courseplayer/${card.course_id}/${card.last_viewed_lesson_id}`)} className="coursecard" shadow='sm' w={277} p={0} withBorder radius={"md"}>
 
                                         <Card h={120} w={277} p={0} radius={0} >
@@ -142,7 +147,7 @@ const HomeComp = () => {
                         return (
                             <Carousel.Slide>
                                 <Card shadow='sm' w={277} p={0} withBorder radius={"md"}>
-                                    <Skeleton visible={!skeletonview}>
+                                    <Skeleton visible={skeletonview}>
                                         <Card h={120} p={0} radius={0} >
                                             <Image
                                                 src={card.thumbnail}
@@ -186,7 +191,7 @@ const HomeComp = () => {
                             <>
                                 <Carousel.Slide>
                                     <Card shadow='sm' mb={"1rem"} w={277} p={0} withBorder radius={"md"}>
-                                        <Skeleton visible={!skeletonview}>
+                                        <Skeleton visible={skeletonview}>
                                             <Card h={120} p={0} radius={0} >
                                                 <Image
                                                     src={card.thumbnail}

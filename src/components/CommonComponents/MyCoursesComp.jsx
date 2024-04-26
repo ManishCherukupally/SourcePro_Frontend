@@ -324,7 +324,7 @@ const MyCoursesComp = () => {
     const [inProgress, setInProgress] = useState([])
     const [history, setHistory] = useState([])
     // console.log(history)
-    const [skeletonview, setSkeletonView] = useState(false);
+    const [skeletonview, setSkeletonView] = useState(true);
 
     const [isLoading, setLoading] = useState(true);
 
@@ -334,8 +334,11 @@ const MyCoursesComp = () => {
             withCredentials: true
         })
             .then(resp => {
-                setSkeletonView(resp.data && ((l) => !l))
-                // console.log("Course Date-->", resp)
+                setTimeout(() => {
+                    setSkeletonView(resp.data ? false : true)
+                    // console.log(skeletonview)
+
+                }, 1000)                // console.log("Course Date-->", resp)
                 const progress = resp.data.In_Progress
                 setInProgress(progress)
                 // console.log(JSON.stringify(progress))

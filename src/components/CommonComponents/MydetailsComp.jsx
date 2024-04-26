@@ -20,7 +20,7 @@ const MydetailsComp = () => {
     const navigate = useNavigate();
     const [data, setData] = useState([]);
     const [isEditing, setIsEditing] = useState(false);
-    const [skeletonview, setSkeletonView] = useState(false);
+    const [skeletonview, setSkeletonView] = useState(true);
 
 
     useEffect(() => {
@@ -29,8 +29,11 @@ const MydetailsComp = () => {
         })
 
             .then(res => {
-                setSkeletonView(res.data && ((l) => !l))
+                setTimeout(() => {
+                    setSkeletonView(res.data ? false : true)
+                    // console.log(skeletonview)
 
+                }, 1000)
                 // console.log(res.data)
                 setData(res.data);
             })

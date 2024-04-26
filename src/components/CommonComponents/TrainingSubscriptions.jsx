@@ -14,7 +14,7 @@ const TrainingSubscriptions = () => {
     const largeScreen = useMediaQuery("(min-width: 1440px)");
     const extraLargeScreen = useMediaQuery("(min-width: 1770px)");
     const [subscriptions, setSubscriptions] = useState([]);
-    const [skeletonview, setSkeletonView] = useState(false);
+    const [skeletonview, setSkeletonView] = useState(true);
 
 
     useEffect(() => {
@@ -22,8 +22,11 @@ const TrainingSubscriptions = () => {
             withCredentials: true,
         })
             .then(response => {
-                setSkeletonView(response.data && ((l) => !l))
+                setTimeout(() => {
+                    setSkeletonView(response.data ? false : true)
+                    // console.log(skeletonview)
 
+                }, 1000)
                 console.log('Fetched data:', response.data["Training_Subscription"]);
                 setSubscriptions(response.data["Training_Subscription"])
             })
