@@ -125,7 +125,7 @@ const QuizComponent = () => {
     const [result, setResult] = useState(false)
     const course = useParams()
     const lessonId = useParams()
-    const [skeletonview, setSkeletonView] = useState(false);
+    const [skeletonview, setSkeletonView] = useState(true);
 
     // console.log("color " + color)
 
@@ -148,7 +148,11 @@ const QuizComponent = () => {
             }
         )
             .then((resp) => {
-                setSkeletonView(quizData && ((l) => !l))
+                setTimeout(() => {
+                    setSkeletonView(resp.data ? false : true)
+                    // console.log(skeletonview)
+
+                }, 1000)
                 const qData = resp.data.quiz
                 setQuizData(qData);
                 // @ts-ignore
