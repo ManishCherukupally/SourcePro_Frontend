@@ -21,7 +21,8 @@ import ForgotPassword from "./pages/ForgotPswdPage";
 import MobileHead from "./components/dashboard Header/MobileHead";
 import CourseMobileComp from "./components/CourseComp/CourseMobileComp";
 import Test from './test'
-
+import LoginHCTPage from "./HCTpages/LoginHCTPage";
+import DashboardHCTPage from "./HCTpages/DashboardHCTPage";
 
 function App() {
 
@@ -57,6 +58,11 @@ function App() {
           {/* <Route path="/:courseid/:lessonid" Component={CoursePage} /> */}
           {/* <Route path="/quiz" Component={Quiz_test} /> */}
           <Route path="/quiz/:courseid/:lessonid" Component={QuizPage} />
+
+          {/* HCT Routes*/}
+
+          <Route path="/hct/login" Component={LoginHCTPage} />
+          <Route path="/hct/dashboard" Component={DashboardHCTPage} />
 
         </Routes>
 
