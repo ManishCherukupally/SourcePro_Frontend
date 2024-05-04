@@ -63,6 +63,14 @@
     font-weight: 600;
 }
 
+.hctNewpaswd {
+    color: #233c79;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+
+}
+
 .grey-input {
     border: none;
     background-image: grey;
@@ -160,6 +168,15 @@
 .iconbox {
 
     padding-bottom: 6%;
+    border-width: 2px;
+    display: flex;
+    justify-content: center;
+
+}
+
+.hctHeadicon {
+
+    padding-bottom: 8%;
     border-width: 2px;
     display: flex;
     justify-content: center;

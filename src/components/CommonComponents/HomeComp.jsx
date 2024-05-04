@@ -51,11 +51,11 @@ const HomeComp = () => {
             .then((resp) => {
                 setTimeout(() => {
                     setSkeletonView(resp.data ? false : true)
-                    console.log(skeletonview)
+                    // console.log(skeletonview)
 
                 }, 1000)
 
-                console.log(skeletonview)
+                // console.log(skeletonview)
                 const continueapidata = resp.data["Continue_Learning"]
                 setContinueLearning(continueapidata)
                 // setLessonId(continueapidata.last_viewed_lesson_id)
