@@ -14,24 +14,7 @@ const UserManagement = () => {
     const largeScreen = useMediaQuery("(min-width: 1440px)");
     const extraLargeScreen = useMediaQuery("(min-width: 1770px)");
     const [value, setValue] = useState('active');
-    const form = useForm({
-        initialValues: {
-            name: window.localStorage.getItem("name") ? window.localStorage.getItem("name") : '',
 
-            username: window.localStorage.getItem("business_email") ? window.localStorage.getItem("business_email") : '',
-            contact_no: window.localStorage.getItem("contact_no") ? window.localStorage.getItem("contact_no") : '',
-            location: window.localStorage.getItem("location") ? window.localStorage.getItem("location") : '',
-            user_status: value
-        },
-        transformValues: (values) => ({
-            name: `${values.name}`,
-
-            username: `${values.username}`,
-            contact_no: `${values.contact_no}`,
-            user_status: `${values.user_status}`,
-            location: `${values.location}`,
-        }),
-    })
 
     const [userData, setUserData] = useState([])
 
@@ -44,10 +27,37 @@ const UserManagement = () => {
     const [userModal, setUserModal] = useState(false)
     const [EditModal, setEditModal] = useState(false)
     const [userName, setUserName] = useState('')
-    const [render, setRender] = useState(0)
+    console.log(userName)
+    var name
+    var location
+    var contact_no
+    var email
+    // const [render, setRender] = useState(0)
     const [loaderVisible, setLoaderVisible] = useState(false);
 
     // console.log(userName)
+    const form = useForm({
+        initialValues: {
+            name: window.localStorage.getItem('name') ? window.localStorage.getItem('name') : '',
+
+            username: window.localStorage.getItem('username') ? window.localStorage.getItem('username') : '',
+            contact_no: window.localStorage.getItem('contact_no') ? window.localStorage.getItem('contact_no') : '',
+            location: window.localStorage.getItem('location') ? window.localStorage.getItem('location') : '',
+            user_status: value
+        },
+        transformValues: (values) => ({
+            name: `${values.name}`,
+
+            business_email: `${values.username}`,
+            contact_no: `${values.contact_no}`,
+            user_status: `${value}`,
+            location: `${values.location}`,
+            company: '',
+            years_of_experience: '',
+            job_position: ''
+
+        }),
+    })
     useEffect(() => {
         client.get("pagination/", {
             params: {
@@ -123,14 +133,19 @@ const UserManagement = () => {
                     <Tooltip label={"Edit"}><ActionIcon variant='subtle'
                         onClick={() => {
                             setEditModal(true)
+                            setUserName(item.business_email)
+                            // contact_no = item.contact_no
+                            // name = item.name
+                            // email = item.business_email
+                            // location = item.location
                             window.localStorage.setItem("name", item.name)
                             window.localStorage.setItem("contact_no", item.contact_no)
-                            window.localStorage.setItem("business_email", item.business_email)
+                            window.localStorage.setItem("username", item.business_email)
                             window.localStorage.setItem("date_joined", item.date_joined)
                             window.localStorage.setItem("location", item.location)
                             setTimeout(() => {
                                 window.localStorage.clear()
-                            }, 500);
+                            }, 10000);
                         }} ><MdEdit color="#233c79" /></ActionIcon></Tooltip>
                     <Tooltip label={"Delete"}><ActionIcon variant='subtle' onClick={() => {
                         setOpenModal(true)
@@ -181,7 +196,7 @@ const UserManagement = () => {
         setLoaderVisible(true)
         client.put("user_details/", form.getTransformedValues())
         setTimeout(() => {
-            setUserModal(false)
+            setEditModal(false)
             setLoaderVisible(false)
         }, 1000);
     }
@@ -213,7 +228,7 @@ const UserManagement = () => {
                     </div>
                 </Overlay>
             )} */}
-            <Container mt={mediumScreen ? "5rem" : "2rem"} size={"xl"}>
+            <Container mt={mediumScreen ? "7rem" : "2rem"} size={"xl"}>
                 <Center>
                     <Modal style={{ display: "flex", justifyContent: "center" }} opened={userModal} onClose={() => setUserModal(false)} title="Add user">
                         <form>
@@ -222,14 +237,14 @@ const UserManagement = () => {
 
                                     label="Name"
                                     name='name'
-                                    placeholder="Enter  name"
+                                    placeholder="Enter name"
                                     size={mediumScreen ? "md" : "lg"}
                                     {...form.getInputProps('name')}
 
                                 />
                                 <TextInput
 
-                                    label="Username/ Email"
+                                    label="Email"
                                     name='username'
                                     placeholder="user@email.com"
                                     size={mediumScreen ? "md" : "lg"}
@@ -249,7 +264,7 @@ const UserManagement = () => {
 
                                     label="Contact No."
                                     name='contact_no'
-                                    placeholder="Enter  contact No."
+                                    placeholder="Enter Contact No."
                                     size={mediumScreen ? "md" : "lg"}
                                     {...form.getInputProps('contact_no')}
 
@@ -258,7 +273,7 @@ const UserManagement = () => {
 
                                     label="Location"
                                     name='location'
-                                    placeholder="Enter location"
+                                    placeholder="Enter Location"
                                     size={mediumScreen ? "md" : "lg"}
                                     {...form.getInputProps('location')}
 
@@ -289,21 +304,21 @@ const UserManagement = () => {
                 </Center>
 
                 <Center>
-                    <Modal style={{ display: "flex", justifyContent: "center" }} opened={EditModal} onClose={() => setEditModal(false)} title="Add user">
+                    <Modal style={{ display: "flex", justifyContent: "center" }} opened={EditModal} onClose={() => setEditModal(false)} title="Edit user details">
                         <form>
                             <SimpleGrid cols={1}>
                                 <TextInput
 
                                     label="Name"
                                     name='name'
-                                    placeholder="Enter  name"
+                                    placeholder="Enter name"
                                     size={mediumScreen ? "md" : "lg"}
                                     {...form.getInputProps('name')}
 
                                 />
                                 <TextInput
 
-                                    label="Username/ Email"
+                                    label="Email"
                                     name='username'
                                     placeholder="user@email.com"
                                     size={mediumScreen ? "md" : "lg"}
@@ -323,7 +338,7 @@ const UserManagement = () => {
 
                                     label="Contact No."
                                     name='contact_no'
-                                    placeholder="Enter  contact No."
+                                    placeholder="Enter Contact No."
                                     size={mediumScreen ? "md" : "lg"}
                                     {...form.getInputProps('contact_no')}
 
@@ -333,7 +348,7 @@ const UserManagement = () => {
                                     label="Location"
 
                                     name='location'
-                                    placeholder="Enter location"
+                                    placeholder="Enter Location"
                                     size={mediumScreen ? "md" : "lg"}
                                     {...form.getInputProps('location')}
 
@@ -351,13 +366,14 @@ const UserManagement = () => {
                                         <Radio value="inactive" label="Inactive" />
                                     </Group>
                                 </Radio.Group>
+
+                                <Space h={15} />
+                                <Flex justify={"end"} gap={"2%"}>
+                                    <Button loading={loaderVisible} style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "#233c79" }}
+                                        variant='filled' onClick={handleEditUser}>Done</Button>
+                                    <Button variant='outline' color='dark' onClick={() => setEditModal(false)}>No</Button>
+                                </Flex>
                             </SimpleGrid>
-                            <Space h={15} />
-                            <Flex justify={"end"} gap={"2%"}>
-                                <Button loading={loaderVisible} style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "#233c79" }}
-                                    variant='filled' onClick={handleAddUser}>Done</Button>
-                                <Button variant='outline' color='dark' onClick={() => setEditModal(false)}>No</Button>
-                            </Flex>
                         </form>
 
                     </Modal>
@@ -409,7 +425,7 @@ const UserManagement = () => {
                         <thead>
                             <tr>
                                 <th> Status </th>
-                                <th> User name </th>
+                                <th> Name </th>
                                 <th> Contact no. </th>
                                 <th> Email </th>
                                 <th> Date of joining </th>
