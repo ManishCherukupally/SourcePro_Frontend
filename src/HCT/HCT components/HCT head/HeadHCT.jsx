@@ -73,11 +73,10 @@ const HeadHCT = () => {
             <nav >
                 <Flex align={"center"} justify={"space-between"}>
                     <Box style={{ display: "flex", alignItems: "center" }}>
-                        <a href='http://healthcoachsaiteja.com/' style={{ marginLeft: 50 }}>
+                        <a href='https://www.sourceprotraining.com'>
                             <Image
-                                style={{ margin: 50, paddingBottom: 10 }}
-                                maw={130}
-                                mah={70}
+                                style={{ margin: 50 }}
+                                maw={120}
                                 src={"https://lh3.googleusercontent.com/proxy/-ptEoCXQaGeaX0l_w5gA1iSfkLmjCIt9tMW9UtQE6OiQh2taj9X1HNgEQfh6r9d5hshNtcVK5o9wdgxMUbHWsUiibVkJ73TMy90VAJ-pt2QpPlAYk2OH-NsTfjue0JcSnhBRQd3iLuSVFrjmLw"} /></a>
 
                         {/* <Select searchable nothingFound="No related courses" fz={18} w={400} radius={"md"} variant='filled'

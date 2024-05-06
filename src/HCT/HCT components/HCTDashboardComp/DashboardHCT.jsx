@@ -12,14 +12,14 @@ const DashboardHCT = () => {
     const [hctData, setHctData] = useState({})
 
     useEffect(() => {
-        axios.get("http://192.168.29.220:8000/sourcepro/all_users_status/")
+        client.get("all_users_status/")
             .then((resp) => {
                 setHctData(resp.data.status)
             })
     }, [])
     return (
         <div>
-            <Container mt={mediumScreen ? "5rem" : "2rem"} size={"xl"}>
+            <Container mt={mediumScreen ? "7rem" : "2rem"} size={"xl"}>
                 <Text fz={22} fw={600}>Dashboard</Text>
                 <Space h={15} />
 

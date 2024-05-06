@@ -61,7 +61,7 @@ const LoginHCT = (props) => {
                 .then((resp) => {
                     // console.log(JSON.stringify(resp.data.status))
                     if (resp.data.status === "user_validated") {
-                        window.localStorage.setItem("userStatus", resp.data.status)
+                        window.localStorage.setItem("hctuserstatus", resp.data.status)
 
 
                         navigate("/hct/dashboard")
