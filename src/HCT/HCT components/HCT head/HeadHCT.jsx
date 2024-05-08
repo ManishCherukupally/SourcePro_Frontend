@@ -57,10 +57,10 @@ const HeadHCT = () => {
                     // removeToken(['sessionid']);
                     window.localStorage.clear()
                     // Optionally, redirect user to login page
-                    window.location.href = "/";
+                    window.location.href = "/hct/login";
                 }
             })
-            window.location.href = "/hct/login";
+            // window.location.href = "/hct/login";
         }
         catch (err) {
             console.error(err)
@@ -73,7 +73,7 @@ const HeadHCT = () => {
             <nav >
                 <Flex align={"center"} justify={"space-between"}>
                     <Box style={{ display: "flex", alignItems: "center" }}>
-                        <a href='https://www.sourceprotraining.com'>
+                        <a href='http://healthcoachsaiteja.com/'>
                             <Image
                                 style={{ margin: 50 }}
                                 maw={120}

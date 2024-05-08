@@ -25,36 +25,38 @@ const UserManagement = () => {
     const [opened, { open, close }] = useDisclosure(false);
     const [openModal, setOpenModal] = useState(false)
     const [userModal, setUserModal] = useState(false)
+
     const [EditModal, setEditModal] = useState(false)
+    const [editData, setEditData] = useState(null)
+    console.log(editData)
+    const [editStatus, setEditStatus] = useState(false)
+    const [formValues, setFormValues] = useState(null);
+    console.log(formValues)
+
     const [userName, setUserName] = useState('')
-    console.log(userName)
-    var name
-    var location
-    var contact_no
-    var email
+
     // const [render, setRender] = useState(0)
     const [loaderVisible, setLoaderVisible] = useState(false);
 
     // console.log(userName)
     const form = useForm({
-        initialValues: {
-            name: window.localStorage.getItem('name') ? window.localStorage.getItem('name') : '',
 
-            username: window.localStorage.getItem('username') ? window.localStorage.getItem('username') : '',
-            contact_no: window.localStorage.getItem('contact_no') ? window.localStorage.getItem('contact_no') : '',
-            location: window.localStorage.getItem('location') ? window.localStorage.getItem('location') : '',
+        initialValues: {
+            name: "",
+            business_email: "",
+            contact_no: "",
+            location: "",
             user_status: value
         },
         transformValues: (values) => ({
             name: `${values.name}`,
-
             business_email: `${values.username}`,
             contact_no: `${values.contact_no}`,
             user_status: `${value}`,
             location: `${values.location}`,
-            company: '',
-            years_of_experience: '',
-            job_position: ''
+            // company: '',
+            // years_of_experience: '',
+            // job_position: ''
 
         }),
     })
@@ -111,11 +113,11 @@ const UserManagement = () => {
 
     const rows = userData.map((item) => (
         <tr key={item.id}>
-            <td>{item.user_status ?
-                (<Tooltip label={item.user_status === 'inactive' ? "Inactive" : "Active"}>
-                    <ActionIcon variant='transparent' color={item.user_status === 'inactive' ? 'red' : 'green'} onClick={() => {
+            <td>{item.u_user_status ?
+                (<Tooltip label={item.u_user_status === 'inactive' ? "Inactive" : "Active"}>
+                    <ActionIcon variant='transparent' color={item.u_user_status === 'inactive' ? 'red' : 'green'} onClick={() => {
                         open();
-                        setUserName(item.business_email)
+                        setUserName(item.u_business_email)
                     }}><MdCircle /></ActionIcon>
                 </Tooltip>) : (
                     <ActionIcon variant='transparent' color='gray'><MdCircle /></ActionIcon>
@@ -123,45 +125,48 @@ const UserManagement = () => {
 
             }</td>
 
-            <td>{item.name}</td>
-            <td>{item.contact_no}</td>
-            <td>{item.business_email}</td>
+            <td>{item.u_name}</td>
+            <td>{item.u_contact_no}</td>
+            <td>{item.u_business_email}</td>
             <td>{handleDate(item.date_joined)}</td>
-            <td>{item.location}</td>
+            <td>{item.u_location}</td>
             <td>
                 <Flex>
                     <Tooltip label={"Edit"}><ActionIcon variant='subtle'
                         onClick={() => {
+                            // handleEditData(item)
                             setEditModal(true)
-                            setUserName(item.business_email)
-                            // contact_no = item.contact_no
-                            // name = item.name
-                            // email = item.business_email
-                            // location = item.location
-                            window.localStorage.setItem("name", item.name)
-                            window.localStorage.setItem("contact_no", item.contact_no)
-                            window.localStorage.setItem("username", item.business_email)
-                            window.localStorage.setItem("date_joined", item.date_joined)
-                            window.localStorage.setItem("location", item.location)
-                            setTimeout(() => {
-                                window.localStorage.clear()
-                            }, 10000);
+                            setUserName(item.u_business_email)
+
+                            setEditStatus(true)
                         }} ><MdEdit color="#233c79" /></ActionIcon></Tooltip>
                     <Tooltip label={"Delete"}><ActionIcon variant='subtle' onClick={() => {
                         setOpenModal(true)
-                        setUserName(item.business_email)
+                        setUserName(item.u_business_email)
                     }} ><MdDeleteForever color="FF3C5F" /></ActionIcon></Tooltip>
                 </Flex>
             </td>
         </tr>
     ))
 
+    // const handleEditData = (data) => {
+    //     console.log(data.u_name)
+    //     setFormValues({
+    //         name: data.u_name,
+    //         business_email: data.u_business_email,
+    //         contact_no: data.u_contact_no,
+    //         location: data.u_location,
+    //         user_status: value
+    //     });
+    //     setEditStatus(true)
+    //     setEditData(data)
+    // }
     const handleDelete = () => {
         setLoaderVisible(true)
 
         client.delete('add_delete_users/', {
             params: {
-                username: userName
+                business_email: userName
             }
         })
         setTimeout(() => {
@@ -174,7 +179,7 @@ const UserManagement = () => {
         setLoaderVisible(true)
 
         client.put("update_user_status/",
-            { username: userName }
+            { business_email: userName }
         )
 
         setTimeout(() => {
@@ -185,6 +190,7 @@ const UserManagement = () => {
 
     const handleAddUser = () => {
         setLoaderVisible(true)
+
         client.post("add_delete_users/", form.getTransformedValues())
         setTimeout(() => {
             setUserModal(false)
@@ -194,7 +200,7 @@ const UserManagement = () => {
 
     const handleEditUser = () => {
         setLoaderVisible(true)
-        client.put("user_details/", form.getTransformedValues())
+        client.put("edit_user_details_hct/", form.getTransformedValues())
         setTimeout(() => {
             setEditModal(false)
             setLoaderVisible(false)
@@ -203,31 +209,7 @@ const UserManagement = () => {
 
     return (
         <div>
-            {/* {loaderVisible && (
-                <Overlay blur={4}>
-                    <div
-                        style={{
-                            height: "90vh",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                        }}
-                    ><Card w={320} h={240} style={{ display: "flex", alignContent: "center", justifyContent: "center" }}>
-                            <Center>
 
-                                <Flex direction={"column"} align={"center"}>
-                                    <Loader size={"md"}
-                                        color="#233c79"
-                                        variant="bars" />
-                                    <Space h="md" />
-                                    <Text c={"#3A3A3A"} fz={14} fw={600}>Please wait...</Text>
-
-                                </Flex>
-                            </Center>
-                        </Card>
-                    </div>
-                </Overlay>
-            )} */}
             <Container mt={mediumScreen ? "7rem" : "2rem"} size={"xl"}>
                 <Center>
                     <Modal style={{ display: "flex", justifyContent: "center" }} opened={userModal} onClose={() => setUserModal(false)} title="Add user">
@@ -304,7 +286,10 @@ const UserManagement = () => {
                 </Center>
 
                 <Center>
-                    <Modal style={{ display: "flex", justifyContent: "center" }} opened={EditModal} onClose={() => setEditModal(false)} title="Edit user details">
+                    <Modal style={{ display: "flex", justifyContent: "center" }} opened={EditModal} onClose={() => {
+                        setEditModal(false)
+                        setEditStatus(false)
+                    }} title="Edit user details">
                         <form>
                             <SimpleGrid cols={1}>
                                 <TextInput
@@ -371,7 +356,10 @@ const UserManagement = () => {
                                 <Flex justify={"end"} gap={"2%"}>
                                     <Button loading={loaderVisible} style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "#233c79" }}
                                         variant='filled' onClick={handleEditUser}>Done</Button>
-                                    <Button variant='outline' color='dark' onClick={() => setEditModal(false)}>No</Button>
+                                    <Button variant='outline' color='dark' onClick={() => {
+                                        setEditModal(false)
+                                        setEditStatus(false)
+                                    }}>No</Button>
                                 </Flex>
                             </SimpleGrid>
                         </form>
@@ -414,7 +402,10 @@ const UserManagement = () => {
                         //   };
                         // })} 
                         /> */}
-                        <Button onClick={() => setUserModal(true)} radius={10} style={{ backgroundColor: "#233c79" }}>Add user</Button>
+                        <Button onClick={() => {
+                            setUserModal(true)
+                            setEditStatus(false)
+                        }} radius={10} style={{ backgroundColor: "#233c79" }}>Add user</Button>
                     </Group>
                 </Flex>
 
