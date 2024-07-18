@@ -28,10 +28,10 @@ const UserManagement = () => {
 
     const [EditModal, setEditModal] = useState(false)
     const [editData, setEditData] = useState(null)
-    console.log(editData)
+    // console.log(editData)
     const [editStatus, setEditStatus] = useState(false)
     const [formValues, setFormValues] = useState(null);
-    console.log(formValues)
+    // console.log(formValues)
 
     const [userName, setUserName] = useState('')
 
@@ -70,6 +70,7 @@ const UserManagement = () => {
                 setUserData(resp.data["page_obj"])
                 setRecordsPerPage(resp.data.number_of_pages)
             })
+            .catch(err => console.error(err))
     }, [currentPage, loaderVisible])
 
     // const form = useForm({
@@ -112,12 +113,12 @@ const UserManagement = () => {
     // const numbers = [...Array(nPages + 1).keys()].slice(1)
 
     const rows = userData.map((item) => (
-        <tr key={item.id}>
-            <td>{item.u_user_status ?
-                (<Tooltip label={item.u_user_status === 'inactive' ? "Inactive" : "Active"}>
-                    <ActionIcon variant='transparent' color={item.u_user_status === 'inactive' ? 'red' : 'green'} onClick={() => {
+        <tr key={item.id} style={{ height: 50 }}>
+            <td >{item.user_status ?
+                (<Tooltip label={item.user_status === 'inactive' ? "Inactive" : "Active"}>
+                    <ActionIcon variant='transparent' color={item.user_status === 'inactive' ? 'red' : 'green'} onClick={() => {
                         open();
-                        setUserName(item.u_business_email)
+                        setUserName(item.business_email)
                     }}><MdCircle /></ActionIcon>
                 </Tooltip>) : (
                     <ActionIcon variant='transparent' color='gray'><MdCircle /></ActionIcon>
@@ -125,42 +126,39 @@ const UserManagement = () => {
 
             }</td>
 
-            <td>{item.u_name}</td>
-            <td>{item.u_contact_no}</td>
-            <td>{item.u_business_email}</td>
+            <td>{item.name}</td>
+            <td>{item.contact_no}</td>
+            <td>{item.business_email}</td>
             <td>{handleDate(item.date_joined)}</td>
-            <td>{item.u_location}</td>
+            <td>{item.location}</td>
             <td>
                 <Flex>
                     <Tooltip label={"Edit"}><ActionIcon variant='subtle'
                         onClick={() => {
                             // handleEditData(item)
                             setEditModal(true)
-                            setUserName(item.u_business_email)
-
+                            setUserName(item.business_email)
+                            editDetails(item)
                             setEditStatus(true)
                         }} ><MdEdit color="#233c79" /></ActionIcon></Tooltip>
                     <Tooltip label={"Delete"}><ActionIcon variant='subtle' onClick={() => {
                         setOpenModal(true)
-                        setUserName(item.u_business_email)
+                        setUserName(item.business_email)
                     }} ><MdDeleteForever color="FF3C5F" /></ActionIcon></Tooltip>
                 </Flex>
             </td>
         </tr>
     ))
 
-    // const handleEditData = (data) => {
-    //     console.log(data.u_name)
-    //     setFormValues({
-    //         name: data.u_name,
-    //         business_email: data.u_business_email,
-    //         contact_no: data.u_contact_no,
-    //         location: data.u_location,
-    //         user_status: value
-    //     });
-    //     setEditStatus(true)
-    //     setEditData(data)
-    // }
+    const editDetails = (data) => {
+        form.setValues({
+            name: data.name,
+            business_email: data.business_email,
+            contact_no: data.contact_no,
+            location: data.location,
+            user_status: value
+        });
+    }
     const handleDelete = () => {
         setLoaderVisible(true)
 
@@ -169,6 +167,7 @@ const UserManagement = () => {
                 business_email: userName
             }
         })
+            .catch(err => console.error(err))
         setTimeout(() => {
             setOpenModal(false)
             setLoaderVisible(false)
@@ -181,7 +180,7 @@ const UserManagement = () => {
         client.put("update_user_status/",
             { business_email: userName }
         )
-
+            .catch(err => console.error(err))
         setTimeout(() => {
             close()
             setLoaderVisible(false)
@@ -192,6 +191,7 @@ const UserManagement = () => {
         setLoaderVisible(true)
 
         client.post("add_delete_users/", form.getTransformedValues())
+            .catch(err => console.error(err))
         setTimeout(() => {
             setUserModal(false)
             setLoaderVisible(false)
@@ -201,6 +201,7 @@ const UserManagement = () => {
     const handleEditUser = () => {
         setLoaderVisible(true)
         client.put("edit_user_details_hct/", form.getTransformedValues())
+            .catch(err => console.error(err))
         setTimeout(() => {
             setEditModal(false)
             setLoaderVisible(false)
@@ -210,107 +211,30 @@ const UserManagement = () => {
     return (
         <div>
 
-            <Container mt={mediumScreen ? "7rem" : "2rem"} size={"xl"}>
-                <Center>
-                    <Modal style={{ display: "flex", justifyContent: "center" }} opened={userModal} onClose={() => setUserModal(false)} title="Add user">
-                        <form>
-                            <SimpleGrid cols={1}>
-                                <TextInput
+            <Container mt={mediumScreen ? "5rem" : "2rem"} size={"xxl"}>
 
-                                    label="Name"
-                                    name='name'
-                                    placeholder="Enter name"
-                                    size={mediumScreen ? "md" : "lg"}
-                                    {...form.getInputProps('name')}
+                <Modal centered style={{ display: "flex", justifyContent: "center" }} opened={userModal} onClose={() => setUserModal(false)} title="Add user">
+                    <form>
+                        <SimpleGrid cols={1}>
+                            <TextInput
 
-                                />
-                                <TextInput
+                                label="Name"
+                                name='name'
+                                placeholder="Enter name"
+                                size={mediumScreen ? "md" : "lg"}
+                                {...form.getInputProps('name')}
 
-                                    label="Email"
-                                    name='username'
-                                    placeholder="user@email.com"
-                                    size={mediumScreen ? "md" : "lg"}
-                                    {...form.getInputProps('username')}
+                            />
+                            <TextInput
 
-                                />
-                                {/* <TextInput
+                                label="Email"
+                                name='username'
+                                placeholder="user@email.com"
+                                size={mediumScreen ? "md" : "lg"}
+                                {...form.getInputProps('username')}
 
-                                    label="Password"
-                                    name='password'
-                                    placeholder=" password"
-                                    size={mediumScreen ? "md" : "lg"}
-                                    {...form.getInputProps('password')}
-
-                                /> */}
-                                <TextInput
-
-                                    label="Contact No."
-                                    name='contact_no'
-                                    placeholder="Enter Contact No."
-                                    size={mediumScreen ? "md" : "lg"}
-                                    {...form.getInputProps('contact_no')}
-
-                                />
-                                <TextInput
-
-                                    label="Location"
-                                    name='location'
-                                    placeholder="Enter Location"
-                                    size={mediumScreen ? "md" : "lg"}
-                                    {...form.getInputProps('location')}
-
-                                />
-                                <Radio.Group
-                                    value={value}
-                                    onChange={setValue}
-
-                                    label="Select status of the user"
-
-                                    withAsterisk
-                                >
-                                    <Group>
-                                        <Radio value="active" label="Active" />
-                                        <Radio value="inactive" label="Inactive" />
-                                    </Group>
-                                </Radio.Group>
-                            </SimpleGrid>
-                            <Space h={15} />
-                            <Flex justify={"end"} gap={"2%"}>
-                                <Button loading={loaderVisible} style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "#233c79" }}
-                                    variant='filled' onClick={handleAddUser}>Done</Button>
-                                <Button variant='outline' color='dark' onClick={() => setUserModal(false)}>No</Button>
-                            </Flex>
-                        </form>
-
-                    </Modal>
-                </Center>
-
-                <Center>
-                    <Modal style={{ display: "flex", justifyContent: "center" }} opened={EditModal} onClose={() => {
-                        setEditModal(false)
-                        setEditStatus(false)
-                    }} title="Edit user details">
-                        <form>
-                            <SimpleGrid cols={1}>
-                                <TextInput
-
-                                    label="Name"
-                                    name='name'
-                                    placeholder="Enter name"
-                                    size={mediumScreen ? "md" : "lg"}
-                                    {...form.getInputProps('name')}
-
-                                />
-                                <TextInput
-
-                                    label="Email"
-                                    name='username'
-                                    placeholder="user@email.com"
-                                    size={mediumScreen ? "md" : "lg"}
-                                    {...form.getInputProps('username')}
-
-                                />
-                                {/* <TextInput
+                            />
+                            {/* <TextInput
 
                                     label="Password"
                                     name='password'
@@ -319,76 +243,155 @@ const UserManagement = () => {
                                     {...form.getInputProps('password')}
 
                                 /> */}
-                                <TextInput
+                            <TextInput
 
-                                    label="Contact No."
-                                    name='contact_no'
-                                    placeholder="Enter Contact No."
-                                    size={mediumScreen ? "md" : "lg"}
-                                    {...form.getInputProps('contact_no')}
+                                label="Contact No."
+                                name='contact_no'
+                                placeholder="Enter Contact No."
+                                size={mediumScreen ? "md" : "lg"}
+                                {...form.getInputProps('contact_no')}
 
-                                />
-                                <TextInput
+                            />
+                            <TextInput
 
-                                    label="Location"
+                                label="Location"
+                                name='location'
+                                placeholder="Enter Location"
+                                size={mediumScreen ? "md" : "lg"}
+                                {...form.getInputProps('location')}
 
-                                    name='location'
-                                    placeholder="Enter Location"
-                                    size={mediumScreen ? "md" : "lg"}
-                                    {...form.getInputProps('location')}
+                            />
+                            <Radio.Group
+                                value={value}
+                                onChange={setValue}
 
-                                />
-                                <Radio.Group
-                                    value={value}
-                                    onChange={setValue}
+                                label="Select status of the user"
 
-                                    label="Select status of the user"
-
-                                    withAsterisk
-                                >
-                                    <Group>
-                                        <Radio value="active" label="Active" />
-                                        <Radio value="inactive" label="Inactive" />
-                                    </Group>
-                                </Radio.Group>
-
-                                <Space h={15} />
-                                <Flex justify={"end"} gap={"2%"}>
-                                    <Button loading={loaderVisible} style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "#233c79" }}
-                                        variant='filled' onClick={handleEditUser}>Done</Button>
-                                    <Button variant='outline' color='dark' onClick={() => {
-                                        setEditModal(false)
-                                        setEditStatus(false)
-                                    }}>No</Button>
-                                </Flex>
-                            </SimpleGrid>
-                        </form>
-
-                    </Modal>
-                </Center>
-                <Center>
-                    <Modal style={{ display: "flex", justifyContent: "center" }} opened={opened} onClose={close} title="Are you sure?!">
-                        <Text>Do you really want to change the status?</Text>
+                                withAsterisk
+                            >
+                                <Group>
+                                    <Radio value="active" label="Active" />
+                                    <Radio value="inactive" label="Inactive" />
+                                </Group>
+                            </Radio.Group>
+                        </SimpleGrid>
                         <Space h={15} />
                         <Flex justify={"end"} gap={"2%"}>
                             <Button loading={loaderVisible} style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "#233c79" }}
-                                variant='filled' onClick={handleStatus}>Yes</Button>
-                            <Button variant='outline' color='dark' onClick={close}>No</Button>
+                                variant='filled' onClick={handleAddUser}>Done</Button>
+                            <Button variant='outline' color='dark' onClick={() => setUserModal(false)}>No</Button>
                         </Flex>
-                    </Modal>
-                </Center>
+                    </form>
 
-                <Center>
-                    <Modal style={{ display: "flex", justifyContent: "center" }} opened={openModal} onClose={() => setOpenModal(false)} title="Are you sure?!">
-                        <Text>Do you really want to delete this user?</Text>
-                        <Space h={15} />
-                        <Flex justify={"end"} gap={"2%"}>
-                            <Button loading={loaderVisible} onClick={handleDelete} style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "#233c79" }}
-                                variant='filled'>Yes</Button>
-                            <Button variant='outline' color='dark' onClick={() => setOpenModal(false)}>No</Button>
-                        </Flex>
-                    </Modal>
-                </Center>
+                </Modal>
+
+
+
+                <Modal centered style={{ display: "flex", justifyContent: "center" }} opened={EditModal} onClose={() => {
+                    setEditModal(false)
+                    setEditStatus(false)
+                }} title="Edit user details">
+                    <form>
+                        <SimpleGrid cols={1}>
+                            <TextInput
+
+                                label="Name"
+                                name='name'
+                                placeholder="Enter name"
+                                size={mediumScreen ? "md" : "lg"}
+                                {...form.getInputProps('name')}
+
+                            />
+                            <TextInput
+
+                                label="Email"
+                                name='business_email'
+                                placeholder="user@email.com"
+                                size={mediumScreen ? "md" : "lg"}
+                                {...form.getInputProps('business_email')}
+
+                            />
+                            {/* <TextInput
+
+                                    label="Password"
+                                    name='password'
+                                    placeholder=" password"
+                                    size={mediumScreen ? "md" : "lg"}
+                                    {...form.getInputProps('password')}
+
+                                /> */}
+                            <TextInput
+
+                                label="Contact No."
+                                name='contact_no'
+                                placeholder="Enter Contact No."
+                                size={mediumScreen ? "md" : "lg"}
+                                {...form.getInputProps('contact_no')}
+
+                            />
+                            <TextInput
+
+                                label="Location"
+
+                                name='location'
+                                placeholder="Enter Location"
+                                size={mediumScreen ? "md" : "lg"}
+                                {...form.getInputProps('location')}
+
+                            />
+                            <Radio.Group
+                                value={value}
+                                onChange={setValue}
+
+                                label="Select status of the user"
+
+                                withAsterisk
+                            >
+                                <Group>
+                                    <Radio value="active" label="Active" />
+                                    <Radio value="inactive" label="Inactive" />
+                                </Group>
+                            </Radio.Group>
+
+                            <Space h={15} />
+                            <Flex justify={"end"} gap={"2%"}>
+                                <Button loading={loaderVisible} style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "#233c79" }}
+                                    variant='filled' onClick={handleEditUser}>Done</Button>
+                                <Button variant='outline' color='dark' onClick={() => {
+                                    setEditModal(false)
+                                    setEditStatus(false)
+                                }}>No</Button>
+                            </Flex>
+                        </SimpleGrid>
+                    </form>
+
+                </Modal>
+
+
+                <Modal centered style={{ display: "flex", justifyContent: "center" }} opened={opened} onClose={close} title="Are you sure?!">
+                    <Text>Do you really want to change the status?</Text>
+                    <Space h={15} />
+                    <Flex justify={"end"} gap={"2%"}>
+                        <Button loading={loaderVisible} style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "#233c79" }}
+                            variant='filled' onClick={() => {
+                                handleStatus()
+                            }}>Yes</Button>
+                        <Button variant='outline' color='dark' onClick={close}>No</Button>
+                    </Flex>
+                </Modal>
+
+
+
+                <Modal centered style={{ display: "flex", justifyContent: "center" }} opened={openModal} onClose={() => setOpenModal(false)} title="Are you sure?!">
+                    <Text>Do you really want to delete this user?</Text>
+                    <Space h={15} />
+                    <Flex justify={"end"} gap={"2%"}>
+                        <Button loading={loaderVisible} onClick={handleDelete} style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "#233c79" }}
+                            variant='filled'>Yes</Button>
+                        <Button variant='outline' color='dark' onClick={() => setOpenModal(false)}>No</Button>
+                    </Flex>
+                </Modal>
+
                 <Flex justify={"space-between"}>
                     <Text fz={22} fw={600}>Users</Text>
                     <Group>
@@ -405,7 +408,15 @@ const UserManagement = () => {
                         <Button onClick={() => {
                             setUserModal(true)
                             setEditStatus(false)
-                        }} radius={10} style={{ backgroundColor: "#233c79" }}>Add user</Button>
+                            form.setValues({
+                                name: "",
+                                business_email: "",
+                                contact_no: "",
+                                location: "",
+                                user_status: value
+                            })
+                        }}
+                            radius={10} style={{ backgroundColor: "#233c79" }}>Add User</Button>
                     </Group>
                 </Flex>
 

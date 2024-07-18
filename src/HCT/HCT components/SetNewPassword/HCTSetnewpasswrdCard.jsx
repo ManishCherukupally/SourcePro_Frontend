@@ -92,7 +92,8 @@ const HCTSetnewpasswrdCard = (props) => {
                     // Optionally, redirect user to login page
                     window.location.href = "/hct/login";
                 }
-            });
+            })
+                .catch(err => console.error(err))
             // console.log(email)
             // console.log(otp)
             // console.log(password)
@@ -125,7 +126,8 @@ const HCTSetnewpasswrdCard = (props) => {
                 //     setemailError("Please provide correct email ID")
                 // }
 
-            });
+            })
+                .catch(err => console.error(err))
             // console.log(email)
             // console.log(response.data)
         }
