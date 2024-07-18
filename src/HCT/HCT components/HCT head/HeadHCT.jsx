@@ -43,6 +43,11 @@ import { Cookies, useCookies } from 'react-cookie'
 import { useMediaQuery } from '@mantine/hooks'
 import axios from 'axios'
 import client from '../../../API/api'
+import { TbTemplate } from 'react-icons/tb'
+import { GoBroadcast } from "react-icons/go";
+import { HiHome } from "react-icons/hi";
+
+
 // axios.defaults.withCredentials = true;
 // axios.defaults.xsrfCookieName = 'csrftoken'
 // axios.defaults.xsrfHeaderName = 'x-csrftoken'
@@ -92,19 +97,54 @@ const HeadHCT = () => {
                     </Box>
 
                     <Box pt={13} style={{ display: "flex", alignItems: "center" }}>
-                        <Box w={80} className='hctHeadicon'
+                        {/* <Box w={80} className='hctHeadicon'
                             style={{
                                 borderBottom: `${window.location.pathname === "/hct/dashboard" ? "4px solid #F09A3E" : ""}`
                             }}
                         >
                             <Link to={"/hct/dashboard"}>
-                                <Image width="23px" src={window.location.pathname === "/hct/dashboard" ? Home1 : Home} ></Image>
+                                <Image width="23px"
+                                    src={window.location.pathname === "/hct/dashboard" ? Home1 : Home} ></Image>
+                            </Link>
+                        </Box> */}
+
+                        <Box w={80} className='hctHeadicon'
+                            style={{
+                                borderBottom: `${window.location.pathname === "/hct/dashboard" ? "4px solid #fab005" : ""}`
+                            }}
+                        >
+                            <Link to={"/hct/dashboard"}>
+                                {/* <ActionIcon width="23px" src={window.location.pathname === "/hct/template" ? <TbTemplate co /> : <TbTemplate />} ></ActionIcon> */}
+                                <HiHome size={"1.5rem"} style={{ color: `${window.location.pathname === "/hct/dashboard" ? "#fab005" : "gray"}` }} />
+                            </Link>
+                        </Box>
+
+                        <Box w={80} className='hctHeadicon'
+                            style={{
+                                borderBottom: `${window.location.pathname === "/hct/template" ? "4px solid #fab005" : ""}`
+                            }}
+                        >
+                            <Link to={"/hct/template"}>
+                                {/* <ActionIcon width="23px" src={window.location.pathname === "/hct/template" ? <TbTemplate co /> : <TbTemplate />} ></ActionIcon> */}
+                                <TbTemplate size={"1.5rem"} style={{ color: `${window.location.pathname === "/hct/template" ? "#fab005" : "gray"}` }} />
+                            </Link>
+                        </Box>
+
+
+                        <Box w={80} className='hctHeadicon'
+                            style={{
+                                borderBottom: `${window.location.pathname === "/hct/broadcast" ? "4px solid #fab005" : ""}`
+                            }}
+                        >
+                            <Link to={"/hct/broadcast"}>
+                                {/* <ActionIcon width="23px" src={window.location.pathname === "/hct/broadcast" ? <Tbbroadcast co /> : <Tbbroadcast />} ></ActionIcon> */}
+                                <GoBroadcast size={"1.5rem"} style={{ color: `${window.location.pathname === "/hct/broadcast" ? "#fab005" : "gray"}` }} />
                             </Link>
                         </Box>
 
                         {/* <Box h={"100%"} w={80} className='iconbox'
                             style={{
-                                borderBottom: `${window.location.pathname === "/mycourses" ? "3px solid #F09A3E" : ""}`
+                                borderBottom: `${window.location.pathname === "/mycourses" ? "3px solid #fab005" : ""}`
                             }}
                         >
                             <Link to={"/mycourses"}>
@@ -114,7 +154,7 @@ const HeadHCT = () => {
 
                         <Box h={"100%"} w={80} className='hctHeadicon'
                             style={{
-                                borderBottom: window.location.pathname === '/hct/usermanagement' ? '4px solid #F09A3E' : "",
+                                borderBottom: window.location.pathname === '/hct/usermanagement' ? '4px solid #fab005' : "",
                             }}
                         >
                             <Menu position="top" withArrow shadow="md"
@@ -126,8 +166,7 @@ const HeadHCT = () => {
                                     },
                                 }}>
                                 <Menu.Target>
-                                    <Image width="20px" src=
-                                        {window.location.pathname === '/hct/usermanagement' ? User1 : User}  ></Image>
+                                    <ActionIcon> <MdPerson size={"1.5rem"} style={{ color: `${window.location.pathname === "/hct/usermanagement" ? "#fab005" : "gray"}` }} /></ActionIcon>
                                 </Menu.Target>
 
                                 <Menu.Dropdown >

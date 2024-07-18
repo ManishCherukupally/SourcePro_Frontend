@@ -16,6 +16,7 @@ const DashboardHCT = () => {
             .then((resp) => {
                 setHctData(resp.data.status)
             })
+            .catch(err => console.error(err))
     }, [])
     return (
         <div>

@@ -26,6 +26,8 @@ import DashboardHCTPage from "./HCT/HCTpages/DashboardHCTPage";
 import ForgetPasswordHCTPage from "./HCT/HCTpages/ForgetPasswordHCTPage";
 import HCTSetNewpasswordPage from "./HCT/HCTpages/HCTSetNewpasswordPage";
 import UserManagementPage from "./HCT/HCTpages/UserManagementPage";
+import TemplatePage from "./HCT/HCTpages/TemplatePage";
+import BroadcastPage from "./HCT/HCTpages/BroadcastPage";
 
 function App() {
 
@@ -69,6 +71,8 @@ function App() {
           <Route path="/hct/set-new-password" Component={HCTSetNewpasswordPage} />
           <Route path="/hct/dashboard" Component={DashboardHCTPage} />
           <Route path="/hct/usermanagement" Component={UserManagementPage} />
+          <Route path="/hct/template" Component={TemplatePage} />
+          <Route path="/hct/broadcast" Component={BroadcastPage} />
 
 
         </Routes>
