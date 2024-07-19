@@ -43,6 +43,8 @@ const Broadcast = () => {
     const [selectedSource, setSelectedSource] = useState('');
 
     const [newTemplateId, setnewTemplateId] = useState(null)
+    const [newTemplate, setnewTemplate] = useState(null)
+    const [newtemplateEdit, setnewtemplateEdit] = useState(false)
     useEffect(() => {
         client.get("broadcast_pagination/", {
             params: {
@@ -100,13 +102,11 @@ const Broadcast = () => {
     // console.log(templatedropDownData);
 
     const handleSelectTemplate = (value) => {
-        // setSelectedTemplate(value);
-        // Convert the selected value to the corresponding template ID
         const selectedTemplateId = parseInt(value);
-        setSelectedTemplate(selectedTemplateId);
-        setnewTemplateId(selectedTemplateId)
+        newtemplateEdit ? setnewTemplate(selectedTemplateId) : setSelectedTemplate(selectedTemplateId);
     };
 
+    console.log(newTemplate);
     const handleSelectUsers = (values) => {
         // setSelectedUsers(values);
         // Convert the selected values to the corresponding user IDs
@@ -125,6 +125,7 @@ const Broadcast = () => {
     // };
 
     const handleEditData = (item) => {
+
         setEditData(item);
         setSelectedTemplate(parseInt(item.template_id)); // Make sure this sets the correct template ID
         setSelectedUsers(item.users.map(user => user.user_id));
@@ -184,6 +185,7 @@ const Broadcast = () => {
                         onClick={() => {
                             // handleEditData(item)
                             setEditModal(true)
+                            setnewtemplateEdit(true)
                             handleEditData(item)
 
                             // console.log(templateData.find(template => template.template_id === item.id));
@@ -222,7 +224,7 @@ const Broadcast = () => {
             frequency: selectedFrequency,
             follow_up: selectedSource,
             time: selectedFrequency === 'once' ? null : `${values.time}`,
-            new_template_id: selectedTemplate,
+            new_template_id: newTemplate,
         })
     })
 
@@ -261,6 +263,8 @@ const Broadcast = () => {
             setEditModal(false)
             setLoaderVisible(false)
         }, 1000);
+        setSelectedTemplate(newTemplate)
+        setnewtemplateEdit(false)
     }
 
     const handleSend = () => {
@@ -340,13 +344,15 @@ const Broadcast = () => {
                 </Modal>
 
                 <Modal centered style={{ display: "flex", justifyContent: "center" }} opened={editModal} onClose={() => setEditModal(false)} title="Edit Broadcast">
-
                     <Select
                         data={templatedropDownData}
                         placeholder="Select a template"
                         label="Templates"
-                        value={selectedTemplate}
-                        onChange={handleSelectTemplate}
+                        value={newtemplateEdit && newTemplate === null ? selectedTemplate : newTemplate}
+                        onChange={(value) => {
+                            setnewtemplateEdit ? setnewTemplate(parseInt(value)) : setSelectedTemplate(parseInt(value));
+                        }}
+                    // onChange={handleSelectTemplate}
                     />
 
                     <MultiSelect
@@ -380,6 +386,7 @@ const Broadcast = () => {
                                 {...form.getInputProps('time')}
                             />) : (null)
                     }
+
                     <Select
                         data={[
                             { value: 'mail', label: 'Mail' },
@@ -392,12 +399,6 @@ const Broadcast = () => {
                         onChange={setSelectedSource}
                     />
 
-                    {/* <TimeInput
-                        withSeconds
-                        label='Time'
-                        placeholder='Enter time'
-                        {...form.getInputProps('time')}
-                    /> */}
                     <Space h={15} />
                     <Flex justify={"end"} gap={"2%"}>
                         <Button type='submit' loading={loaderVisible} style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "#233c79" }}
@@ -406,6 +407,7 @@ const Broadcast = () => {
                     </Flex>
 
                 </Modal>
+
 
 
                 <Modal centered style={{ display: "flex", justifyContent: "center" }} opened={openModal} onClose={() => setOpenModal(false)} title="Are you sure?!">
