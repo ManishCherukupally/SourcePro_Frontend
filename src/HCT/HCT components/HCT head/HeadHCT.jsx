@@ -62,10 +62,10 @@ const HeadHCT = () => {
                     // removeToken(['sessionid']);
                     window.localStorage.clear()
                     // Optionally, redirect user to login page
-                    window.location.href = "/hct/login";
+                    window.location.href = "/login";
                 }
             })
-            // window.location.href = "/hct/login";
+            // window.location.href = "/login";
         }
         catch (err) {
             console.error(err)
@@ -99,46 +99,46 @@ const HeadHCT = () => {
                     <Box pt={13} style={{ display: "flex", alignItems: "center" }}>
                         {/* <Box w={80} className='hctHeadicon'
                             style={{
-                                borderBottom: `${window.location.pathname === "/hct/dashboard" ? "4px solid #F09A3E" : ""}`
+                                borderBottom: `${window.location.pathname === "/dashboard" ? "4px solid #F09A3E" : ""}`
                             }}
                         >
-                            <Link to={"/hct/dashboard"}>
+                            <Link to={"/dashboard"}>
                                 <Image width="23px"
-                                    src={window.location.pathname === "/hct/dashboard" ? Home1 : Home} ></Image>
+                                    src={window.location.pathname === "/dashboard" ? Home1 : Home} ></Image>
                             </Link>
                         </Box> */}
 
                         <Box w={80} className='hctHeadicon'
                             style={{
-                                borderBottom: `${window.location.pathname === "/hct/dashboard" ? "4px solid #fab005" : ""}`
+                                borderBottom: `${window.location.pathname === "/dashboard" ? "4px solid #fab005" : ""}`
                             }}
                         >
-                            <Link to={"/hct/dashboard"}>
-                                {/* <ActionIcon width="23px" src={window.location.pathname === "/hct/template" ? <TbTemplate co /> : <TbTemplate />} ></ActionIcon> */}
-                                <HiHome size={"1.5rem"} style={{ color: `${window.location.pathname === "/hct/dashboard" ? "#fab005" : "gray"}` }} />
+                            <Link to={"/dashboard"}>
+                                {/* <ActionIcon width="23px" src={window.location.pathname === "/template" ? <TbTemplate co /> : <TbTemplate />} ></ActionIcon> */}
+                                <HiHome size={"1.5rem"} style={{ color: `${window.location.pathname === "/dashboard" ? "#fab005" : "gray"}` }} />
                             </Link>
                         </Box>
 
                         <Box w={80} className='hctHeadicon'
                             style={{
-                                borderBottom: `${window.location.pathname === "/hct/template" ? "4px solid #fab005" : ""}`
+                                borderBottom: `${window.location.pathname === "/template" ? "4px solid #fab005" : ""}`
                             }}
                         >
-                            <Link to={"/hct/template"}>
-                                {/* <ActionIcon width="23px" src={window.location.pathname === "/hct/template" ? <TbTemplate co /> : <TbTemplate />} ></ActionIcon> */}
-                                <TbTemplate size={"1.5rem"} style={{ color: `${window.location.pathname === "/hct/template" ? "#fab005" : "gray"}` }} />
+                            <Link to={"/template"}>
+                                {/* <ActionIcon width="23px" src={window.location.pathname === "/template" ? <TbTemplate co /> : <TbTemplate />} ></ActionIcon> */}
+                                <TbTemplate size={"1.5rem"} style={{ color: `${window.location.pathname === "/template" ? "#fab005" : "gray"}` }} />
                             </Link>
                         </Box>
 
 
                         <Box w={80} className='hctHeadicon'
                             style={{
-                                borderBottom: `${window.location.pathname === "/hct/broadcast" ? "4px solid #fab005" : ""}`
+                                borderBottom: `${window.location.pathname === "/broadcast" ? "4px solid #fab005" : ""}`
                             }}
                         >
-                            <Link to={"/hct/broadcast"}>
-                                {/* <ActionIcon width="23px" src={window.location.pathname === "/hct/broadcast" ? <Tbbroadcast co /> : <Tbbroadcast />} ></ActionIcon> */}
-                                <GoBroadcast size={"1.5rem"} style={{ color: `${window.location.pathname === "/hct/broadcast" ? "#fab005" : "gray"}` }} />
+                            <Link to={"/broadcast"}>
+                                {/* <ActionIcon width="23px" src={window.location.pathname === "/broadcast" ? <Tbbroadcast co /> : <Tbbroadcast />} ></ActionIcon> */}
+                                <GoBroadcast size={"1.5rem"} style={{ color: `${window.location.pathname === "/broadcast" ? "#fab005" : "gray"}` }} />
                             </Link>
                         </Box>
 
@@ -154,7 +154,7 @@ const HeadHCT = () => {
 
                         <Box h={"100%"} w={80} className='hctHeadicon'
                             style={{
-                                borderBottom: window.location.pathname === '/hct/usermanagement' ? '4px solid #fab005' : "",
+                                borderBottom: window.location.pathname === '/usermanagement' ? '4px solid #fab005' : "",
                             }}
                         >
                             <Menu position="top" withArrow shadow="md"
@@ -166,7 +166,7 @@ const HeadHCT = () => {
                                     },
                                 }}>
                                 <Menu.Target>
-                                    <ActionIcon> <MdPerson size={"1.5rem"} style={{ color: `${window.location.pathname === "/hct/usermanagement" ? "#fab005" : "gray"}` }} /></ActionIcon>
+                                    <ActionIcon> <MdPerson size={"1.5rem"} style={{ color: `${window.location.pathname === "/usermanagement" ? "#fab005" : "gray"}` }} /></ActionIcon>
                                 </Menu.Target>
 
                                 <Menu.Dropdown >
@@ -189,7 +189,7 @@ const HeadHCT = () => {
                                     </Menu.Item>
                                     */}
                                     <Menu.Item className='menutext' onClick={() => {
-                                        navigate('/hct/usermanagement')
+                                        navigate('/usermanagement')
                                     }}>
                                         User Management
                                     </Menu.Item>

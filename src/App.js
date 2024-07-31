@@ -65,14 +65,14 @@ function App() {
           <Route path="/quiz/:courseid/:lessonid" Component={QuizPage} />
 
           {/* HCT Routes*/}
-
+{/* 
           <Route path="/hct/login" Component={LoginHCTPage} />
           <Route path="/hct/forgot-password" Component={ForgetPasswordHCTPage} />
-          <Route path="/hct/set-new-password" Component={HCTSetNewpasswordPage} />
-          <Route path="/hct/dashboard" Component={DashboardHCTPage} />
-          <Route path="/hct/usermanagement" Component={UserManagementPage} />
-          <Route path="/hct/template" Component={TemplatePage} />
-          <Route path="/hct/broadcast" Component={BroadcastPage} />
+          <Route path="/hct/set-new-password" Component={HCTSetNewpasswordPage} /> */}
+          <Route path="/dashboard" Component={DashboardHCTPage} />
+          <Route path="/usermanagement" Component={UserManagementPage} />
+          <Route path="/template" Component={TemplatePage} />
+          <Route path="/broadcast" Component={BroadcastPage} />
 
 
         </Routes>
