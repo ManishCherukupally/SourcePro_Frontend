@@ -50,7 +50,7 @@ const UserManagement = () => {
         },
         transformValues: (values) => ({
             name: `${values.name}`,
-            business_email: `${values.username}`,
+            business_email: `${values.business_email}`,
             contact_no: `${values.contact_no}`,
             user_status: `${value}`,
             location: `${values.location}`,

@@ -40,12 +40,7 @@ function App() {
       <Router>
 
         <Routes>
-          {/* 
-          <Route path="/green" Component={QuizScoreRed} />
-          <Route path="/header" Component={Head} />
-          <Route path="/courseplayer" Component={CoursePage} /> */}
-
-          <Route path="/" element={window.localStorage.getItem("userStatus") ? (<Navigate to={"/home"} />) : (<Navigate to={"/login"} />)} />
+        <Route path="/" element={window.localStorage.getItem("userStatus") ? (<Navigate to={"/home"} />) : (<Navigate to={"/login"} />)} />
           <Route path="/mobilevideo" Component={CourseMobileComp} />
           <Route path="/login" Component={LoginPage} />
           <Route path="/forgot-password" Component={ForgotPassword} />
