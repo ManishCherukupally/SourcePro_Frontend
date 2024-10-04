@@ -64,7 +64,7 @@ const LoginHCT = (props) => {
                         window.localStorage.setItem("hctuserstatus", resp.data.status)
 
 
-                        // navigate("/dashboard")
+                        navigate("/hct/dashboard")
                     }
                     else {
                         setLoader(false)
