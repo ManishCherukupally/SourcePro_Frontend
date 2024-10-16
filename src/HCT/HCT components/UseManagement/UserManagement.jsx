@@ -228,10 +228,10 @@ const UserManagement = () => {
                             <TextInput
 
                                 label="Email"
-                                name='username'
+                                name='business_email'
                                 placeholder="user@email.com"
                                 size={mediumScreen ? "md" : "lg"}
-                                {...form.getInputProps('username')}
+                                {...form.getInputProps('business_email')}
 
                             />
                             {/* <TextInput
