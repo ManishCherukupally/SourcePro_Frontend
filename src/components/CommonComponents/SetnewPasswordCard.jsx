@@ -183,7 +183,7 @@ const SetnewPasswordCard = (props) => {
                             </div>
                         </Stack>
                         <Space h={3} />
-                        <Text fz={"xs"}>Please enter the OTP set to your registered Email ID</Text>
+                        <Text fz={"xs"}>Please enter the OTP sent to your registered Email ID</Text>
 
                         <Space h={15} />
                         <Stack>

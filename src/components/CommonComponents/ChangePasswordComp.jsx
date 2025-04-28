@@ -63,8 +63,9 @@ const ChangePasswordComp = () => {
                     setLoader(true);
                     setSuccess('Successfull!');
                     removeToken(['encsrftok']);
+                    window.localStorage.clear()
                     setTimeout(() => {
-                        window.location.href = '/';
+                        window.location.href = '/login';
                     }, 1200)
                     // Redirect to login page
                 }

@@ -262,7 +262,12 @@ export function QuizScoreGreen() {
 
                                 style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}
                             >DOWNLOAD CERTIFICATE</Button> */}
-                            {status ? (<Button mr={"3.5rem"} variant='filled' onClick={() => setCertificateModal(true)}
+                            {status ? (<Button mr={"3.5rem"} variant='filled' onClick={() => {
+                                setCertificateModal(true)
+                                setTimeout(() => {
+                                    exportComponentAsPNG(targetRef)
+                                }, 500)
+                            }}
 
                                 style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "rgba(240, 154, 62, 1)" }}
                             >DOWNLOAD CERTIFICATE</Button>) :
