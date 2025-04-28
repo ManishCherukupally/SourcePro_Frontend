@@ -350,7 +350,7 @@ const Broadcast = () => {
                         label="Templates"
                         value={newtemplateEdit && newTemplate === null ? selectedTemplate : newTemplate}
                         onChange={(value) => {
-                            setnewtemplateEdit ? setnewTemplate(parseInt(value)) : setSelectedTemplate(parseInt(value));
+                            newtemplateEdit ? setnewTemplate(parseInt(value)) : setSelectedTemplate(parseInt(value));
                         }}
                     // onChange={handleSelectTemplate}
                     />
