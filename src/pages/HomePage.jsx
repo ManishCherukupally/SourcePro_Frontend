@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 
 const HomePage = () => {
   const navigate = useNavigate()
-  var isLoggedIn = window.localStorage.getItem("encsrftok")
+  // var isLoggedIn = window.localStorage.getItem("encsrftok")
   const [auth, setAuth] = useState(false)
   useEffect(() => {
     client.get("home/", {
